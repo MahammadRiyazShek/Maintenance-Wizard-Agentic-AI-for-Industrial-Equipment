@@ -1,2 +1,20 @@
-# maintenance wizard for industrial equipment
-MaintWizard-AI is an end-to-end Agentic AI decision-support platform custom-engineered for heavy steel manufacturing environments. Built to address the Tata Steel Agentic AI Challenge, the system eliminates fragmented manual diagnostics by unifying live IoT sensor telemetry, plant logs, technical manuals, and historical failure records into a centralized cognitive reasoning loop.  Key Technical Capabilities Built: 1. Cyber-Physical Telemetry Core: Live tracking of multi-variable thresholds (Temperature, Vibration, Flow, Pressure) across upstream ironmaking down to utility lines. 2. RAG-Infused Root Cause Analysis (RCA): Automated diagnostics utilizing domain-specific logic to extract trace references from SOP guidelines and OEM operational manuals. 3. Operations Priority & Spares Linkage: Dynamic calculation of RUL (Remaining Useful Life), coupled with warehouse inventory analysis and financial delay penalties ($/hr) to automatically rank asset criticality. 4. Human-In-The-Loop Learning: Active feedback mechanism allowing plant engineers to input ground-truth observations, systematically correcting and refining future agentic reasoning. 5. Contextual Conversational Assistant: Natural language troubleshooting interface contextually bounded to the degraded plant node for zero-latency operator query resolution.
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+</div>
+
+# Run and deploy your AI Studio app
+
+This contains everything you need to run your app locally.
+
+View your app in AI Studio: https://ai.studio/apps/282e859a-f4b6-482f-b818-1236dea4c9d8
+
+## Run Locally
+
+**Prerequisites:**  Node.js
+
+
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`
