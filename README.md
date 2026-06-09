@@ -1,4 +1,3 @@
-═══════════════════════════════════════════════════════════
 OPTION 1 — Use the Live Deployment (Recommended for reviewers)
 ═══════════════════════════════════════════════════════════
 1. Open: https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/
@@ -11,7 +10,6 @@ OPTION 1 — Use the Live Deployment (Recommended for reviewers)
 5. Inspect the "Agentic Diagnosis & Planning" panel for traceable SOP
    analysis and failure predictions
 
-═══════════════════════════════════════════════════════════
 OPTION 2 — Run Locally from Source
 ═══════════════════════════════════════════════════════════
 Prerequisites: Node.js v18+, a Google Gemini API key
