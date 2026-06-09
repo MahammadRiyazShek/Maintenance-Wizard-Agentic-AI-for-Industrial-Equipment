@@ -13,6 +13,7 @@ OPTION 1 — Use the Live Deployment (Recommended)
 
 OPTION 2 — Run Locally from Source
 ═══════════════════════════════════════════════════════════
+
 Prerequisites: Node.js v18+, a Google Gemini API key
 
 1. git clone https://github.com/MahammadRiyazShek/maintenance-wizard-agentic-ai-for-industrial-equipment.git
