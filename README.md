@@ -1,18 +1,3 @@
-<<<<<<< HEAD
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
-
-# Run and deploy your AI Studio app
-
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/282e859a-f4b6-482f-b818-1236dea4c9d8
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-=======
 OPTION 1 — Use the Live Deployment (Recommended)
 ═══════════════════════════════════════════════════════════
 1. Open: https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/
@@ -24,8 +9,6 @@ OPTION 1 — Use the Live Deployment (Recommended)
    such as: "What's the recommended SOP for tuyere over-temperature?"
 5. Inspect the "Agentic Diagnosis & Planning" panel for traceable SOP
    analysis and failure predictions
-   
->>>>>>> 5bdad328b878ab5f5e168e1d74be0dc23a37785b
 
 
 OPTION 2 — Run Locally from Source
