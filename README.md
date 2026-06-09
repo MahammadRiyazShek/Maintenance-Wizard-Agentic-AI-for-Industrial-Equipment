@@ -1,4 +1,4 @@
-OPTION 1 — Use the Live Deployment (Recommended for reviewers)
+OPTION 1 — Use the Live Deployment (Recommended)
 ═══════════════════════════════════════════════════════════
 1. Open: https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/
 2. Click any of the 4 plant asset nodes in the "Plant Assets Telemetry Core"
