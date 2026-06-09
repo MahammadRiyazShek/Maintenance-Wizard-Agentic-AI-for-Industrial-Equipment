@@ -16,6 +16,9 @@ import LogbookBrowser from "./components/LogbookBrowser.tsx";
 import KBBrowser from "./components/KBBrowser.tsx";
 import SystemDocumentation from "./components/SystemDocumentation.tsx";
 
+import { ClientStore } from "./utils/dataStore.ts";
+import { runAssetDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
+
 import { 
   Activity, 
   ShieldAlert, 
@@ -28,11 +31,13 @@ import {
   Bell,
   Clock,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  Key,
+  Cpu
 } from "lucide-react";
 
 export default function App() {
-  // Main Data States with server backing
+  // Main Data States with client persistence
   const [assets, setAssets] = useState<Asset[]>([]);
   const [alerts, setAlerts] = useState<ControlRoomAlert[]>([]);
   const [logbook, setLogbook] = useState<LogbookEntry[]>([]);
@@ -46,6 +51,11 @@ export default function App() {
   const [activeToolTab, setActiveToolTab] = useState<"chat" | "rag" | "logbook">("chat");
   const [showDocsModal, setShowDocsModal] = useState<boolean>(false);
   
+  // Key config interface
+  const [keyInput, setKeyInput] = useState<string>(getSavedApiKey());
+  const [showKeyPanel, setShowKeyPanel] = useState<boolean>(false);
+  const [apiActive, setApiActive] = useState<boolean>(!!getSavedApiKey());
+
   // Diagnostics & Chats Logic States
   const [activeDiagnosis, setActiveDiagnosis] = useState<DiagnosticResult | null>(null);
   const [diagnosisLoading, setDiagnosisLoading] = useState<boolean>(false);
@@ -64,26 +74,49 @@ export default function App() {
     return () => clearInterval(timer);
   }, []);
 
-  // Hydrate states from corporate API daemon on mount
+  // Hydrate states and check server-side Gemini configuration
   useEffect(() => {
     fetchInitialData();
+    checkBackendHealth();
   }, []);
 
-  async function fetchInitialData() {
+  async function checkBackendHealth() {
     try {
-      const [assetsRes, alertsRes, logRes, kbRes] = await Promise.all([
-        fetch("/api/assets"),
-        fetch("/api/alerts"),
-        fetch("/api/logbook"),
-        fetch("/api/kb")
-      ]);
+      const res = await fetch("/api/health");
+      if (res.ok) {
+        const data = await res.json();
+        // Server key configured inside env structure, fallback to local storage key check if not
+        setApiActive(data.keyConfigured || !!getSavedApiKey());
+      } else {
+        setApiActive(!!getSavedApiKey());
+      }
+    } catch {
+      setApiActive(!!getSavedApiKey());
+    }
+  }
 
-      if (assetsRes.ok) setAssets(await assetsRes.json());
-      if (alertsRes.ok) setAlerts(await alertsRes.json());
-      if (logRes.ok) setLogbook(await logRes.json());
-      if (kbRes.ok) setKbDocs(await kbRes.json());
+  function fetchInitialData() {
+    try {
+      const liveAssets = ClientStore.getAssets();
+      const liveAlerts = ClientStore.getAlerts();
+      const liveLogbook = ClientStore.getLogbook();
+      const liveKb = ClientStore.getKbDocuments();
+
+      setAssets(liveAssets);
+      setAlerts(liveAlerts);
+      setLogbook(liveLogbook);
+      setKbDocs(liveKb);
+
+      // Default select first asset on start
+      if (liveAssets.length > 0) {
+        setSelectedAssetId(liveAssets[0].id);
+        const relatedAlert = liveAlerts.find(a => a.assetId === liveAssets[0].id && a.status !== "Resolved");
+        if (relatedAlert) {
+          setSelectedAlertId(relatedAlert.id);
+        }
+      }
     } catch (e) {
-      console.error("Failed to load backend databases:", e);
+      console.error("Failed to load local DB tables:", e);
     }
   }
 
@@ -120,24 +153,17 @@ export default function App() {
   // Trigger telemetry mutation simulation (cyber-physical interaction)
   const handleUpdateTelemetry = async (assetId: string, telemetry: any) => {
     try {
-      const response = await fetch("/api/assets/telemetry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ assetId, ...telemetry })
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setAssets(data.assets);
-        setAlerts(data.alerts);
-        
-        // Re-read active asset status
-        const active = data.assets.find((a: Asset) => a.id === assetId);
-        if (active && selectedAssetId === assetId) {
-          // If a new warning/critical alert was spawned, automatically bind it
-          const freshAlert = data.alerts.find((al: ControlRoomAlert) => al.assetId === assetId && al.status !== "Resolved");
-          if (freshAlert) {
-            setSelectedAlertId(freshAlert.id);
-          }
+      const res = ClientStore.updateAssetTelemetry(assetId, telemetry);
+      setAssets(res.assets);
+      setAlerts(res.alerts);
+      
+      // Re-read active asset status
+      const active = res.assets.find((a: Asset) => a.id === assetId);
+      if (active && selectedAssetId === assetId) {
+        // If a new warning/critical alert was spawned, automatically bind it
+        const freshAlert = res.alerts.find((al: ControlRoomAlert) => al.assetId === assetId && al.status !== "Resolved");
+        if (freshAlert) {
+          setSelectedAlertId(freshAlert.id);
         }
       }
     } catch (err) {
@@ -148,22 +174,15 @@ export default function App() {
   // Acknowledge a control room alarm
   const handleAcknowledgeAlert = async (alertId: string, status: "Investigating" | "Resolved") => {
     try {
-      const response = await fetch("/api/alerts/acknowledge", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ alertId, status })
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setAlerts(data.alerts);
-        setAssets(data.assets);
-        
-        // If alert was resolved, clear selection
-        if (status === "Resolved" && selectedAlertId === alertId) {
-          setSelectedAlertId(null);
-          setActiveDiagnosis(null);
-          setFeedbackSaved(false);
-        }
+      const res = ClientStore.acknowledgeAlert(alertId, status);
+      setAlerts(res.alerts);
+      setAssets(res.assets);
+      
+      // If alert was resolved, clear selection
+      if (status === "Resolved" && selectedAlertId === alertId) {
+        setSelectedAlertId(null);
+        setActiveDiagnosis(null);
+        setFeedbackSaved(false);
       }
     } catch (e) {
       console.error("Failed to acknowledge warning alert:", e);
@@ -178,23 +197,8 @@ export default function App() {
     setActiveDiagnosis(null);
 
     try {
-      const response = await fetch("/api/diagnose", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          assetId: selectedAssetId,
-          alertId: selectedAlertId || undefined,
-          userNotes
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        // Bind the generated structured DiagnosticResult
-        setActiveDiagnosis(data.report);
-      } else {
-        console.error("Diagnostics compile response failed.");
-      }
+      const report = await runAssetDiagnosis(selectedAssetId, selectedAlertId, userNotes);
+      setActiveDiagnosis(report);
     } catch (e) {
       console.error("AI reasoning query fault:", e);
     } finally {
@@ -204,21 +208,10 @@ export default function App() {
 
   // Save worker feedback and expert learning notes to database
   const handleSubmitFeedback = async (rating: "helpful" | "unhelpful", note: string) => {
-    if (!activeDiagnosis || !selectedAssetId) return;
+    if (!selectedAssetId) return;
     try {
-      const response = await fetch("/api/feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          diagnosticId: `diag-current`,
-          assetId: selectedAssetId,
-          rating,
-          correctionNote: note || undefined
-        })
-      });
-      if (response.ok) {
-        setFeedbackSaved(true);
-      }
+      const updated = ClientStore.addFeedback(selectedAssetId, rating, note);
+      setFeedbackSaved(true);
     } catch (err) {
       console.error("Feedback registration fault:", err);
     }
@@ -227,28 +220,21 @@ export default function App() {
   // Log completed operations / repair actions
   const handleAddLogbookEntry = async (logData: { assetId: string; actionTaken: string; engineerName: string }) => {
     try {
-      const response = await fetch("/api/logbook", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...logData,
-          alertId: selectedAlertId || undefined, // Bind to resolve active selected alerts
-          diagnosticReportId: activeDiagnosis ? "diag-current" : undefined
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setLogbook(data.logbook);
-        setAlerts(data.alerts);
-        setAssets(data.assets);
-        
-        // Success resets active alerts if this was resolving active selected asset
-        if (selectedAssetId === logData.assetId) {
-          setSelectedAlertId(null);
-          setActiveDiagnosis(null);
-          setFeedbackSaved(false);
-        }
+      const res = ClientStore.addLogbookEntry(
+        logData.assetId,
+        logData.actionTaken,
+        logData.engineerName,
+        selectedAlertId || undefined
+      );
+      setLogbook(res.logbook);
+      setAlerts(res.alerts);
+      setAssets(res.assets);
+      
+      // Success resets active alerts if this was resolving active selected asset
+      if (selectedAssetId === logData.assetId) {
+        setSelectedAlertId(null);
+        setActiveDiagnosis(null);
+        setFeedbackSaved(false);
       }
     } catch (e) {
       console.error("Workorder manual log entry failure:", e);
@@ -269,32 +255,27 @@ export default function App() {
     setChatLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          assetId: selectedAssetId || undefined,
-          alertId: selectedAlertId || undefined,
-          message: text,
-          chatHistory: updatedHistory
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const wizardReply: ChatMessage = {
-          id: `reply-${Date.now()}`,
-          role: "model",
-          text: data.text,
-          timestamp: data.timestamp
-        };
-        setChatHistory([...updatedHistory, wizardReply]);
-      }
+      const reply = await askWizardChat(selectedAssetId, selectedAlertId, text, updatedHistory);
+      const wizardReply: ChatMessage = {
+        id: `reply-${Date.now()}`,
+        role: "model",
+        text: reply,
+        timestamp: new Date().toISOString()
+      };
+      setChatHistory([...updatedHistory, wizardReply]);
     } catch (err) {
       console.error("Wizard response stream failed:", err);
     } finally {
       setChatLoading(false);
     }
+  };
+
+  // Save key
+  const handleSaveApiKey = (e: React.FormEvent) => {
+    e.preventDefault();
+    saveApiKey(keyInput);
+    setApiActive(!!keyInput.trim());
+    setShowKeyPanel(false);
   };
 
   const getActiveAsset = () => {
@@ -320,7 +301,7 @@ export default function App() {
             </h1>
             <p className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
               <Activity className="h-3 w-3 text-emerald-500 animate-pulse" />
-              <span>Cyber-Physical Plant Interface Active • Decision Autonomy Mode</span>
+              <span>Cyber-Physical Plant Interface Active • {apiActive ? "Live Gemini AI Mode" : "Simulated Cognitive Mode"}</span>
             </p>
           </div>
         </div>
@@ -330,6 +311,17 @@ export default function App() {
           <div className="hidden md:flex items-center gap-2 bg-slate-800/40 px-3 py-1.5 rounded-lg border border-slate-800 font-mono text-[11px] text-slate-300">
             <Clock className="h-3.5 w-3.5 text-blue-400" />
             <span>UTC Local Time: <b>{new Date(currentTime).toLocaleTimeString()}</b></span>
+          </div>
+
+          <div
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold font-mono tracking-wide border select-none ${
+              apiActive 
+                ? "bg-emerald-950/50 text-emerald-300 border-emerald-500/30" 
+                : "bg-slate-800 text-slate-400 border-slate-700"
+            }`}
+          >
+            <Cpu className={`h-3.5 w-3.5 ${apiActive ? "text-emerald-400 animate-pulse" : "text-amber-400"}`} />
+            <span>{apiActive ? "Gemini 3.5: Secure Link" : "Cognitive Simulator Mode"}</span>
           </div>
 
           <button
