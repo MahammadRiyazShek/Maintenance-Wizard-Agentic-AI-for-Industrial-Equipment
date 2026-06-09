@@ -9,6 +9,7 @@ OPTION 1 — Use the Live Deployment (Recommended for reviewers)
    such as: "What's the recommended SOP for tuyere over-temperature?"
 5. Inspect the "Agentic Diagnosis & Planning" panel for traceable SOP
    analysis and failure predictions
+   
 
 OPTION 2 — Run Locally from Source
 ═══════════════════════════════════════════════════════════
