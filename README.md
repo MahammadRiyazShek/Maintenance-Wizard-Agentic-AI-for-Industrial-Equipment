@@ -15,13 +15,13 @@ OPTION 2 — Run Locally from Source
 ═══════════════════════════════════════════════════════════
 Prerequisites: Node.js v18+, a Google Gemini API key
 
-  1. git clone https://github.com/MahammadRiyazShek/maintenance-wizard-agentic-ai-for-industrial-equipment.git
-  2. cd maintenance-wizard-agentic-ai-for-industrial-equipment
-  3. npm install
-  4. Create a file named  .env.local  in the project root with:
-        GEMINI_API_KEY=your_gemini_api_key_here
-  5. npm run dev
-  6. Open http://localhost:5173 in your browser
+1. git clone https://github.com/MahammadRiyazShek/maintenance-wizard-agentic-ai-for-industrial-equipment.git
+2. cd maintenance-wizard-agentic-ai-for-industrial-equipment
+3. npm install
+4. Create a file named  .env.local  in the project root with:
+   GEMINI_API_KEY=your_gemini_api_key_here
+5. npm run dev
+6. Open http://localhost:5173 in your browser
 
 Build for production:
   npm run build  &&  npm start
