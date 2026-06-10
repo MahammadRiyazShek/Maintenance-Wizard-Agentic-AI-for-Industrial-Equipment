@@ -15,6 +15,7 @@ import SupportChat from "./components/SupportChat.tsx";
 import LogbookBrowser from "./components/LogbookBrowser.tsx";
 import KBBrowser from "./components/KBBrowser.tsx";
 import SystemDocumentation from "./components/SystemDocumentation.tsx";
+import PlantFlowVisualizer from "./components/PlantFlowVisualizer.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -356,47 +357,52 @@ export default function App() {
           </div>
         ) : (
           /* Main Cockpit Split Layout grid and flex boxes */
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 h-full items-start overflow-y-auto xl:overflow-hidden">
+          <div className="space-y-6 overflow-y-auto xl:h-[calc(100vh-120px)] pr-1 font-sans" id="dashboard-workbench">
             
-            {/* Columns 1-4: Telemetry feeds and active warnings ticker */}
-            <section className="xl:col-span-4 space-y-6 xl:h-[calc(100vh-130px)] xl:overflow-y-auto pr-0 xl:pr-1" id="left-telemetry-column">
-              {/* Asset list Grid selections */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
-                <AssetSelector
-                  assets={assets}
-                  selectedAssetId={selectedAssetId}
-                  onSelectAsset={handleSelectAsset}
-                  onUpdateTelemetry={handleUpdateTelemetry}
+            {/* Plant bottleneck and delay flow cascade summary */}
+            <PlantFlowVisualizer assets={assets} />
+
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+              
+              {/* Columns 1-4: Telemetry feeds and active warnings ticker */}
+              <section className="xl:col-span-4 space-y-6 xl:h-[calc(100vh-320px)] xl:overflow-y-auto pr-0 xl:pr-1" id="left-telemetry-column">
+                {/* Asset list Grid selections */}
+                <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+                  <AssetSelector
+                    assets={assets}
+                    selectedAssetId={selectedAssetId}
+                    onSelectAsset={handleSelectAsset}
+                    onUpdateTelemetry={handleUpdateTelemetry}
+                  />
+                </div>
+
+                {/* Alarm indicators */}
+                <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+                  <AlertList
+                    alerts={alerts}
+                    selectedAssetId={selectedAssetId}
+                    onSelectAlert={handleSelectAlert}
+                    onAcknowledge={handleAcknowledgeAlert}
+                  />
+                </div>
+              </section>
+
+              {/* Columns 5-8: Diagnostic Planning center stage */}
+              <section className="xl:col-span-5 xl:h-[calc(100vh-320px)] xl:overflow-y-auto pr-0 xl:pr-1" id="center-reasoning-column">
+                <DiagnosisReport
+                  asset={activeAsset}
+                  report={activeDiagnosis}
+                  loading={diagnosisLoading}
+                  onExecuteDiagnosis={handleRunDiagnosis}
+                  onSubmitFeedback={handleSubmitFeedback}
+                  feedbackLogged={feedbackSaved}
                 />
-              </div>
+              </section>
 
-              {/* Alarm indicators */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
-                <AlertList
-                  alerts={alerts}
-                  selectedAssetId={selectedAssetId}
-                  onSelectAlert={handleSelectAlert}
-                  onAcknowledge={handleAcknowledgeAlert}
-                />
-              </div>
-            </section>
-
-            {/* Columns 5-8: Diagnostic Planning center stage */}
-            <section className="xl:col-span-5 xl:h-[calc(100vh-130px)] xl:overflow-y-auto pr-0 xl:pr-1" id="center-reasoning-column">
-              <DiagnosisReport
-                asset={activeAsset}
-                report={activeDiagnosis}
-                loading={diagnosisLoading}
-                onExecuteDiagnosis={handleRunDiagnosis}
-                onSubmitFeedback={handleSubmitFeedback}
-                feedbackLogged={feedbackSaved}
-              />
-            </section>
-
-            {/* Columns 9-12: Maintenance crew toolkit (Interactive Chat, RAG search and logbook tab selections) */}
-            <section className="xl:col-span-3 xl:h-[calc(100vh-130px)] flex flex-col gap-4" id="right-toolkit-column">
-              {/* Selector Tab Buttons bar */}
-              <div className="bg-white border border-slate-200 p-1.5 rounded-xl flex gap-1 shadow-xs">
+              {/* Columns 9-12: Maintenance crew toolkit (Interactive Chat, RAG search and logbook tab selections) */}
+              <section className="xl:col-span-3 xl:h-[calc(100vh-320px)] flex flex-col gap-4" id="right-toolkit-column">
+                {/* Selector Tab Buttons bar */}
+                <div className="bg-white border border-slate-200 p-1.5 rounded-xl flex gap-1 shadow-xs">
                 <button
                   onClick={() => setActiveToolTab("chat")}
                   className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
@@ -460,6 +466,7 @@ export default function App() {
               </div>
             </section>
 
+            </div>
           </div>
         )}
       </main>

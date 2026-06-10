@@ -18,7 +18,10 @@ import {
   Loader2,
   Lock,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  FileText,
+  Copy,
+  X
 } from "lucide-react";
 
 interface DiagnosisReportProps {
@@ -42,6 +45,8 @@ export default function DiagnosisReport({
   const [feedbackRating, setFeedbackRating] = useState<"helpful" | "unhelpful" | null>(null);
   const [feedbackText, setFeedbackText] = useState("");
   const [submittingFeedback, setSubmittingFeedback] = useState(false);
+  const [showSapModal, setShowSapModal] = useState(false);
+  const [copiedSapText, setCopiedSapText] = useState(false);
 
   // Triggering diagnosis
   const handleDiagnose = (e: React.FormEvent) => {
@@ -58,6 +63,50 @@ export default function DiagnosisReport({
     setFeedbackText("");
     // Clear selection
     setFeedbackRating(null);
+  };
+
+  const generateSapLogText = () => {
+    if (!report || !asset) return "";
+    return `=== TATA STEEL PLANT MAINTENANCE WORKLOG ENTRY ===
+SYSTEM: Tata Steel Maintenance Wizard - AI SUPPORT
+NOTIFICATION RECAP: Active Mechanical/Process Interruption
+--------------------------------------------------
+Notification Type: M2 (Malfunction Report) / Plant: 1000
+Functional Loc: JSD-PH2-${asset.area.toUpperCase().replace(/\s+/g, '-')}
+Equipment ID: ${asset.id.toUpperCase()} - ${asset.name}
+Interruption Delay Penalty: $${asset.delayCostPerHour.toLocaleString()}/Hr
+
+DIAGNOSED FAULT:
+${report.probableFault}
+
+PRIMARY CAUSE & RCA ORIGIN:
+- ${report.rootCauseAnalysis.primaryCause}
+Flagged Telemetry Sensors: ${report.rootCauseAnalysis.contributingSensors.join(", ") || "None"}
+Downstream Bottleneck Allocation: ${report.priorityAnalysis.bottleneckStatus}
+
+CRITICAL ACTION PLAN TASKS (SOP COMPLIANCE):
+Immediate Core Actions (Online Operations):
+${report.maintenancePlan.immediateActions.map((a, i) => `  ${i + 1}. [ ] ${a}`).join("\n")}
+
+Shutdown Maintenance Requirements:
+${report.maintenancePlan.shutDownActions.map((a, i) => `  ${i + 1}. [ ] ${a}`).join("\n")}
+
+SPARES CONFIGURATION & PROCUREMENT:
+${report.maintenancePlan.spareProcurementStrategy}
+
+TRACED REFERENCE SOURCES (Explainability Snippets):
+${report.sourcesReferenced.map(s => ` - [${s.type}] ${s.title}: "${s.snippet.trim().substring(0, 100).replace(/\n/g, ' ')}..."`).join("\n")}
+--------------------------------------------------
+Logged by Senior Maintenance Engineer
+Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch)
+==================================================`;
+  };
+
+  const handleCopySapText = () => {
+    const text = generateSapLogText();
+    navigator.clipboard.writeText(text);
+    setCopiedSapText(true);
+    setTimeout(() => setCopiedSapText(false), 2000);
   };
 
   const getRiskColor = (risk: string) => {
@@ -181,6 +230,19 @@ export default function DiagnosisReport({
                     <span>Analyzed & Synthesized automatically by Gemini-3.5-Flash</span>
                   </div>
                 </div>
+              </div>
+
+              {/* ACTION: Generate SAP Work Order Button */}
+              <div className="flex justify-end pt-1">
+                <button
+                  type="button"
+                  id="btn-generate-sap-wo"
+                  onClick={() => setShowSapModal(true)}
+                  className="px-3.5 py-1.5 bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-700 hover:text-slate-950 rounded-lg text-xs font-bold font-mono inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer"
+                >
+                  <FileText className="h-3.5 w-3.5 text-indigo-600" />
+                  <span>Format SAP PM Shift Log</span>
+                </button>
               </div>
 
               {/* RCA Details Grid */}
@@ -467,6 +529,64 @@ export default function DiagnosisReport({
           )}
         </div>
       )}
+
+      {/* SAP PM Work Order Modal Overlay */}
+      {showSapModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-feed">
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
+            <div className="bg-slate-950 text-white p-4 flex items-center justify-between border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-blue-400" />
+                <span className="font-sans font-extrabold text-sm uppercase tracking-wide">
+                  SAP PM Work Notification Formatter
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSapModal(false)}
+                className="p-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded transition cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            
+            <div className="p-4 md:p-6 space-y-4 overflow-y-auto flex-1 text-xs text-slate-700">
+              <p className="text-slate-500 leading-relaxed font-sans">
+                This structured digital maintenance entry matches standard SAP PM templates (Malfunction Notification type M2). Copied worklogs can be quickly pasted directly into your shift handoff dashboard or Tata Steel's ERP:
+              </p>
+
+              <div className="relative">
+                <pre className="bg-slate-50 text-slate-700 border border-slate-200 rounded-xl p-4 font-mono text-[9px] leading-relaxed overflow-x-auto whitespace-pre-wrap select-all max-h-[45vh]">
+                  {generateSapLogText()}
+                </pre>
+                
+                <button
+                  onClick={handleCopySapText}
+                  className={`absolute top-2 right-2 px-3 py-1.5 rounded-lg text-[10px] font-bold font-mono tracking-wide border flex items-center gap-1 transition ${
+                    copiedSapText 
+                      ? "bg-emerald-50 text-emerald-700 border-emerald-300" 
+                      : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50 cursor-pointer"
+                  }`}
+                >
+                  <Copy className="h-3 w-3" />
+                  <span>{copiedSapText ? "Copied to Clipboard!" : "Copy Worklog"}</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 px-4 md:px-6 py-3 border-t border-slate-200 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowSapModal(false)}
+                className="px-4 py-2 bg-slate-900 border border-slate-950 text-white hover:bg-slate-800 text-xs font-bold rounded-xl transition cursor-pointer"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
