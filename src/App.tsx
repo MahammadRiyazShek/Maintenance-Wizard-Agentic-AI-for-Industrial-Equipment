@@ -16,6 +16,8 @@ import LogbookBrowser from "./components/LogbookBrowser.tsx";
 import KBBrowser from "./components/KBBrowser.tsx";
 import SystemDocumentation from "./components/SystemDocumentation.tsx";
 import PlantFlowVisualizer from "./components/PlantFlowVisualizer.tsx";
+import SandboxSimulator from "./components/SandboxSimulator.tsx";
+import ShiftHandoffModal from "./components/ShiftHandoffModal.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -49,7 +51,7 @@ export default function App() {
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
   
   // Tab within the Operations Toolkit (Right side)
-  const [activeToolTab, setActiveToolTab] = useState<"chat" | "rag" | "logbook">("chat");
+  const [activeToolTab, setActiveToolTab] = useState<"chat" | "rag" | "logbook" | "sandbox">("chat");
   const [showDocsModal, setShowDocsModal] = useState<boolean>(false);
   
   // Key config interface
@@ -325,6 +327,8 @@ export default function App() {
             <span>{apiActive ? "Gemini 3.5: Secure Link" : "Cognitive Simulator Mode"}</span>
           </div>
 
+          <ShiftHandoffModal assets={assets} alerts={alerts} logbook={logbook} />
+
           <button
             onClick={() => setShowDocsModal(!showDocsModal)}
             id="btn-show-system-docs"
@@ -438,6 +442,18 @@ export default function App() {
                   <FileText className="h-3.5 w-3.5" />
                   <span>Logbook</span>
                 </button>
+
+                <button
+                  onClick={() => setActiveToolTab("sandbox")}
+                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                    activeToolTab === "sandbox"
+                      ? "bg-slate-900 text-white shadow-xs"
+                      : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
+                  }`}
+                >
+                  <Cpu className="h-3.5 w-3.5" />
+                  <span>Sandbox</span>
+                </button>
               </div>
 
               {/* Active Tab body box */}
@@ -461,6 +477,13 @@ export default function App() {
                     assets={assets}
                     logbook={logbook}
                     onAddLog={handleAddLogbookEntry}
+                  />
+                )}
+
+                {activeToolTab === "sandbox" && (
+                  <SandboxSimulator
+                    asset={activeAsset}
+                    onApplySimulatedTelemetry={handleUpdateTelemetry}
                   />
                 )}
               </div>
