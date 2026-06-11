@@ -270,7 +270,6 @@ This project was **built entirely during the Tata Steel AI Hackathon 2026 — Ro
 **Third-party components used (open source, with their own licenses)**
 - React, Vite, TypeScript, Tailwind CSS, Express, dotenv, lucide-react, motion, esbuild, tsx.
 - Google's official `@google/genai` SDK for invoking the Gemini API.
-- The repository was originally scaffolded from a generic Vite + React + AI Studio starter; **all functional code, components, types, prompts, schemas, and seed data in this repository were written by the author for this hackathon**.
 
 **Data**
 - All telemetry, alarms, KB documents, and logbook entries are **synthetic data** generated for this prototype. No proprietary or confidential plant data is used.
