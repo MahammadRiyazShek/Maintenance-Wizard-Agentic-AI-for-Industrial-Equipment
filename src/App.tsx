@@ -343,12 +343,12 @@ export default function App() {
       {/* Main Container screen */}
       <main className="flex-1 overflow-hidden p-4 md:p-6" id="dashboard-viewport">
         {showDocsModal ? (
-          /* Render full hackathon explanation doc */
+          /* Render full technical explanation manual */
           <div className="bg-white rounded-2xl border border-slate-200 shadow-lg p-6 max-h-[85vh] overflow-y-auto max-w-5xl mx-auto animate-feed">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
               <h3 className="font-sans font-bold text-lg text-slate-800 flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-indigo-600" />
-                Tata Steel Hackathon documentation dossier
+                Maintenance Wizard — System & Operations Manual
               </h3>
               <button
                 onClick={() => setShowDocsModal(false)}

@@ -9,7 +9,7 @@ export default function SystemDocumentation() {
         <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600 rounded-full blur-3xl opacity-25"></div>
         <div className="relative z-10 space-y-3">
           <div className="inline-flex items-center gap-2 bg-blue-500/20 px-3 py-1 rounded-full text-blue-300 border border-blue-500/30 text-xs font-mono">
-            <span>TATA STEEL HACKATHON DELIVERABLE</span>
+            <span>TATA STEEL INDUSTRIAL OPERATIONS SUITE</span>
           </div>
           <h1 className="text-3xl font-sans font-bold tracking-tight">System Architecture & Technical Design</h1>
           <p className="text-slate-300 text-sm max-w-2xl">
