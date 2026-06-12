@@ -18,6 +18,7 @@ import SystemDocumentation from "./components/SystemDocumentation.tsx";
 import PlantFlowVisualizer from "./components/PlantFlowVisualizer.tsx";
 import SandboxSimulator from "./components/SandboxSimulator.tsx";
 import ShiftHandoffModal from "./components/ShiftHandoffModal.tsx";
+import MLEnginePanel from "./components/MLEnginePanel.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -36,7 +37,8 @@ import {
   ExternalLink,
   ChevronRight,
   Key,
-  Cpu
+  Cpu,
+  Binary
 } from "lucide-react";
 
 export default function App() {
@@ -51,7 +53,7 @@ export default function App() {
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
   
   // Tab within the Operations Toolkit (Right side)
-  const [activeToolTab, setActiveToolTab] = useState<"chat" | "rag" | "logbook" | "sandbox">("chat");
+  const [activeToolTab, setActiveToolTab] = useState<"chat" | "rag" | "logbook" | "sandbox" | "ml-engine">("chat");
   const [showDocsModal, setShowDocsModal] = useState<boolean>(false);
   
   // Key config interface
@@ -406,22 +408,22 @@ export default function App() {
               {/* Columns 9-12: Maintenance crew toolkit (Interactive Chat, RAG search and logbook tab selections) */}
               <section className="xl:col-span-3 xl:h-[calc(100vh-320px)] flex flex-col gap-4" id="right-toolkit-column">
                 {/* Selector Tab Buttons bar */}
-                <div className="bg-white border border-slate-200 p-1.5 rounded-xl flex gap-1 shadow-xs">
+                <div className="bg-white border border-slate-200 p-1 rounded-xl flex flex-wrap gap-1 shadow-xs">
                 <button
                   onClick={() => setActiveToolTab("chat")}
-                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 min-w-[70px] py-1.5 px-1.5 rounded-lg text-[10.5px] font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
                     activeToolTab === "chat"
                       ? "bg-slate-900 text-white shadow-xs"
                       : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
                   }`}
                 >
                   <MessageSquare className="h-3.5 w-3.5" />
-                  <span>Interactive Chat</span>
+                  <span>Chat</span>
                 </button>
 
                 <button
                   onClick={() => setActiveToolTab("rag")}
-                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 min-w-[70px] py-1.5 px-1.5 rounded-lg text-[10.5px] font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
                     activeToolTab === "rag"
                       ? "bg-slate-900 text-white shadow-xs"
                       : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
@@ -433,19 +435,19 @@ export default function App() {
 
                 <button
                   onClick={() => setActiveToolTab("logbook")}
-                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 min-w-[70px] py-1.5 px-1.5 rounded-lg text-[10.5px] font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
                     activeToolTab === "logbook"
                       ? "bg-slate-900 text-white shadow-xs"
                       : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
                   }`}
                 >
                   <FileText className="h-3.5 w-3.5" />
-                  <span>Logbook</span>
+                  <span>Log</span>
                 </button>
 
                 <button
                   onClick={() => setActiveToolTab("sandbox")}
-                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                  className={`flex-1 min-w-[70px] py-1.5 px-1.5 rounded-lg text-[10.5px] font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
                     activeToolTab === "sandbox"
                       ? "bg-slate-900 text-white shadow-xs"
                       : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
@@ -453,6 +455,18 @@ export default function App() {
                 >
                   <Cpu className="h-3.5 w-3.5" />
                   <span>Sandbox</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveToolTab("ml-engine")}
+                  className={`flex-1 min-w-[70px] py-1.5 px-1.5 rounded-lg text-[10.5px] font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
+                    activeToolTab === "ml-engine"
+                      ? "bg-indigo-600 text-white shadow-xs"
+                      : "text-indigo-600 hover:bg-indigo-50 border border-indigo-100"
+                  }`}
+                >
+                  <Binary className="h-3.5 w-3.5" />
+                  <span>ML Rigor</span>
                 </button>
               </div>
 
@@ -485,6 +499,10 @@ export default function App() {
                     asset={activeAsset}
                     onApplySimulatedTelemetry={handleUpdateTelemetry}
                   />
+                )}
+
+                {activeToolTab === "ml-engine" && (
+                  <MLEnginePanel asset={activeAsset} />
                 )}
               </div>
             </section>

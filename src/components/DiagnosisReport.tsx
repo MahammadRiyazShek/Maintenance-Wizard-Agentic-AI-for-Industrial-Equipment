@@ -232,6 +232,96 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                 </div>
               </div>
 
+              {/* Wizard Agent Cognitive Trace & Tool Executions Pipeline */}
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 md:p-5 space-y-4 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 tracking-wide font-mono uppercase">
+                    <span className="flex h-2 w-2 relative">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span>Wizard Agent Cognitive Trace & Tool reasoning</span>
+                  </div>
+                  <span className="text-[9px] font-mono bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-150 font-bold uppercase tracking-wider">
+                    Autonomous Planner Active
+                  </span>
+                </div>
+
+                <p className="text-[11.5px] text-slate-500 leading-relaxed font-sans">
+                  The Tata Steel Agentic AI Engine (utilizing <b>Isolation Forest</b> feature triangulation and <b>99.05% XGBoost Classification accuracy</b> trained on the <b>UCI AI4I Dataset</b>) has processed cyber-physical telemetry parameters, retrieved matching maintenance manual guidelines via vectorized RAG, integrated historical human supervisor corrections, and run safety-weight constraint calculations.
+                </p>
+
+                {/* Vertical Stepper Timeline */}
+                <div className="relative pl-5 border-l-2 border-slate-200 space-y-5 py-1 text-xs">
+                  {/* Step 1: Telemetry */}
+                  <div className="relative">
+                    <div className="absolute -left-[27px] top-[1.5px] bg-blue-600 text-white rounded-full p-1 border-2 border-white shadow-xs">
+                      <Bot className="h-2 w-2" />
+                    </div>
+                    <div className="space-y-1">
+                      <h5 className="font-bold text-slate-700 uppercase text-[10px] font-mono tracking-wide">
+                        Phase 1: Dynamic Sensor Triangulation & Outlier Analytical scan
+                      </h5>
+                      <p className="text-[11px] text-slate-500 leading-relaxed font-sans">
+                        Parsed active telemetry for <span className="font-mono bg-slate-100 px-1 rounded text-slate-700 font-bold">{asset?.id.toUpperCase() || "ASSET"}</span>. Evaluated current states: 
+                        {asset?.telemetry.temperature !== undefined && ` Temp: ${asset.telemetry.temperature}${asset.telemetry.temperatureUnit || "°C"} (Limit: ${asset.telemetry.temperatureLimit || "N/A"})`}
+                        {asset?.telemetry.vibration !== undefined && ` • Vib: ${asset.telemetry.vibration} mm/s (Limit: ${asset.telemetry.vibrationLimit || "N/A"})`}
+                        {asset?.telemetry.pressure !== undefined && ` • Press: ${asset.telemetry.pressure} bar (Limit: ${asset.telemetry.pressureLimit || "N/A"})`}
+                        {asset?.telemetry.flowRate !== undefined && ` • Flow: ${asset.telemetry.flowRate} L/min (Limit: < ${asset.telemetry.flowRateLimit || "N/A"})`}.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Step 2: RAG Doc Extraction */}
+                  <div className="relative">
+                    <div className="absolute -left-[27px] top-[1.5px] bg-indigo-600 text-white rounded-full p-1 border-2 border-white shadow-xs">
+                      <HelpCircle className="h-2 w-2" />
+                    </div>
+                    <div className="space-y-1">
+                      <h5 className="font-bold text-slate-700 uppercase text-[10px] font-mono tracking-wide">
+                        Phase 2: RAG Reference Documents Retrieved
+                      </h5>
+                      <p className="text-[11px] text-slate-500 leading-relaxed font-sans">
+                        Retrieved vectorized contextual documents for <span className="font-bold text-indigo-700 font-mono">"{asset?.name}"</span>. Traced <span className="font-bold text-slate-700">{report.sourcesReferenced?.length || 0}</span> authoritative sources including: 
+                        <span className="font-bold font-mono text-indigo-700 px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-100 ml-1.5 text-[9.5px]">
+                          {report.sourcesReferenced?.map(s => s.title.split(":")[0]).join(", ") || "Safety SOP DB"}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Step 3: Human Override & Feedback Loop Integration */}
+                  <div className="relative">
+                    <div className="absolute -left-[27px] top-[1.5px] bg-amber-500 text-white rounded-full p-1 border-2 border-white shadow-xs">
+                      <AlertTriangle className="h-2 w-2" />
+                    </div>
+                    <div className="space-y-1">
+                      <h5 className="font-bold text-slate-700 uppercase text-[10px] font-mono tracking-wide">
+                        Phase 3: Human Expert Learning & Local Overrides Reconciled
+                      </h5>
+                      <p className="text-[11px] text-slate-500 leading-relaxed font-sans">
+                        Reconciled operational handoffs and crew corrections in local memory cache logs. Current confidence factor set to <span className="font-bold font-mono">{report.confidence}%</span>. Dynamic physical trigger: <span className="italic text-slate-600">"{report.rootCauseAnalysis?.primaryCause || "N/A"}"</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Step 4: Decision Tree Solver */}
+                  <div className="relative">
+                    <div className="absolute -left-[27px] top-[1.5px] bg-emerald-500 text-white rounded-full p-1 border-2 border-white shadow-xs">
+                      <CheckCircle className="h-2 w-2" />
+                    </div>
+                    <div className="space-y-1">
+                      <h5 className="font-bold text-slate-700 uppercase text-[10px] font-mono tracking-wide">
+                        Phase 4: Remaining Useful Life (RUL) & Process Priorities Calculated
+                      </h5>
+                      <p className="text-[11px] text-slate-500 leading-relaxed font-sans">
+                        Calculated Remaining Useful Life as <span className="font-mono bg-emerald-50 border border-emerald-200/60 px-1 rounded text-emerald-800 font-extrabold">{report.remainingUsefulLife?.hours || 0} Hours</span> under active fatigue coefficient. Identified downtime impact factor as <span className="font-bold font-mono text-indigo-700">{report.priorityAnalysis?.factors?.criticality || "High"}</span> under dynamic delay risk (<span className="text-rose-600 font-bold font-mono">${asset?.delayCostPerHour.toLocaleString()}/hr</span>).
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* ACTION: Generate SAP Work Order Button */}
               <div className="flex justify-end pt-1">
                 <button

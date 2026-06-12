@@ -256,6 +256,163 @@ function generateSimulatedDiagnosis(
         }
       ]
     };
+  } else if (asset.id === "hsm-01") {
+    // Hot Strip Mill Work Roll Bearing Anomaly
+    const temp = asset.telemetry.temperature;
+    const vib = asset.telemetry.vibration;
+    const tempLimit = asset.telemetry.temperatureLimit;
+    const vibLimit = asset.telemetry.vibrationLimit;
+
+    let safeHours = 120;
+    if (temp > 80 || vib > 4.0) safeHours = 8;
+    else if (temp > 70 || vib > 3.0) safeHours = 48;
+
+    const risk = temp > tempLimit || vib > vibLimit ? "Critical" : (temp > tempLimit * 0.95 || vib > vibLimit * 0.9) ? "High" : temp > 72 ? "Medium" : "Low";
+
+    let primaryCause = "Work roll high shear loads leading to micro-spalling of rolling elements and synthetic lithium grease layer cracking.";
+    if (activeCorrection) {
+      primaryCause = `EXPERT FIELD CORRECTION VERIFIED: ${activeCorrection}`;
+    } else if (hasNotes) {
+      primaryCause += ` Integrated operator observation: "${userNotes}"`;
+    }
+
+    return {
+      assetId: asset.id,
+      alertId: alert ? alert.id : undefined,
+      timestamp: new Date().toISOString(),
+      probableFault: "Hot Strip Mill Work Roll Bearing Outer Race Spalling & Thermal Dissipation Anomaly",
+      confidence: activeCorrection ? 100 : 90,
+      rootCauseAnalysis: {
+        primaryCause,
+        contributingSensors: ["Bearing Housing Thermocouple HSM-TC-WR1", "Vibration Sensor HSM-WR-VIB1-R"],
+        processDefects: [
+          "Dynamic work roll slab overload shear stress",
+          "External roll water coolant spray nozzle partial scale occlusion",
+          "Lithium grease mechanical shear thin-out"
+        ]
+      },
+      remainingUsefulLife: {
+        hours: safeHours,
+        warningMessage: temp > 80 
+          ? "CRITICAL HEAT BUILDUP: Bearing seizure risk imminent (>85°C threshold). Roll stand jam will cause roll stand micro-cracking and massive downstream work delays." 
+          : "Monitor work stand vibrations during heavy steel sheet drag cycles.",
+        catastrophicFailureRisk: risk
+      },
+      priorityAnalysis: {
+        riskClassification: risk,
+        urgencyScore: temp > 80 || vib > 4.0 ? 8 : 4,
+        bottleneckStatus: "Roughing Stand work roll bearings seizure forces roll replacement and full mill delay penalty. Production delay costs: $22,000 per hour of delay.",
+        factors: {
+          criticality: "Hot Strip Mill Primary Roughening Assembly (HSM-01)",
+          delaySeverity: "Highly Severe Delay Overhead ($22,000/hr)",
+          sparesAvailability: "4 units currently available in plant warehouse",
+          leadTime: "60 days standard factory-order lead time"
+        }
+      },
+      maintenancePlan: {
+        immediateActions: [
+          "Activate supplementary external water spray nozzles to reduce work roll housing temperatures.",
+          "Force an automatic lubricant purge cycle to pump fresh lithium grease (Klüberplex BE 31-502).",
+          "Audit slab thickness reduction force parameters on the control room screen."
+        ],
+        shutDownActions: [
+          "Bring milling stand to complete decelerated stop during next scheduled roll changeover.",
+          "Perform complete disassembly of roll housing, replace work roll bearing with Model WRB-SL90, and inspect guide clearance tolerances."
+        ],
+        monitoringInstructions: [
+          "Run physical checks on water cooling pressure sensors and trace bearing temperature spikes."
+        ],
+        spareProcurementStrategy: "Warehouse A Bin-4 lists 4 WRB-SL90 synthetic bearings in active storage, crossing the safety level of 2 units. Request stock release to roll changeover zone."
+      },
+      sourcesReferenced: [
+        {
+          type: "SOP",
+          title: "SOP-301-HSM: Rolling Bearing Thermal Overload Prevention",
+          snippet: "Maintain roll bearing housing temperature strictly beneath 85°C. For thermal anomalies, deploy auxiliary cooling sprays and apply lubricant purge cycle."
+        },
+        {
+          type: "Historical_Record",
+          title: "Failure Record Archive: HSM Stand 1 Bearing Seizure Damage (October 2025)",
+          snippet: "Rapid thermal rise over 15min went unchecked. Bearing split, completely fusing rollers to shafts, requiring custom mechanical extraction and costing over $120k in destroyed equipment."
+        }
+      ]
+    };
+  } else if (asset.id === "cogc-03") {
+    // Coke Oven Gas Compressor Anomaly
+    const temp = asset.telemetry.temperature;
+    const vib = asset.telemetry.vibration;
+    const tempLimit = asset.telemetry.temperatureLimit;
+    const vibLimit = asset.telemetry.vibrationLimit;
+
+    let safeHours = 240;
+    if (temp > 105 || vib > 2.8) safeHours = 12;
+    else if (temp > 95 || vib > 2.2) safeHours = 72;
+
+    const risk = temp > tempLimit || vib > vibLimit ? "Critical" : (temp > tempLimit * 0.95 || vib > vibLimit * 0.9) ? "High" : temp > 93 ? "Medium" : "Low";
+
+    let primaryCause = "Solenoid valve fluctuations creating intake gas pulsation, inducing abnormal rotor deflection frequencies.";
+    if (activeCorrection) {
+      primaryCause = `EXPERT FIELD CORRECTION VERIFIED: ${activeCorrection}`;
+    } else if (hasNotes) {
+      primaryCause += ` Integrated operator observation: "${userNotes}"`;
+    }
+
+    return {
+      assetId: asset.id,
+      alertId: alert ? alert.id : undefined,
+      timestamp: new Date().toISOString(),
+      probableFault: "Gas Compressor Rotor High-Frequency Axial Wobble & Impeller Contact Threat",
+      confidence: activeCorrection ? 100 : 91,
+      rootCauseAnalysis: {
+        primaryCause,
+        contributingSensors: ["Roto-Dynamic Shaft Displacement Probe COG-DT-3", "Aux Discharge Pressure Sensor COGC-P3-OUT"],
+        processDefects: [
+          "Intake gas moisture/tar condensates build-up",
+          "Inlet solenoid strainer partial clogging",
+          "Dynamic uncompensated compression wave surge"
+        ]
+      },
+      remainingUsefulLife: {
+        hours: safeHours,
+        warningMessage: temp > 105 
+          ? "CRITICAL IMPELLER THREAT: Rotor radial displacement approaching casing contact risk. Operating past 110°C limit may cause catastrophic blade disintegration."
+          : "Keep track of intake line tar traps and regular solenoid response times.",
+        catastrophicFailureRisk: risk
+      },
+      priorityAnalysis: {
+        riskClassification: risk,
+        urgencyScore: temp > 105 || vib > 2.8 ? 7 : 3,
+        bottleneckStatus: "Utilities gas supply compression drops, impacting blast furnace thermal balances down the line. Delay penalty: $9,500/hr.",
+        factors: {
+          criticality: "Utilities Fuel Gas Distribution Core Component (COGC-03)",
+          delaySeverity: "Moderate Delay Penalty ($9,500/hr)",
+          sparesAvailability: "2 solenoid intake valves ready in local inventory",
+          leadTime: "7 days supplier factory-dispatch timeline"
+        }
+      },
+      maintenancePlan: {
+        immediateActions: [
+          "Verify gas intake volume and clear any trapped moisture condensates at the separator stage.",
+          "Perform remote calibration testing of the intake pressure regulator valve.",
+          "Check voltage and signal parameters of the SV-COGC solenoid control circuit."
+        ],
+        shutDownActions: [
+          "Bypass utilities gas line through secondary redundant storage vessels.",
+          "Shut down Compressor #3 rotor, strip shroud assembly, perform rotor blade guide clearances alignments, and swap out the intake solenoid."
+        ],
+        monitoringInstructions: [
+          "Log continuous shaft thermal levels and track blade dynamic frequency charts closely."
+        ],
+        spareProcurementStrategy: "Warehouse Bin-9 lists 2 SV-COGC solenoid spare units. Safety level is 1 unit. Request immediately from spares distribution lead."
+      },
+      sourcesReferenced: [
+        {
+          type: "Spare_DB",
+          title: "Steel Plant Spare Parts Inventory and Procurement Lead Times",
+          snippet: "Compressor Solenoid Valve (Model SV-COGC): Current active warehouse stock is 2 units. Lead time is 7 days. Recommended safety stock is 1 unit."
+        }
+      ]
+    };
   } else {
     // Custom fallbacks for other healthy objects or general predictive analysis
     const risk = asset.status === "Critical" ? "Critical" : asset.status === "Warning" ? "Medium" : "Low";
@@ -347,6 +504,29 @@ function generateSimulatedChatResponse(
         return "Reviewing casting oscillator spares:\n- Bearing Model: FAG 22352-TB double-row spherical roller bearing.\n- Storage Inventory: 1 unit available in Warehouse B (Bin-12).\n- Procurement Lead Time: 45 days.\n- Dispatch Advice: Since this is our only spare, replace only if backpressure lubrication flush fails to reduce vibrations beneath 5.0 mm/s. Prepare secondary import order now.";
       }
       return `Welcome to CC-02 Oscillator Chat support. Sensor logs identify a Warning Status with ${asset.telemetry.vibration} mm/s vibration rating.\nYou can ask about 'vibration boundaries', 'clamping torque', or 'spherical roller bearing spares compatibility'.`;
+    }
+
+    if (asset.id === "hsm-01") {
+      if (text.includes("limit") || text.includes("temperature") || text.includes("temp") || text.includes("vibration")) {
+        return `Regarding Hot Strip Mill Roll Bearing Stand #1, under SOP-301-HSM:\n- The critical bearing housing thermal limit is 85°C, and safe vibrations must stay below 4.5 mm/s.\n- Current telemetry registers Temp: ${asset.telemetry.temperature}°C, Vib: ${asset.telemetry.vibration} mm/s.\n- If thresholds are crossed, IMMEDIATELY launch water spray purges and high-temp synthetic lithium purges; roll seize risks split rolling elements (loss: $120k).`;
+      }
+      if (text.includes("spare") || text.includes("bearing") || text.includes("stock") || text.includes("parts")) {
+        return "Checking the stock database for Hot Strip Mill Roll Bearings:\n- Spare Part: Model WRB-SL90\n- Stock status: 4 units available in Warehouse A (above safety level of 2 units).\n- Procurement Lead Time: 60 days standard factory cycle.\n- Requisition advice: Ready for roll changeover allocation.";
+      }
+      if (text.includes("lubrication") || text.includes("grease") || text.includes("purge")) {
+        return "SOP-301-HSM guidelines mandate high-temperature synthetic chemical lithium-complex grease. Purging forced grease pushes contaminants out and serves to lower local friction dissipation in the housing.";
+      }
+      return `Welcome to the Hot Strip Mill Roll Stand #1 Console. Current readings are Temp: ${asset.telemetry.temperature}°C and Vib: ${asset.telemetry.vibration} mm/s. Safe operation is monitored. Ask about 'limits', 'lubrication', or 'bearing spares'.`;
+    }
+
+    if (asset.id === "cogc-03") {
+      if (text.includes("limit") || text.includes("pressure") || text.includes("vibration") || text.includes("temperature")) {
+        return `For Coke Oven Gas Compressor #3 rotors:\n- Thermal limit is 110°C, vibration limit is 3.0 mm/s, pressure limit is 17.0 bar.\n- Current status represents Temperature: ${asset.telemetry.temperature}°C, Vibration: ${asset.telemetry.vibration} mm/s, Pressure: ${asset.telemetry.pressure} bar.\n- Spiking vibration indicates shaft misalignment or blade deposits. Ask about 'solenoid valve' or check clearances.`;
+      }
+      if (text.includes("valve") || text.includes("solenoid") || text.includes("spare") || text.includes("parts")) {
+        return "Checking Gas Compressor parts status:\n- Solenoid Part: Model SV-COGC (Compressor Solenoid Valve)\n- Stock Availability: 2 units in stock.\n- Lead Time: 7 days. Recommended safety: 1 unit.\n- Intake solenoid oscillation is known to create severe rotor frequency waves; replace if valve pressure fluctuates.";
+      }
+      return `Welcome to Gas Compressor Compressor #3 Diagnostic logs support. Operating values indicate Temperature: ${asset.telemetry.temperature}°C, Pressure: ${asset.telemetry.pressure} bar.\nYou can query 'limit boundaries', 'solenoid valve spares', or 'historical anomalies'.`;
     }
   }
 
