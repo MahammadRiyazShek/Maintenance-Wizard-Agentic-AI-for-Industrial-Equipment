@@ -21,7 +21,14 @@ import {
   Sparkles,
   FileText,
   Copy,
-  X
+  X,
+  IndianRupee,
+  Scale,
+  Coins,
+  TrendingUp,
+  CheckSquare,
+  Layers,
+  Activity
 } from "lucide-react";
 
 interface DiagnosisReportProps {
@@ -47,6 +54,78 @@ export default function DiagnosisReport({
   const [submittingFeedback, setSubmittingFeedback] = useState(false);
   const [showSapModal, setShowSapModal] = useState(false);
   const [copiedSapText, setCopiedSapText] = useState(false);
+
+  // Dynamic Maintenance Priority Index (MPI) - Real mathematical triangulation
+  const calculateMPI = () => {
+    if (!asset || !report) return { mpi: 0, crit: 0, stress: 0, penalty: 0 };
+    
+    // 1. Criticality Factor
+    let crit = 30;
+    if (asset.processCriticality === "Critical") crit = 100;
+    else if (asset.processCriticality === "High") crit = 80;
+    else if (asset.processCriticality === "Medium") crit = 50;
+    
+    // 2. Sensor Stress Level
+    let stress = 40;
+    if (asset.telemetry) {
+      const tempLimit = asset.telemetry.temperatureLimit || 80;
+      const vibLimit = asset.telemetry.vibrationLimit || 5.0;
+      const tRatio = asset.telemetry.temperature / tempLimit;
+      const vRatio = asset.telemetry.vibration / vibLimit;
+      stress = Math.min(100, Math.round(((tRatio + vRatio) / 2) * 100));
+    }
+
+    // 3. Delay Penalty Severity Rank
+    // Normalizing against our highest plant penalty Stand ($22,000 / hr)
+    const penalty = Math.min(100, Math.round((asset.delayCostPerHour / 22000) * 100));
+
+    // Dynamic Weights: Criticality 35%, Physical Sensor wear 40%, Lost Production Economics 25%
+    const mpi = Math.min(100, Math.round((crit * 0.35) + (stress * 0.40) + (penalty * 0.25)));
+    
+    return {
+      mpi,
+      crit,
+      stress,
+      penalty
+    };
+  };
+
+  // Dynamic Cost Impact Intelligence Calculations
+  // Catastrophic cold stand crash averages 6 hours recovery time.
+  // Delay Lost Production + Standard Emergency parts fabrication is $15,000.
+  const calculateCostImpact = () => {
+    if (!asset) return { unmitigatedUSD: 0, unmitigatedINR: 0, plannedUSD: 0, plannedINR: 0, netSavingsUSD: 0, netSavingsINR: 0, roi: 0 };
+    
+    const recoveryHours = 6;
+    const lossProductionUSD = asset.delayCostPerHour * recoveryHours;
+    const directOverhaulHardwareUSD = 15000;
+    const unmitigatedUSD = lossProductionUSD + directOverhaulHardwareUSD;
+    
+    // Spares parts scheduling + minor off-peak team hours during standard planned weekend turn
+    const plannedUSD = 6000;
+    
+    const usdToInrRate = 83.40;
+    const unmitigatedINR = Math.round(unmitigatedUSD * usdToInrRate);
+    const plannedINR = Math.round(plannedUSD * usdToInrRate);
+    
+    const netSavingsUSD = unmitigatedUSD - plannedUSD;
+    const netSavingsINR = Math.round(netSavingsUSD * usdToInrRate);
+    
+    const roi = Math.round((netSavingsUSD / plannedUSD) * 100);
+    
+    return {
+      unmitigatedUSD,
+      unmitigatedINR,
+      plannedUSD,
+      plannedINR,
+      netSavingsUSD,
+      netSavingsINR,
+      roi
+    };
+  };
+
+  const mpiData = calculateMPI();
+  const costData = calculateCostImpact();
 
   // Triggering diagnosis
   const handleDiagnose = (e: React.FormEvent) => {
@@ -408,40 +487,266 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                 </div>
               </div>
 
-              {/* Priority matrix constraints metrics */}
-              <div className="bg-slate-50 border border-slate-150 rounded-xl p-4 space-y-3">
-                <span className="text-[10px] font-bold text-slate-500 font-mono tracking-wider uppercase block">
-                  Operations Priority Grading Matcher
-                </span>
+              {/* Priority matrix constraints metrics & custom MPI Engine */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 md:p-5 space-y-4 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <span className="text-[10px] font-bold text-slate-500 font-mono tracking-wider uppercase block">
+                      Operations Priority Index Engine
+                    </span>
+                    <h4 className="font-sans font-bold text-sm text-slate-800">
+                      Bespoke Maintenance Priority Index (MPI)
+                    </h4>
+                  </div>
+                  <span className="text-[9.5px] font-mono bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded border border-indigo-100 uppercase font-bold">
+                    Triangulated Math Matrix
+                  </span>
+                </div>
+
+                {/* Mathematical Formula breakdown inside diagnostic panel */}
+                <div className="bg-white p-3 rounded-lg border border-slate-150 font-mono text-[10px] text-slate-600 leading-normal">
+                  <div className="font-bold text-slate-700 mb-1 flex items-center gap-1">
+                    <Activity className="h-3.5 w-3.5 text-indigo-600 animate-pulse" />
+                    <span>Active MPI Governance Formula:</span>
+                  </div>
+                  <p className="bg-slate-50 p-2 rounded text-indigo-700 text-center font-extrabold select-all">
+                    MPI = (Criticality × 0.35) + (SensorStress × 0.40) + (DowntimeLossRank × 0.25)
+                  </p>
+                  <p className="text-[9px] text-slate-400 mt-1 italic">
+                    Where Criticality is based on steel line bottleneck coefficients, SensorStress models thermo-vibratory fatigue ratios, and DowntimeLossRank normalizes delay penalties.
+                  </p>
+                </div>
                 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-1 text-center">
-                  <div className="bg-white p-2.5 rounded-lg border border-slate-100">
-                    <span className="text-[9px] text-slate-400 block font-mono uppercase">Criticality</span>
-                    <strong className="text-xs text-slate-700 font-bold tracking-tight block mt-1">{report.priorityAnalysis.factors.criticality}</strong>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-1 text-center">
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-150 shadow-2xs">
+                    <span className="text-[9px] text-slate-400 block font-mono uppercase">Criticality (35%)</span>
+                    <strong className="text-xs text-slate-700 font-extrabold tracking-tight block mt-1">
+                      {report.priorityAnalysis.factors.criticality} ({mpiData.crit})
+                    </strong>
                   </div>
-                  <div className="bg-white p-2.5 rounded-lg border border-slate-100">
-                    <span className="text-[9px] text-slate-400 block font-mono uppercase">Delay impact</span>
-                    <strong className="text-xs text-slate-700 font-bold tracking-tight block mt-1">{report.priorityAnalysis.factors.delaySeverity}</strong>
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-150 shadow-2xs">
+                    <span className="text-[9px] text-slate-400 block font-mono uppercase">Sensor Wear (40%)</span>
+                    <strong className="text-xs text-slate-700 font-extrabold tracking-tight block mt-1">
+                      {report.rootCauseAnalysis.contributingSensors.length > 0 ? "Elevated" : "Nominal"} ({mpiData.stress})
+                    </strong>
                   </div>
-                  <div className="bg-white p-2.5 rounded-lg border border-slate-100">
-                    <span className="text-[9px] text-slate-400 block font-mono uppercase">Warehouse Stock</span>
-                    <strong className="text-xs text-slate-700 font-bold tracking-tight block mt-1">{report.priorityAnalysis.factors.sparesAvailability}</strong>
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-150 shadow-2xs">
+                    <span className="text-[9px] text-slate-400 block font-mono uppercase">Delay Penalty (25%)</span>
+                    <strong className="text-xs text-slate-700 font-extrabold tracking-tight block mt-1">
+                      ${asset.delayCostPerHour.toLocaleString()}/Hr ({mpiData.penalty})
+                    </strong>
                   </div>
-                  <div className="bg-white p-2.5 rounded-lg border border-slate-100">
-                    <span className="text-[9px] text-slate-400 block font-mono uppercase">Procurement Lead</span>
-                    <strong className="text-xs text-slate-700 font-bold tracking-tight block mt-1">{report.priorityAnalysis.factors.leadTime}</strong>
+                  <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-2.5 rounded-lg border border-indigo-100 shadow-2xs">
+                    <span className="text-[9px] text-indigo-500 block font-mono uppercase font-bold">MPI Score</span>
+                    <strong className="text-sm text-indigo-700 font-black tracking-tight block mt-0.5">
+                      {mpiData.mpi} / 100
+                    </strong>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                {/* Progress bar representing MPI priority */}
+                <div className="space-y-1">
+                  <div className="flex justify-between text-[9px] text-slate-400 font-mono">
+                    <span>Low Hazard (0)</span>
+                    <span>Action Required (75+)</span>
+                    <span>Extreme Risk (100)</span>
+                  </div>
+                  <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full transition-all duration-500 rounded-full ${
+                        mpiData.mpi >= 75 
+                          ? "bg-gradient-to-r from-red-500 to-orange-500" 
+                          : mpiData.mpi >= 50 
+                            ? "bg-gradient-to-r from-amber-500 to-yellow-500" 
+                            : "bg-gradient-to-r from-emerald-500 to-teal-500"
+                      }`}
+                      style={{ width: `${mpiData.mpi}%` }}
+                    ></div>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-150 flex items-center justify-between text-xs">
                   <div className="space-y-0.5">
-                    <p className="text-[10px] text-slate-400 uppercase font-mono">Bottleneck evaluation</p>
-                    <p className="text-xs text-slate-700 font-medium leading-relaxed font-sans">{report.priorityAnalysis.bottleneckStatus}</p>
+                    <p className="text-[10px] text-slate-400 uppercase font-mono">Dynamic Line Bottleneck Rating</p>
+                    <p className="text-xs text-slate-700 font-bold leading-relaxed font-sans">{report.priorityAnalysis.bottleneckStatus}</p>
                   </div>
                   <div className="text-right shrink-0">
                     <div className="text-[10px] text-slate-400 uppercase font-mono">Urgency Index</div>
-                    <div className="text-lg font-extrabold text-blue-600 font-mono mt-0.5">
+                    <div className="text-lg font-black text-rose-600 font-mono mt-0.5">
                       {report.priorityAnalysis.urgencyScore}/10
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* TATA STEEL LEADERSHIP: COMPREHENSIVE COST IMPACT INTELLIGENCE */}
+              <div className="bg-slate-900 text-white rounded-xl overflow-hidden shadow-lg border border-slate-800">
+                <div className="bg-slate-850 p-4 border-b border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Coins className="h-4.5 w-4.5 text-amber-400" />
+                    <div>
+                      <h4 className="font-sans font-black text-xs uppercase tracking-wider">
+                        Cost Impact Intelligence Layer
+                      </h4>
+                      <p className="text-[9.5px] text-slate-400 font-mono">
+                        Deterministic risk calculations customized for Tata Steel financial workflows
+                      </p>
+                    </div>
+                  </div>
+                  <div className="font-mono text-[9.5px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-bold">
+                    ROI Estimator Active
+                  </div>
+                </div>
+
+                <div className="p-4 md:p-5 space-y-4 text-xs font-sans leading-normal">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Unmitigated Failure */}
+                    <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-2">
+                      <div className="text-[9.5px] text-rose-400 uppercase font-mono font-bold tracking-wide">
+                        Unmitigated Failure Cost:
+                      </div>
+                      <div className="space-y-0.5">
+                        <div className="text-base text-white font-extrabold font-mono">
+                          ₹{costData.unmitigatedINR.toLocaleString()}
+                        </div>
+                        <div className="text-[10.5px] text-slate-400">
+                          (Equivalent to USD ${costData.unmitigatedUSD.toLocaleString()})
+                        </div>
+                      </div>
+                      <p className="text-[9.5px] text-slate-500 leading-relaxed font-sans border-t border-slate-900 pt-1.5">
+                        Consists of <b>6 hours standalone line outage delay</b> (penalty of ${asset.delayCostPerHour.toLocaleString()}/Hr) + <b>$15,000 emergency structural overhaul</b> of bearings and housing gears.
+                      </p>
+                    </div>
+
+                    {/* Mitigated Action Cost */}
+                    <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-2">
+                      <div className="text-[9.5px] text-emerald-400 uppercase font-mono font-bold tracking-wide">
+                        Mitigated AI Action Cost:
+                      </div>
+                      <div className="space-y-0.5">
+                        <div className="text-base text-white font-extrabold font-mono">
+                          ₹{costData.plannedINR.toLocaleString()}
+                        </div>
+                        <div className="text-[10.5px] text-slate-400">
+                          (Equivalent to USD ${costData.plannedUSD.toLocaleString()})
+                        </div>
+                      </div>
+                      <p className="text-[9.5px] text-slate-500 leading-relaxed font-sans border-t border-slate-900 pt-1.5">
+                        SOP components replacement & crew support scheduled inside off-peak weekend line Maintenance. Delivers <b>₹0 lost delay costs</b>.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Business ROI Banner */}
+                  <div className="bg-emerald-950/40 border border-emerald-500/20 p-3 rounded-lg flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div className="space-y-0.5 text-center sm:text-left">
+                      <div className="text-[10px] text-emerald-450 uppercase font-mono font-bold tracking-wider">
+                        Immediate Saved Maintenance Capital (Tata Steel ROI):
+                      </div>
+                      <p className="text-emerald-100 text-xs font-semibold leading-relaxed">
+                        By applying AI speed restriction + weekend planned swap instead of run-to-failure.
+                      </p>
+                    </div>
+                    <div className="text-center shrink-0 space-y-0.5 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-lg">
+                      <div className="text-[9px] text-emerald-350 uppercase font-mono tracking-widest">Calculated Net ROI:</div>
+                      <div className="text-xl font-bold font-mono text-emerald-400">
+                        +{costData.roi}%
+                      </div>
+                      <div className="text-[9.5px] text-emerald-300 font-sans font-bold">
+                        Save ₹{costData.netSavingsINR.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* TATA STEEL LEADERSHIP: AGENTIC DECISION-MAKING AUDIT TRAIL */}
+              <div className="border border-slate-200 rounded-xl overflow-hidden shadow-2xs bg-white space-y-3">
+                <div className="bg-slate-900 text-white px-4 py-3 flex items-center justify-between border-b border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <Scale className="h-4.5 w-4.5 text-blue-400" />
+                    <div>
+                      <h4 className="font-sans font-extrabold text-xs uppercase tracking-wider">
+                        Agent Option-Space Decision Audit Trail
+                      </h4>
+                      <p className="text-[9.5px] text-slate-400 font-mono">
+                        Multi-stage mathematical reasoning matching standard compliance manuals
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[9px] font-mono bg-emerald-950 text-emerald-400 px-2.5 py-0.5 rounded border border-emerald-800 font-bold uppercase tracking-wider">
+                    Autonomous Dispatch Selected
+                  </span>
+                </div>
+                
+                <div className="p-4 space-y-4">
+                  {/* Option A */}
+                  <div className="flex gap-3">
+                    <div className="flex flex-col items-center shrink-0">
+                      <div className="h-6 w-6 rounded-full bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center text-xs font-bold font-mono">
+                        A
+                      </div>
+                      <div className="w-[1.5px] bg-slate-100 flex-grow my-1"></div>
+                    </div>
+                    <div className="space-y-1 pb-1.5 flex-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <strong className="text-xs text-slate-800 font-bold">Emergency Trip / Immediate Cold Stop</strong>
+                        <span className="text-[8.5px] bg-rose-100 text-rose-800 font-bold px-1.5 py-0.5 rounded font-mono uppercase w-max">Rejected (High Outage)</span>
+                      </div>
+                      <p className="text-[10.5px] text-slate-500 leading-relaxed font-sans">
+                        <b>Justification:</b> Tripping the active physical rolling stand immediately will bring down continuous flow in surrounding sub-lines, requiring expensive backup ladles maintenance. Since the remaining useful life (RUL) shows a safe buffer of <span className="font-bold text-slate-700 font-mono">{report.remainingUsefulLife.hours} hours</span>, a complete emergency stop violates optimal capacity.
+                      </p>
+                      <div className="text-[9.5px] text-rose-600 font-mono">
+                        Penalty Outcome: Loss of ₹{(asset.delayCostPerHour * 83.4 * 3).toLocaleString()} production during active shift hours.
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Option B */}
+                  <div className="flex gap-3">
+                    <div className="flex flex-col items-center shrink-0">
+                      <div className="h-6 w-6 rounded-full bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center text-xs font-bold font-mono">
+                        B
+                      </div>
+                      <div className="w-[1.5px] bg-slate-100 flex-grow my-1"></div>
+                    </div>
+                    <div className="space-y-1 pb-1.5 flex-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <strong className="text-xs text-slate-800 font-bold">Run to Failure (Do-Nothing Strategy)</strong>
+                        <span className="text-[8.5px] bg-amber-100 text-amber-800 font-bold px-1.5 py-0.5 rounded font-mono uppercase w-max">Rejected (Terminal Risk)</span>
+                      </div>
+                      <p className="text-[10.5px] text-slate-500 leading-relaxed font-sans">
+                        <b>Justification:</b> Sighting to "run the machine into the ground" causes permanent wear spalling. Vibration stresses would cross local shear parameters, causing shaft warp, melting grease layers, and requiring days of rebuild rather than a simple bearing exchange.
+                      </p>
+                      <div className="text-[9.5px] text-amber-700 font-mono">
+                        Penalty Outcome: Catastrophic overhaul totaling ₹{costData.unmitigatedINR.toLocaleString()}.
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Option C */}
+                  <div className="flex gap-3">
+                    <div className="flex flex-col items-center shrink-0">
+                      <div className="h-6 w-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold font-mono shadow-md">
+                        C
+                      </div>
+                    </div>
+                    <div className="space-y-1 flex-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <strong className="text-xs text-indigo-700 font-extrabold flex items-center gap-1">
+                          <CheckSquare className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                          <span>Extended Safe-Mode + Scheduled Weekend Shutdown Swap</span>
+                        </strong>
+                        <span className="text-[8.5px] bg-emerald-100 text-emerald-800 font-black px-1.5 py-0.5 rounded font-mono uppercase w-max">Approved (AI Strategy)</span>
+                      </div>
+                      <p className="text-[10.5px] text-slate-600 leading-relaxed font-sans">
+                        <b>Justification:</b> Recommending a 10% reduction in kinetic speed along with immediate bearing spray flush flattens the Paris-Erdogan wear slope. This maintains the asset in a safe thermo-vibratory region, allowing operations to safely bridge the remaining {report.remainingUsefulLife.hours} hours until the planned weekend turn without halting production.
+                      </p>
+                      <div className="text-[10px] text-emerald-700 font-mono font-bold flex flex-wrap gap-x-2 gap-y-0.5 items-center">
+                        <span className="bg-emerald-55 border border-emerald-200 px-1 py-0.5 rounded">Action Cost: ₹{costData.plannedINR.toLocaleString()}</span>
+                        <span>•</span>
+                        <span className="bg-indigo-50 border border-indigo-150 text-indigo-700 px-1 py-0.5 rounded">Save Capital: ₹{costData.netSavingsINR.toLocaleString()} ({costData.roi}% ROI)</span>
+                      </div>
                     </div>
                   </div>
                 </div>

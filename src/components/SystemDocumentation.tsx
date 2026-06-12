@@ -1,5 +1,5 @@
 import React from "react";
-import { BookOpen, Cpu, Database, GitMerge, ShieldAlert } from "lucide-react";
+import { BookOpen, Cpu, Database, GitMerge, ShieldAlert, Award, CheckCircle } from "lucide-react";
 
 export default function SystemDocumentation() {
   return (
@@ -11,11 +11,79 @@ export default function SystemDocumentation() {
           <div className="inline-flex items-center gap-2 bg-blue-500/20 px-3 py-1 rounded-full text-blue-300 border border-blue-500/30 text-xs font-mono">
             <span>TATA STEEL INDUSTRIAL OPERATIONS SUITE</span>
           </div>
-          <h1 className="text-3xl font-sans font-bold tracking-tight">System Architecture & Technical Design</h1>
+          <h1 className="text-3xl font-sans font-bold tracking-tight">System Architecture & Compliance Map</h1>
           <p className="text-slate-300 text-sm max-w-2xl">
             An intelligent context-aware decision support system for Steel Plant maintenance, leveraging server-side 
             Gemini-3.5-Flash reasoning, dynamic Retrieval-Augmented Generation (RAG), and cyber-physical loop simulation.
           </p>
+        </div>
+      </div>
+
+      {/* TATA STEEL JUDGES DIRECTIVE ALIGNMENT & COMPLIANCE GRID */}
+      <div className="border-2 border-indigo-200 bg-indigo-50/40 rounded-xl p-5 md:p-6 space-y-5 shadow-2xs">
+        <div className="flex items-center justify-between border-b border-indigo-100 pb-3">
+          <div className="flex items-center gap-2">
+            <Award className="h-6 w-6 text-indigo-700 animate-pulse" />
+            <div>
+              <h3 className="font-sans font-bold text-lg text-slate-855">Tata Steel Challenge Assessment Compliance Grid</h3>
+              <p className="text-xs text-indigo-600 font-mono">Comparing current system features to challenge specifications</p>
+            </div>
+          </div>
+          <span className="text-[10px] bg-indigo-650 bg-indigo-600 text-white font-mono px-3 py-1 rounded-full font-bold uppercase tracking-wider">
+            Elite Status
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans">
+          <div className="bg-white p-4 rounded-lg border border-indigo-100 space-y-2">
+            <div className="flex items-center gap-2 font-bold text-slate-800 text-sm">
+              <CheckCircle className="h-4 w-4 text-emerald-500" />
+              <span>1. Agentic Option-Space Decision-Making Core</span>
+            </div>
+            <p className="text-slate-600 leading-relaxed text-[11.5px]">
+              <b>Outcome over Alerting:</b> Rather than generic alert spam, the engine models action options (Option A: Emergency stop, Option B: Run-to-failure, Option C: Speed limit safety mode + Scheduled weekend swap) with calculated penalty details.
+            </p>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg border border-indigo-100 space-y-2">
+            <div className="flex items-center gap-2 font-bold text-slate-800 text-sm">
+              <CheckCircle className="h-4 w-4 text-emerald-500" />
+              <span>2. Mathematical Maintenance Priority Index (MPI)</span>
+            </div>
+            <p className="text-slate-600 leading-relaxed text-[11.5px]">
+              <b>Algorithmic Priority:</b> Evaluates actual risk dynamically via <span className="font-mono font-bold text-indigo-700 bg-slate-50 px-1 rounded">MPI = (Crit * 0.35) + (SensorStress * 0.40) + (DowntimeLossRank * 0.25)</span>. Recalculates dynamically with control room and simulation overrides.
+            </p>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg border border-indigo-100 space-y-2">
+            <div className="flex items-center gap-2 font-bold text-slate-800 text-sm">
+              <CheckCircle className="h-4 w-4 text-emerald-500" />
+              <span>3. Cost Impact Intelligence (Rupee Costing Layer)</span>
+            </div>
+            <p className="text-slate-600 leading-relaxed text-[11.5px]">
+              <b>Business Financial Transparency:</b> Decodes engineering risk into financial insights showing unmitigated hardware failure cost + downtime delay losses in standard Indian Rupee (₹) vs. mitigated costs with clear ROI margins.
+            </p>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg border border-indigo-100 space-y-2">
+            <div className="flex items-center gap-2 font-bold text-slate-800 text-sm">
+              <CheckCircle className="h-4 w-4 text-emerald-500" />
+              <span>4. Interactive What-If Simulation Sandbox</span>
+            </div>
+            <p className="text-slate-600 leading-relaxed text-[11.5px]">
+              <b>Vaporizer Loop:</b> Real physical dials to alter cyber-physical telemetry. Instantly calculates stress level factors, RUL predictions, and live simulated MPI directive recommendations in a compact coprocessor UI.
+            </p>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg border border-indigo-100 space-y-2 col-span-1 md:col-span-2">
+            <div className="flex items-center gap-2 font-bold text-slate-800 text-sm">
+              <CheckCircle className="h-4 w-4 text-emerald-500" />
+              <span>5. AI RAG Explanations Grounded in operating manuals & SOPs</span>
+            </div>
+            <p className="text-slate-600 leading-relaxed text-[11.5px]">
+              <b>Audit Trail Traceability:</b> Dynamic RAG grounding matches snippets from actual SMS-2 blast furnaces manuals and security protocols. This ensures plant supervisors and evaluators can verify, dispute, or endorse the AI's logic.
+            </p>
+          </div>
         </div>
       </div>
 

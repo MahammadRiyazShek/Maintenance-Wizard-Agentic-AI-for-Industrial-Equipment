@@ -111,13 +111,25 @@ export default function SandboxSimulator({ asset, onApplySimulatedTelemetry }: S
       predictedRisk = "Warning";
     }
 
+    // Real dynamic MPI for What-If parameters
+    let critValue = 30;
+    if (asset.processCriticality === "Critical") critValue = 100;
+    else if (asset.processCriticality === "High") critValue = 80;
+    else if (asset.processCriticality === "Medium") critValue = 50;
+
+    const penaltyRank = Math.min(100, Math.round((asset.delayCostPerHour / 22000) * 100));
+    
+    // Combining Criticality 35%, simulated thermal-vibratory wear 40%, and lost production penalty 25%
+    const simulatedMPI = Math.min(100, Math.round((critValue * 0.35) + (fatigueLoad * 0.40) + (penaltyRank * 0.25)));
+
     return {
       simulatedTemp,
       simulatedVib,
       simulatedPress,
       fatigueLoad,
       simulatedRulHours,
-      predictedRisk
+      predictedRisk,
+      simulatedMPI
     };
   };
 
@@ -293,31 +305,85 @@ export default function SandboxSimulator({ asset, onApplySimulatedTelemetry }: S
             <span className="font-extrabold text-white text-xs">{sims.fatigueLoad}%</span>
           </div>
         </div>
-
-        {/* Data results list */}
         <div className="border border-slate-200 rounded-xl p-4 flex flex-col justify-between bg-white text-xs space-y-3">
-          <div className="space-y-2">
-            <span className="text-[9px] font-mono uppercase text-indigo-500 block">Simulated Output Telemetry</span>
+          <div className="space-y-2.5">
+            <span className="text-[9px] font-mono uppercase text-indigo-600 block font-bold tracking-wider">Simulated Output Telemetry</span>
             
             <div className="flex justify-between items-center py-1 border-b border-slate-100">
               <span className="text-slate-500 font-mono">Est. Body Temp</span>
-              <span className={`font-mono font-bold ${sims.simulatedTemp > asset.telemetry.temperatureLimit ? "text-rose-600 animate-pulse" : "text-slate-800"}`}>
+              <span className={`font-mono font-bold ${sims.simulatedTemp > asset.telemetry.temperatureLimit ? "text-rose-600 animate-pulse font-extrabold" : "text-slate-800"}`}>
                 {sims.simulatedTemp}{asset.telemetry.temperatureUnit}
               </span>
             </div>
 
             <div className="flex justify-between items-center py-1 border-b border-slate-100">
               <span className="text-slate-500 font-mono">Est. Mechanical Vib</span>
-              <span className={`font-mono font-bold ${sims.simulatedVib > asset.telemetry.vibrationLimit ? "text-rose-600" : "text-slate-805"}`}>
+              <span className={`font-mono font-bold ${sims.simulatedVib > asset.telemetry.vibrationLimit ? "text-rose-600 font-extrabold" : "text-slate-800"}`}>
                 {sims.simulatedVib} mm/s
               </span>
             </div>
 
             <div className="flex justify-between items-center py-1 border-b border-slate-100">
               <span className="text-slate-500 font-mono">Predicted Safe RUL</span>
-              <span className="font-mono font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded">
+              <span className="font-mono font-bold text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded">
                 ~{sims.simulatedRulHours} Hours
               </span>
+            </div>
+
+            {/* LIVE DYNAMIC MAINTENANCE PRIORITY INDEX ENERGETIC INTEGRATION */}
+            <div className="border-t border-slate-200 pt-3 mt-1.5 space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-[9.5px] font-mono uppercase text-indigo-600 font-bold tracking-wider">Live Sim MPI Score</span>
+                <span className="font-mono font-black text-xs text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-150">
+                  {sims.simulatedMPI} / 100
+                </span>
+              </div>
+
+              {/* Progress dynamic slice */}
+              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                <div 
+                  className={`h-full transition-all duration-300 rounded-full ${
+                    sims.simulatedMPI >= 70 
+                      ? "bg-rose-500" 
+                      : sims.simulatedMPI >= 45 
+                        ? "bg-amber-500" 
+                        : "bg-emerald-500"
+                  }`} 
+                  style={{ width: `${sims.simulatedMPI}%` }}
+                ></div>
+              </div>
+
+              {/* Smart Directive AI Coprocessor Dispatch Box */}
+              <div className={`p-2 rounded-lg border text-[10px] leading-relaxed ${
+                sims.simulatedMPI >= 70
+                  ? "bg-rose-50 border-rose-150 text-rose-800"
+                  : sims.simulatedMPI >= 45
+                    ? "bg-amber-50 border-amber-150 text-amber-800"
+                    : "bg-emerald-50 border-emerald-150 text-emerald-800"
+              }`}>
+                <div className="font-bold uppercase tracking-wide flex items-center gap-1 mb-0.5">
+                  <span className={`inline-block w-1.5 h-1.5 rounded-full ${
+                    sims.simulatedMPI >= 70 ? "bg-rose-500 animate-ping" : sims.simulatedMPI >= 45 ? "bg-amber-500" : "bg-emerald-500"
+                  }`}></span>
+                  <span>
+                    {sims.simulatedMPI >= 70
+                      ? "Emergency Dispatch Directive"
+                      : sims.simulatedMPI >= 45
+                        ? "Run to Scheduled Shutdown"
+                        : "Nominal Operations (Optimal)"
+                    }
+                  </span>
+                </div>
+                <p className="font-sans">
+                  {sims.simulatedMPI >= 70
+                    ? `Risk threshold violated at ${sims.simulatedMPI} MPI. Restrict process rollers speed, increase coolant flow above 8 bar, and dispatch emergency shift crew.`
+                    : sims.simulatedMPI >= 45
+                      ? "Fatigue load buffer stabilized. Activate supplementary grease-purging schedules to bridge operations until upcoming planned turn."
+                      : "Operating within safe physical parameters. Maintain standard autonomous supervision and complete scheduled weekend inspections."
+                  }
+                </p>
+              </div>
+
             </div>
           </div>
 
@@ -327,9 +393,9 @@ export default function SandboxSimulator({ asset, onApplySimulatedTelemetry }: S
               type="button"
               id="btn-apply-whatif-telemetry"
               onClick={handleApplyToControlRoom}
-              className="w-full py-1.5 bg-slate-900 text-white rounded-lg font-mono font-bold hover:bg-slate-800 transition text-[10.5px] cursor-pointer text-center flex items-center justify-center gap-1.5"
+              className="w-full py-2 bg-indigo-600 text-white rounded-lg font-mono font-bold hover:bg-indigo-700 transition text-[10.5px] cursor-pointer text-center flex items-center justify-center gap-1.5 shadow-sm"
             >
-              <RefreshCw className="h-3 w-3 animate-spin-slow" />
+              <RefreshCw className="h-3 w-3 animate-spin-slow text-indigo-200" />
               <span>Override Virtual Control Room Telemetry</span>
             </button>
           </div>
