@@ -98,6 +98,342 @@ export let assets: Asset[] = [
         { time: "04:00", temperature: 92, vibration: 1.6, pressure: 14.5 }
       ]
     }
+  },
+  {
+    id: "ld-01",
+    name: "LD Converter BOF #1 Tilting Drive",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 19500,
+    processCriticality: "Critical",
+    telemetry: {
+      temperature: 75,
+      temperatureUnit: "°C",
+      temperatureLimit: 95,
+      vibration: 1.2,
+      vibrationLimit: 3.5,
+      pressure: 190,
+      pressureLimit: 240,
+      historicalData: [
+        { time: "00:00", temperature: 68, vibration: 0.9, pressure: 190 },
+        { time: "01:00", temperature: 70, vibration: 1.0, pressure: 192 },
+        { time: "02:00", temperature: 72, vibration: 1.1, pressure: 191 },
+        { time: "03:00", temperature: 74, vibration: 1.1, pressure: 190 },
+        { time: "04:00", temperature: 75, vibration: 1.2, pressure: 190 }
+      ]
+    }
+  },
+  {
+    id: "bf-03",
+    name: "Sintering Plant Dust Extraction Fan #3",
+    area: "Ironmaking",
+    status: "Healthy",
+    delayCostPerHour: 7500,
+    processCriticality: "Medium",
+    telemetry: {
+      temperature: 54,
+      temperatureUnit: "°C",
+      temperatureLimit: 75,
+      vibration: 2.3,
+      vibrationLimit: 4.8,
+      pressure: 1.8,
+      pressureLimit: 3.0,
+      historicalData: [
+        { time: "00:00", temperature: 50, vibration: 2.1, pressure: 1.8 },
+        { time: "01:00", temperature: 51, vibration: 2.1, pressure: 1.8 },
+        { time: "02:05", temperature: 52, vibration: 2.2, pressure: 1.8 },
+        { time: "03:00", temperature: 53, vibration: 2.2, pressure: 1.8 },
+        { time: "04:00", temperature: 54, vibration: 2.3, pressure: 1.8 }
+      ]
+    }
+  },
+  {
+    id: "hsm-02",
+    name: "Hot Mill Coiler Roller Drive Shaft #3",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 16800,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 82,
+      temperatureUnit: "°C",
+      temperatureLimit: 105,
+      vibration: 3.1,
+      vibrationLimit: 6.0,
+      pressure: 15.0,
+      pressureLimit: 20.0,
+      historicalData: [
+        { time: "00:00", temperature: 74, vibration: 2.8, pressure: 15.0 },
+        { time: "01:00", temperature: 76, vibration: 2.9, pressure: 15.0 },
+        { time: "02:00", temperature: 78, vibration: 3.0, pressure: 15.0 },
+        { time: "03:00", temperature: 80, vibration: 3.1, pressure: 15.0 },
+        { time: "04:00", temperature: 82, vibration: 3.1, pressure: 15.0 }
+      ]
+    }
+  },
+  {
+    id: "cogc-01",
+    name: "Coke Oven Push Car Hydraulic Pack #1",
+    area: "Utilities",
+    status: "Healthy",
+    delayCostPerHour: 11000,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 48,
+      temperatureUnit: "°C",
+      temperatureLimit: 65,
+      vibration: 1.1,
+      vibrationLimit: 2.5,
+      pressure: 160,
+      pressureLimit: 200,
+      historicalData: [
+        { time: "00:00", temperature: 42, vibration: 0.9, pressure: 158 },
+        { time: "01:00", temperature: 44, vibration: 1.0, pressure: 160 },
+        { time: "02:00", temperature: 45, vibration: 1.0, pressure: 162 },
+        { time: "03:00", temperature: 47, vibration: 1.0, pressure: 160 },
+        { time: "04:00", temperature: 48, vibration: 1.1, pressure: 160 }
+      ]
+    }
+  },
+  {
+    id: "bf-01",
+    name: "Blast Furnace #4 Raw Iron Sinter Conveyor #1",
+    area: "Ironmaking",
+    status: "Healthy",
+    delayCostPerHour: 12500,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 42,
+      temperatureUnit: "°C",
+      temperatureLimit: 60,
+      vibration: 1.8,
+      vibrationLimit: 4.0,
+      pressure: 12,
+      pressureLimit: 20,
+      historicalData: [
+        { time: "00:00", temperature: 38, vibration: 1.5, pressure: 12 },
+        { time: "01:00", temperature: 39, vibration: 1.6, pressure: 12 },
+        { time: "02:00", temperature: 40, vibration: 1.6, pressure: 12 },
+        { time: "03:00", temperature: 41, vibration: 1.7, pressure: 12 },
+        { time: "04:00", temperature: 42, vibration: 1.8, pressure: 12 }
+      ]
+    }
+  },
+  {
+    id: "cc-03",
+    name: "Continuous Caster Mould Segment Roller Bearings #3",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 13800,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 95,
+      temperatureUnit: "°C",
+      temperatureLimit: 120,
+      vibration: 2.2,
+      vibrationLimit: 4.5,
+      pressure: 85,
+      pressureLimit: 110,
+      historicalData: [
+        { time: "00:00", temperature: 88, vibration: 2.0, pressure: 85 },
+        { time: "01:00", temperature: 90, vibration: 2.1, pressure: 84 },
+        { time: "02:00", temperature: 92, vibration: 2.1, pressure: 85 },
+        { time: "03:00", temperature: 93, vibration: 2.2, pressure: 86 },
+        { time: "04:00", temperature: 95, vibration: 2.2, pressure: 85 }
+      ]
+    }
+  },
+  {
+    id: "hsm-03",
+    name: "Hot Strip Mill Finishing Stand F5 Descaling Header Valve #2",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 21500,
+    processCriticality: "Critical",
+    telemetry: {
+      temperature: 55,
+      temperatureUnit: "°C",
+      temperatureLimit: 80,
+      vibration: 1.4,
+      vibrationLimit: 3.5,
+      pressure: 220,
+      pressureLimit: 250,
+      historicalData: [
+        { time: "00:00", temperature: 51, vibration: 1.1, pressure: 222 },
+        { time: "01:00", temperature: 52, vibration: 1.2, pressure: 221 },
+        { time: "02:00", temperature: 53, vibration: 1.3, pressure: 220 },
+        { time: "03:00", temperature: 54, vibration: 1.3, pressure: 220 },
+        { time: "04:00", temperature: 55, vibration: 1.4, pressure: 220 }
+      ]
+    }
+  },
+  {
+    id: "ld-02",
+    name: "LD Converter Slag Splashing Lance Nozzle #5",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 18000,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 1120,
+      temperatureUnit: "°C",
+      temperatureLimit: 1250,
+      vibration: 1.1,
+      vibrationLimit: 3.0,
+      pressure: 6.2,
+      pressureLimit: 8.5,
+      historicalData: [
+        { time: "00:00", temperature: 1050, vibration: 0.9, pressure: 6.0 },
+        { time: "01:00", temperature: 1080, vibration: 0.9, pressure: 6.1 },
+        { time: "02:00", temperature: 1100, vibration: 1.0, pressure: 6.2 },
+        { time: "03:00", temperature: 1110, vibration: 1.0, pressure: 6.2 },
+        { time: "04:00", temperature: 1120, vibration: 1.1, pressure: 6.2 }
+      ]
+    }
+  },
+  {
+    id: "wrm-01",
+    name: "Wire Rod Mill Laying Head Pinch Roll",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 15500,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 72,
+      temperatureUnit: "°C",
+      temperatureLimit: 90,
+      vibration: 1.9,
+      vibrationLimit: 4.5,
+      pressure: 6.5,
+      pressureLimit: 8.0,
+      historicalData: [
+        { time: "00:00", temperature: 65, vibration: 1.7, pressure: 6.2 },
+        { time: "01:00", temperature: 68, vibration: 1.8, pressure: 6.3 },
+        { time: "02:00", temperature: 70, vibration: 1.8, pressure: 6.5 },
+        { time: "03:00", temperature: 71, vibration: 1.9, pressure: 6.5 },
+        { time: "04:00", temperature: 72, vibration: 1.9, pressure: 6.5 }
+      ]
+    }
+  },
+  {
+    id: "sinter-02",
+    name: "Sinter Machine #2 Ignition Furnace Burner Blower",
+    area: "Ironmaking",
+    status: "Healthy",
+    delayCostPerHour: 9800,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 48,
+      temperatureUnit: "°C",
+      temperatureLimit: 65,
+      vibration: 1.5,
+      vibrationLimit: 3.5,
+      pressure: 0.8,
+      pressureLimit: 1.5,
+      historicalData: [
+        { time: "00:00", temperature: 44, vibration: 1.3, pressure: 0.8 },
+        { time: "01:00", temperature: 45, vibration: 1.4, pressure: 0.8 },
+        { time: "02:00", temperature: 46, vibration: 1.4, pressure: 0.8 },
+        { time: "03:00", temperature: 47, vibration: 1.5, pressure: 0.8 },
+        { time: "04:00", temperature: 48, vibration: 1.5, pressure: 0.8 }
+      ]
+    }
+  },
+  {
+    id: "crm-02",
+    name: "Cold Rolling Mill 4-Stand Tandem Mill Work Roll Spindle",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 24500,
+    processCriticality: "Critical",
+    telemetry: {
+      temperature: 62,
+      temperatureUnit: "°C",
+      temperatureLimit: 80,
+      vibration: 2.1,
+      vibrationLimit: 5.0,
+      pressure: 150,
+      pressureLimit: 180,
+      historicalData: [
+        { time: "00:00", temperature: 55, vibration: 1.8, pressure: 148 },
+        { time: "01:00", temperature: 58, vibration: 1.9, pressure: 149 },
+        { time: "02:00", temperature: 60, vibration: 2.0, pressure: 150 },
+        { time: "03:00", temperature: 61, vibration: 2.1, pressure: 150 },
+        { time: "04:00", temperature: 62, vibration: 2.1, pressure: 150 }
+      ]
+    }
+  },
+  {
+    id: "ld-03",
+    name: "LD Converter BOF Exhaust Gas Recovery ID Fan #1",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 17200,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 84,
+      temperatureUnit: "°C",
+      temperatureLimit: 105,
+      vibration: 3.2,
+      vibrationLimit: 5.5,
+      pressure: 45,
+      pressureLimit: 60,
+      historicalData: [
+        { time: "00:00", temperature: 78, vibration: 2.8, pressure: 44 },
+        { time: "01:00", temperature: 80, vibration: 2.9, pressure: 45 },
+        { time: "02:00", temperature: 82, vibration: 3.0, pressure: 45 },
+        { time: "03:00", temperature: 83, vibration: 3.1, pressure: 45 },
+        { time: "04:00", temperature: 84, vibration: 3.2, pressure: 45 }
+      ]
+    }
+  },
+  {
+    id: "utl-02",
+    name: "Primary Water Treatment Clarifier Feed Pump #2",
+    area: "Utilities",
+    status: "Healthy",
+    delayCostPerHour: 8200,
+    processCriticality: "Medium",
+    telemetry: {
+      temperature: 36,
+      temperatureUnit: "°C",
+      temperatureLimit: 55,
+      vibration: 1.2,
+      vibrationLimit: 3.0,
+      pressure: 4.5,
+      pressureLimit: 6.0,
+      historicalData: [
+        { time: "00:00", temperature: 32, vibration: 1.0, pressure: 4.3 },
+        { time: "01:00", temperature: 33, vibration: 1.1, pressure: 4.4 },
+        { time: "02:00", temperature: 34, vibration: 1.1, pressure: 4.4 },
+        { time: "03:00", temperature: 35, vibration: 1.2, pressure: 4.5 },
+        { time: "04:00", temperature: 36, vibration: 1.2, pressure: 4.5 }
+      ]
+    }
+  },
+  {
+    id: "oxy-01",
+    name: "Oxygen Plant Cryogenic MAC Stand #1",
+    area: "Utilities",
+    status: "Healthy",
+    delayCostPerHour: 19800,
+    processCriticality: "Critical",
+    telemetry: {
+      temperature: 98,
+      temperatureUnit: "°C",
+      temperatureLimit: 115,
+      vibration: 1.8,
+      vibrationLimit: 3.5,
+      pressure: 8.5,
+      pressureLimit: 11.0,
+      historicalData: [
+        { time: "00:00", temperature: 90, vibration: 1.5, pressure: 8.2 },
+        { time: "01:00", temperature: 92, vibration: 1.6, pressure: 8.3 },
+        { time: "02:00", temperature: 94, vibration: 1.7, pressure: 8.4 },
+        { time: "03:00", temperature: 96, vibration: 1.7, pressure: 8.4 },
+        { time: "04:00", temperature: 98, vibration: 1.8, pressure: 8.5 }
+      ]
+    }
   }
 ];
 

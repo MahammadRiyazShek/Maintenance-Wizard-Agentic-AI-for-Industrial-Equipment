@@ -19,6 +19,7 @@ import PlantFlowVisualizer from "./components/PlantFlowVisualizer.tsx";
 import SandboxSimulator from "./components/SandboxSimulator.tsx";
 import ShiftHandoffModal from "./components/ShiftHandoffModal.tsx";
 import MLEnginePanel from "./components/MLEnginePanel.tsx";
+import SparesProcurementPanel from "./components/SparesProcurementPanel.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -38,7 +39,8 @@ import {
   ChevronRight,
   Key,
   Cpu,
-  Binary
+  Binary,
+  Package
 } from "lucide-react";
 
 export default function App() {
@@ -53,7 +55,7 @@ export default function App() {
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
   
   // Tab within the Operations Toolkit (Right side)
-  const [activeToolTab, setActiveToolTab] = useState<"chat" | "rag" | "logbook" | "sandbox" | "ml-engine">("chat");
+  const [activeToolTab, setActiveToolTab] = useState<"chat" | "rag" | "logbook" | "sandbox" | "ml-engine" | "spares">("chat");
   const [showDocsModal, setShowDocsModal] = useState<boolean>(false);
   
   // Key config interface
@@ -329,6 +331,20 @@ export default function App() {
             <span>{apiActive ? "Gemini 3.5: Secure Link" : "Cognitive Simulator Mode"}</span>
           </div>
 
+          {/* Active algorithms status indicators */}
+          <div className="hidden lg:flex items-center gap-1.5 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800 text-[10.5px] font-mono font-bold select-none text-slate-400">
+            <span className="text-[10px] tracking-wide text-slate-500">ML LABS:</span>
+            <span className="flex items-center gap-1 text-emerald-400 bg-emerald-955/30 border border-emerald-900 px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> XGB-ENSEMBLE
+            </span>
+            <span className="flex items-center gap-1 text-blue-400 bg-blue-955/30 border border-blue-900 px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase">
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-400" /> ISOLATION-FOREST
+            </span>
+            <span className="flex items-center gap-1 text-purple-400 bg-purple-955/30 border border-purple-900 px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase">
+              <span className="h-1.5 w-1.5 rounded-full bg-purple-400" /> PHYSICS-MATH-M3.2
+            </span>
+          </div>
+
           <ShiftHandoffModal assets={assets} alerts={alerts} logbook={logbook} />
 
           <button
@@ -459,14 +475,26 @@ export default function App() {
 
                 <button
                   onClick={() => setActiveToolTab("ml-engine")}
-                  className={`flex-1 min-w-[70px] py-1.5 px-1.5 rounded-lg text-[10.5px] font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
+                  className={`flex-1 min-w-[70px] py-2 px-1.5 rounded-lg text-[10.5px] font-black uppercase transition flex items-center justify-center gap-1 cursor-pointer border glow-indigo-pulse ${
                     activeToolTab === "ml-engine"
-                      ? "bg-indigo-600 text-white shadow-xs"
-                      : "text-indigo-600 hover:bg-indigo-50 border border-indigo-100"
+                      ? "bg-indigo-700 text-white border-indigo-500 font-black shadow-sm scale-102"
+                      : "bg-indigo-50/70 text-indigo-700 border-indigo-200 hover:bg-indigo-100"
                   }`}
                 >
                   <Binary className="h-3.5 w-3.5" />
                   <span>ML Rigor</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveToolTab("spares")}
+                  className={`flex-1 min-w-[70px] py-2 px-1.5 rounded-lg text-[10.5px] font-black uppercase transition flex items-center justify-center gap-1 cursor-pointer border glow-emerald-pulse ${
+                    activeToolTab === "spares"
+                      ? "bg-emerald-700 text-white border-emerald-500 font-black shadow-sm scale-102"
+                      : "bg-emerald-50/70 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                  }`}
+                >
+                  <Package className="h-3.5 w-3.5" />
+                  <span>Spares</span>
                 </button>
               </div>
 
@@ -483,7 +511,7 @@ export default function App() {
                 )}
 
                 {activeToolTab === "rag" && (
-                  <KBBrowser documents={kbDocs} />
+                  <KBBrowser documents={kbDocs} asset={activeAsset} />
                 )}
 
                 {activeToolTab === "logbook" && (
@@ -504,10 +532,100 @@ export default function App() {
                 {activeToolTab === "ml-engine" && (
                   <MLEnginePanel asset={activeAsset} />
                 )}
+
+                {activeToolTab === "spares" && (
+                  <SparesProcurementPanel
+                    asset={activeAsset}
+                    onStockUpdate={() => {
+                      // Trigger state sync after purchasing stock to lower system risks
+                      const refreshedAssets = ClientStore.getAssets();
+                      setAssets(refreshedAssets);
+                    }}
+                  />
+                )}
               </div>
             </section>
 
             </div>
+
+            {/* Extended Plant Operations & Compliance Suite - Solving Visibility Gaps 1:1 */}
+            <div className="border-t border-slate-200/50 pt-6 mt-6 space-y-4" id="executive-ops-suite">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 text-white rounded-xl p-4 border border-slate-850 shadow-md">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="p-0.5 px-2 bg-indigo-600 font-mono rounded text-[9.5px] font-extrabold text-indigo-50 tracking-widest uppercase">
+                      Compliance Suite
+                    </span>
+                    <span className="flex h-2 w-2 relative">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <h3 className="font-sans font-bold text-sm uppercase tracking-wider">
+                      Durable Operations Ledger & Lead-Time Spares Console
+                    </h3>
+                  </div>
+                  <p className="text-xs text-slate-400 font-medium">
+                    Continuous local storage synchronization of expert engineer logs, warehouse lead-time priority indices, and retraining feedback.
+                  </p>
+                </div>
+                <div className="text-[10px] text-slate-400 font-mono text-left sm:text-right">
+                  System state: <strong className="text-emerald-400">SYNCED (SQL/LOCAL)</strong><br />
+                  Lead times monitored: <strong className="text-indigo-300">14 Active Components</strong>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                {/* 1. Fully visible ML Engine & Retraining Workstation */}
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden flex flex-col h-[650px]">
+                  <div className="bg-indigo-50/50 border-b border-slate-100 p-2.5 px-4 font-mono text-[10px] text-indigo-805 font-bold flex items-center justify-between shrink-0">
+                    <span>SUPERVISED ML ENSEMBLE & PHYSICS WORKSTATION</span>
+                    <span className="bg-indigo-100 text-indigo-900 px-2 py-0.5 rounded text-[8.5px] font-extrabold uppercase">
+                      XGBOOST + ISOLATION FOREST
+                    </span>
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-slate-50/20">
+                    <MLEnginePanel asset={activeAsset} />
+                  </div>
+                </div>
+
+                {/* 2. Fully visible Spares Procurement Panel */}
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden flex flex-col h-[650px]">
+                  <div className="bg-emerald-50/50 border-b border-slate-100 p-2.5 px-4 font-mono text-[10px] text-emerald-800 font-bold flex items-center justify-between shrink-0">
+                    <span>WAREHOUSE STOCK CONTROLS</span>
+                    <span className="bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded text-[8.5px] font-extrabold uppercase">
+                      ACTIVE RISK PRIORITY (SPI) ENGAGED
+                    </span>
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-slate-50/20">
+                    <SparesProcurementPanel
+                      asset={activeAsset}
+                      onStockUpdate={() => {
+                        const refreshedAssets = ClientStore.getAssets();
+                        setAssets(refreshedAssets);
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* 3. Fully visible Digital Logbook Browser */}
+                <div className="bg-white rounded-2xl border border-slate-250 shadow-xs overflow-hidden flex flex-col h-[650px]">
+                  <div className="bg-blue-50/50 border-b border-slate-100 p-2.5 px-4 font-mono text-[10px] text-blue-800 font-bold flex items-center justify-between shrink-0">
+                    <span>AUDITABLE PHYSICAL REPAIR RECORDS</span>
+                    <span className="bg-blue-100 text-blue-900 px-2 py-0.5 rounded text-[8.5px] font-extrabold uppercase">
+                      HUMAN-IN-THE-LOOP FEEDBACK ENABLED
+                    </span>
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-slate-50/20">
+                    <LogbookBrowser
+                      assets={assets}
+                      logbook={logbook}
+                      onAddLog={handleAddLogbookEntry}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         )}
       </main>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { LogbookEntry, Asset } from "../types.ts";
-import { Clipboard, User, Calendar, CheckSquare, PlusCircle } from "lucide-react";
+import { Clipboard, User, Calendar, CheckSquare, PlusCircle, Download } from "lucide-react";
 
 interface LogbookBrowserProps {
   assets: Asset[];
@@ -35,6 +35,28 @@ export default function LogbookBrowser({
     setShowForm(false);
   };
 
+  const handleExportCSV = () => {
+    if (logbook.length === 0) return;
+    const headers = ["Log ID", "Asset Name", "Action Undertaken", "Lead Engineer", "Timestamp"];
+    const rows = logbook.map(log => [
+      log.id,
+      `"${log.assetName.replace(/"/g, '""')}"`,
+      `"${log.actionTaken.replace(/"/g, '""')}"`,
+      `"${log.engineerName.replace(/"/g, '""')}"`,
+      log.timestamp
+    ]);
+    const csvContent = [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `tata_steel_maintenance_logbook_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5 md:p-6 shadow-sm space-y-5">
       {/* Header section */}
@@ -53,14 +75,29 @@ export default function LogbookBrowser({
           </div>
         </div>
 
-        <button
-          onClick={() => setShowForm(!showForm)}
-          id="btn-toggle-add-log"
-          className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition cursor-pointer"
-        >
-          <PlusCircle className="h-3.5 w-3.5" />
-          <span>{showForm ? "View Logs" : "Record Action"}</span>
-        </button>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {logbook.length > 0 && (
+            <button
+              type="button"
+              onClick={handleExportCSV}
+              id="btn-export-logbook-csv"
+              className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-lg text-xs font-bold transition cursor-pointer font-sans"
+              title="Export Logbook as CSV"
+            >
+              <Download className="h-3.5 w-3.5" />
+              <span>Export CSV</span>
+            </button>
+          )}
+
+          <button
+            onClick={() => setShowForm(!showForm)}
+            id="btn-toggle-add-log"
+            className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition cursor-pointer"
+          >
+            <PlusCircle className="h-3.5 w-3.5" />
+            <span>{showForm ? "View Logs" : "Record Action"}</span>
+          </button>
+        </div>
       </div>
 
       {/* Manual Insert Form */}

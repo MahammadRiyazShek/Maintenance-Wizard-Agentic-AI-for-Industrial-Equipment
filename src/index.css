@@ -1,1 +1,31 @@
 @import "tailwindcss";
+
+@keyframes pulseGlowIndigo {
+  0%, 100% {
+    box-shadow: 0 0 3px 0.5px rgba(79, 70, 229, 0.35);
+    border-color: rgba(99, 102, 241, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 12px 3.5px rgba(99, 102, 241, 0.75);
+    border-color: rgba(129, 140, 248, 1);
+  }
+}
+
+@keyframes pulseGlowEmerald {
+  0%, 100% {
+    box-shadow: 0 0 3px 0.5px rgba(16, 185, 129, 0.35);
+    border-color: rgba(52, 211, 153, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 12px 3.5px rgba(52, 211, 153, 0.75);
+    border-color: rgba(110, 231, 183, 1);
+  }
+}
+
+.glow-indigo-pulse {
+  animation: pulseGlowIndigo 2s infinite ease-in-out;
+}
+
+.glow-emerald-pulse {
+  animation: pulseGlowEmerald 2s infinite ease-in-out;
+}

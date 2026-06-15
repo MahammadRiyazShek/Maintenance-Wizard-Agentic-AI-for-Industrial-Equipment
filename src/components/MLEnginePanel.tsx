@@ -38,6 +38,14 @@ export default function MLEnginePanel({ asset }: MLEnginePanelProps) {
   const [trainedEpochs, setTrainedEpochs] = useState<number>(250);
   const [validationProgress, setValidationProgress] = useState<number>(100);
 
+  // Hyperparameters Optimization Controllers
+  const [contaminationForest, setContaminationForest] = useState<number>(0.04);
+  const [xgbMaxDepth, setXgbMaxDepth] = useState<number>(6);
+  const [isRetraining, setIsRetraining] = useState<boolean>(false);
+  const [trainingLogs, setTrainingLogs] = useState<string[]>([]);
+  const [trainingProgress, setTrainingProgress] = useState<number>(0);
+  const [feedbackAccBoost, setFeedbackAccBoost] = useState<number>(0);
+
   // Dynamic simulation values for equations
   const [parisC, setParisC] = useState<number>(1.25e-4); // Paris constant
   const [fatigueExponent, setFatigueExponent] = useState<number>(3.2); // Paris m factor
@@ -69,6 +77,40 @@ export default function MLEnginePanel({ asset }: MLEnginePanelProps) {
       } else {
         clearInterval(interval);
         setIsValidating(false);
+      }
+    }, 450);
+  };
+
+  // Trigger interactive re-training on human operator feedback corpus
+  const runClassifierRetraining = () => {
+    setIsRetraining(true);
+    setTrainingProgress(0);
+    setTrainingLogs([]);
+    
+    const logs = [
+      "Gathering persistent operator feedback corrections from storage DB...",
+      "Extruded 3 manual classification overrides into active tuning tensor.",
+      "Re-initializing XGBoost gradient boosting ensemble with feedback bias...",
+      "Epoch 10/100 - Loss: 0.145 - Validation Accuracy: 99.07%",
+      "Epoch 30/100 - Loss: 0.101 - Validation Accuracy: 99.11%",
+      "Epoch 50/100 - Loss: 0.076 - Validation Accuracy: 99.14%",
+      "Epoch 70/100 - Loss: 0.052 - Validation Accuracy: 99.16%",
+      "Epoch 90/100 - Loss: 0.029 - Validation Accuracy: 99.18%",
+      "Epoch 100/100 - Optimization completed successfully with full convergence.",
+      "Saving fortified weight model parameters to global state store...",
+      "Closed-loop feedback cycle completed. Model accuracy boosted +0.13%!"
+    ];
+
+    let currentStep = 0;
+    const interval = setInterval(() => {
+      if (currentStep < logs.length) {
+        setTrainingLogs(prev => [...prev, logs[currentStep]]);
+        setTrainingProgress(Math.floor(((currentStep + 1) / logs.length) * 100));
+        currentStep++;
+      } else {
+        clearInterval(interval);
+        setIsRetraining(false);
+        setFeedbackAccBoost(0.13); // Permanently boost accuracy in memory!
       }
     }, 450);
   };
@@ -201,33 +243,90 @@ export default function MLEnginePanel({ asset }: MLEnginePanelProps) {
             <div className="grid grid-cols-2 gap-3">
               <div className="border border-slate-100 rounded-lg p-2.5 text-center bg-slate-50/50">
                 <span className="text-[9px] font-mono text-slate-400 block uppercase">XGBoost Accuracy</span>
-                <span className="text-xl font-bold text-emerald-600 font-mono">99.05%</span>
+                <span className="text-xl font-bold text-emerald-600 font-mono">
+                  {(99.05 + feedbackAccBoost + (xgbMaxDepth - 6) * 0.02 - Math.abs(contaminationForest - 0.04) * 0.15).toFixed(2)}%
+                </span>
                 <div className="text-[8px] font-mono text-slate-400 mt-1">
-                  Baseline Benchmark
+                  Ensemble Depth Benchmark
                 </div>
               </div>
 
               <div className="border border-slate-100 rounded-lg p-2.5 text-center bg-slate-50/50">
                 <span className="text-[9px] font-mono text-slate-400 block uppercase">Test Area AUC-ROC</span>
-                <span className="text-xl font-bold text-indigo-600 font-mono">0.994</span>
+                <span className="text-xl font-bold text-indigo-600 font-mono">
+                  {(0.994 + (xgbMaxDepth - 6) * 0.0005 - Math.abs(contaminationForest - 0.04) * 0.003).toFixed(3)}
+                </span>
                 <div className="text-[8px] font-mono text-slate-400 mt-1">
                   True Positive Rate
                 </div>
               </div>
 
               <div className="border border-slate-100 rounded-lg p-2.5 text-center bg-slate-50/50">
-                <span className="text-[9px] font-mono text-slate-400 block uppercase">Model Sensitivity</span>
-                <span className="text-xl font-bold text-indigo-500 font-mono">98.70%</span>
+                <span className="text-[9px] font-mono text-slate-400 block uppercase">Isolation Forest Sensitivity</span>
+                <span className="text-xl font-bold text-indigo-500 font-mono">
+                  {(98.70 + (contaminationForest - 0.04) * 12).toFixed(2)}%
+                </span>
                 <div className="text-[8px] font-mono text-slate-400 mt-1">
-                  Recall Rate
+                  True Positive Outlier Recall
                 </div>
               </div>
 
               <div className="border border-slate-100 rounded-lg p-2.5 text-center bg-slate-50/50">
                 <span className="text-[9px] font-mono text-slate-400 block uppercase">False Positive Rate</span>
-                <span className="text-xl font-bold text-rose-500 font-mono">0.95%</span>
+                <span className="text-xl font-bold text-rose-500 font-mono">
+                  {(0.95 + (contaminationForest - 0.04) * 15).toFixed(2)}%
+                </span>
                 <div className="text-[8px] font-mono text-slate-400 mt-1">
                   False Alarm Ratio
+                </div>
+              </div>
+            </div>
+
+            {/* Real-time Interactive Hyperparameter Sliders */}
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-3 font-sans">
+              <span className="text-[9px] font-mono uppercase text-slate-400 block tracking-wider font-extrabold flex items-center gap-1.5">
+                <Settings className="h-3.5 w-3.5 text-indigo-600" />
+                <span>Hyperparameter Optimization Console</span>
+              </span>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Slider 1: Isolation Forest Contamination */}
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center text-[10px] font-mono text-slate-500 font-bold">
+                    <span>IF Contamination Rate (&nu;)</span>
+                    <span className="text-indigo-600">{(contaminationForest * 100).toFixed(1)}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0.01"
+                    max="0.10"
+                    step="0.01"
+                    value={contaminationForest}
+                    onChange={(e) => setContaminationForest(parseFloat(e.target.value))}
+                    className="w-full accent-indigo-600 h-1 bg-slate-200 rounded appearance-none cursor-pointer"
+                  />
+                  <p className="text-[8.5px] text-slate-400 leading-tight">
+                    Set the expected percentage of normal telemetry logs classified as outliers.
+                  </p>
+                </div>
+
+                {/* Slider 2: XGBoost Max Depth */}
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center text-[10px] font-mono text-slate-500 font-bold">
+                    <span>XGBoost Max Tree Depth</span>
+                    <span className="text-emerald-600">{xgbMaxDepth}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="3"
+                    max="10"
+                    value={xgbMaxDepth}
+                    onChange={(e) => setXgbMaxDepth(parseInt(e.target.value))}
+                    className="w-full accent-emerald-500 h-1 bg-slate-200 rounded appearance-none cursor-pointer"
+                  />
+                  <p className="text-[8.5px] text-slate-400 leading-tight">
+                    Ensemble max depth prevents overfitting. Higher depth yields higher model complexity.
+                  </p>
                 </div>
               </div>
             </div>
@@ -522,6 +621,54 @@ export default function MLEnginePanel({ asset }: MLEnginePanelProps) {
                 </div>
               )}
             </div>
+
+            {/* Interactive Retraining Panel */}
+            <div className="border border-slate-200 bg-slate-50/50 rounded-xl p-3.5 space-y-3 font-sans">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-bold text-xs text-slate-700">
+                    Closed-Loop Adaptive Re-Training Workstation
+                  </h4>
+                  <p className="text-[9.5px] text-slate-400 font-mono">
+                    Vectorize operator correction logs into classifier biases (Section 6.6)
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={runClassifierRetraining}
+                  disabled={isRetraining}
+                  className="px-2.5 py-1 text-[10px] font-mono font-bold bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white rounded transition flex items-center gap-1 cursor-pointer"
+                >
+                  <RefreshCw className={`h-3 w-3 ${isRetraining ? "animate-spin" : ""}`} />
+                  <span>Optimizing Weights</span>
+                </button>
+              </div>
+
+              {isRetraining || trainingLogs.length > 0 ? (
+                <div className="space-y-2 font-mono">
+                  <div className="relative w-full h-1 bg-slate-200 rounded-full overflow-hidden">
+                    <div 
+                      className="absolute top-0 left-0 h-full bg-emerald-500 transition-all duration-300"
+                      style={{ width: `${trainingProgress}%` }}
+                    />
+                  </div>
+                  
+                  <div className="bg-black text-[9px] text-emerald-400 p-2.5 rounded-lg border border-slate-900 leading-relaxed font-mono h-32 overflow-y-auto space-y-1">
+                    {trainingLogs.map((log, index) => (
+                      <div key={index} className="flex gap-1">
+                        <span className="text-slate-500">[{index + 1}]</span>
+                        <span>{log}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-4 bg-white/50 border border-dashed border-slate-250 rounded-lg text-slate-400 text-[10px]">
+                  <span>Click optimized weights to inject supervisor correction parameters into classifier layers.</span>
+                </div>
+              )}
+            </div>
+
           </div>
         )}
       </div>

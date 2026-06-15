@@ -99,6 +99,798 @@ const INITIAL_ASSETS: Asset[] = [
         { time: "04:00", temperature: 92, vibration: 1.6, pressure: 14.5 }
       ]
     }
+  },
+  {
+    id: "ld-01",
+    name: "LD Converter BOF #1 Tilting Drive",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 19500,
+    processCriticality: "Critical",
+    telemetry: {
+      temperature: 75,
+      temperatureUnit: "°C",
+      temperatureLimit: 95,
+      vibration: 1.2,
+      vibrationLimit: 3.5,
+      pressure: 190,
+      pressureLimit: 240,
+      historicalData: [
+        { time: "00:00", temperature: 68, vibration: 0.9, pressure: 190 },
+        { time: "01:00", temperature: 70, vibration: 1.0, pressure: 192 },
+        { time: "02:00", temperature: 72, vibration: 1.1, pressure: 191 },
+        { time: "03:00", temperature: 74, vibration: 1.1, pressure: 190 },
+        { time: "04:00", temperature: 75, vibration: 1.2, pressure: 190 }
+      ]
+    }
+  },
+  {
+    id: "bf-03",
+    name: "Sintering Plant Dust Extraction Fan #3",
+    area: "Ironmaking",
+    status: "Healthy",
+    delayCostPerHour: 7500,
+    processCriticality: "Medium",
+    telemetry: {
+      temperature: 54,
+      temperatureUnit: "°C",
+      temperatureLimit: 75,
+      vibration: 2.3,
+      vibrationLimit: 4.8,
+      pressure: 1.8,
+      pressureLimit: 3.0,
+      historicalData: [
+        { time: "00:00", temperature: 50, vibration: 2.1, pressure: 1.8 },
+        { time: "01:00", temperature: 51, vibration: 2.1, pressure: 1.8 },
+        { time: "02:00", temperature: 52, vibration: 2.2, pressure: 1.8 },
+        { time: "03:00", temperature: 53, vibration: 2.2, pressure: 1.8 },
+        { time: "04:00", temperature: 54, vibration: 2.3, pressure: 1.8 }
+      ]
+    }
+  },
+  {
+    id: "hsm-02",
+    name: "Hot Mill Coiler Roller Drive Shaft #3",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 16800,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 82,
+      temperatureUnit: "°C",
+      temperatureLimit: 105,
+      vibration: 3.1,
+      vibrationLimit: 6.0,
+      pressure: 15.0,
+      pressureLimit: 20.0,
+      historicalData: [
+        { time: "00:00", temperature: 74, vibration: 2.8, pressure: 15.0 },
+        { time: "01:00", temperature: 76, vibration: 2.9, pressure: 15.0 },
+        { time: "02:00", temperature: 78, vibration: 3.0, pressure: 15.0 },
+        { time: "03:00", temperature: 80, vibration: 3.1, pressure: 15.0 },
+        { time: "04:00", temperature: 82, vibration: 3.1, pressure: 15.0 }
+      ]
+    }
+  },
+  {
+    id: "cogc-01",
+    name: "Coke Oven Push Car Hydraulic Pack #1",
+    area: "Utilities",
+    status: "Healthy",
+    delayCostPerHour: 11000,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 48,
+      temperatureUnit: "°C",
+      temperatureLimit: 65,
+      vibration: 1.1,
+      vibrationLimit: 2.5,
+      pressure: 160,
+      pressureLimit: 200,
+      historicalData: [
+        { time: "00:00", temperature: 42, vibration: 0.9, pressure: 158 },
+        { time: "01:00", temperature: 44, vibration: 1.0, pressure: 160 },
+        { time: "02:00", temperature: 45, vibration: 1.0, pressure: 162 },
+        { time: "03:00", temperature: 47, vibration: 1.0, pressure: 160 },
+        { time: "04:00", temperature: 48, vibration: 1.1, pressure: 160 }
+      ]
+    }
+  },
+  {
+    id: "bf-01",
+    name: "Blast Furnace #4 Raw Iron Sinter Conveyor #1",
+    area: "Ironmaking",
+    status: "Healthy",
+    delayCostPerHour: 12500,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 42,
+      temperatureUnit: "°C",
+      temperatureLimit: 60,
+      vibration: 1.8,
+      vibrationLimit: 4.0,
+      pressure: 12,
+      pressureLimit: 20,
+      historicalData: [
+        { time: "00:00", temperature: 38, vibration: 1.5, pressure: 12 },
+        { time: "01:00", temperature: 39, vibration: 1.6, pressure: 12 },
+        { time: "02:00", temperature: 40, vibration: 1.6, pressure: 12 },
+        { time: "03:00", temperature: 41, vibration: 1.7, pressure: 12 },
+        { time: "04:00", temperature: 42, vibration: 1.8, pressure: 12 }
+      ]
+    }
+  },
+  {
+    id: "cc-03",
+    name: "Continuous Caster Mould Segment Roller Bearings #3",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 13800,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 95,
+      temperatureUnit: "°C",
+      temperatureLimit: 120,
+      vibration: 2.2,
+      vibrationLimit: 4.5,
+      pressure: 85,
+      pressureLimit: 110,
+      historicalData: [
+        { time: "00:00", temperature: 88, vibration: 2.0, pressure: 85 },
+        { time: "01:00", temperature: 90, vibration: 2.1, pressure: 84 },
+        { time: "02:00", temperature: 92, vibration: 2.1, pressure: 85 },
+        { time: "03:00", temperature: 93, vibration: 2.2, pressure: 86 },
+        { time: "04:00", temperature: 95, vibration: 2.2, pressure: 85 }
+      ]
+    }
+  },
+  {
+    id: "hsm-03",
+    name: "Hot Strip Mill Finishing Stand F5 Descaling Header Valve #2",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 21500,
+    processCriticality: "Critical",
+    telemetry: {
+      temperature: 55,
+      temperatureUnit: "°C",
+      temperatureLimit: 80,
+      vibration: 1.4,
+      vibrationLimit: 3.5,
+      pressure: 220,
+      pressureLimit: 250,
+      historicalData: [
+        { time: "00:00", temperature: 51, vibration: 1.1, pressure: 222 },
+        { time: "01:00", temperature: 52, vibration: 1.2, pressure: 221 },
+        { time: "02:00", temperature: 53, vibration: 1.3, pressure: 220 },
+        { time: "03:00", temperature: 54, vibration: 1.3, pressure: 220 },
+        { time: "04:00", temperature: 55, vibration: 1.4, pressure: 220 }
+      ]
+    }
+  },
+  {
+    id: "ld-02",
+    name: "LD Converter Slag Splashing Lance Nozzle #5",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 18000,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 1120,
+      temperatureUnit: "°C",
+      temperatureLimit: 1250,
+      vibration: 1.1,
+      vibrationLimit: 3.0,
+      pressure: 6.2,
+      pressureLimit: 8.5,
+      historicalData: [
+        { time: "00:00", temperature: 1050, vibration: 0.9, pressure: 6.0 },
+        { time: "01:00", temperature: 1080, vibration: 0.9, pressure: 6.1 },
+        { time: "02:00", temperature: 1100, vibration: 1.0, pressure: 6.2 },
+        { time: "03:00", temperature: 1110, vibration: 1.0, pressure: 6.2 },
+        { time: "04:00", temperature: 1120, vibration: 1.1, pressure: 6.2 }
+      ]
+    }
+  },
+  {
+    id: "wrm-01",
+    name: "Wire Rod Mill Laying Head Pinch Roll",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 15500,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 72,
+      temperatureUnit: "°C",
+      temperatureLimit: 90,
+      vibration: 1.9,
+      vibrationLimit: 4.5,
+      pressure: 6.5,
+      pressureLimit: 8.0,
+      historicalData: [
+        { time: "00:00", temperature: 65, vibration: 1.7, pressure: 6.2 },
+        { time: "01:00", temperature: 68, vibration: 1.8, pressure: 6.3 },
+        { time: "02:00", temperature: 70, vibration: 1.8, pressure: 6.5 },
+        { time: "03:00", temperature: 71, vibration: 1.9, pressure: 6.5 },
+        { time: "04:00", temperature: 72, vibration: 1.9, pressure: 6.5 }
+      ]
+    }
+  },
+  {
+    id: "sinter-02",
+    name: "Sinter Machine #2 Ignition Furnace Burner Blower",
+    area: "Ironmaking",
+    status: "Healthy",
+    delayCostPerHour: 9800,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 48,
+      temperatureUnit: "°C",
+      temperatureLimit: 65,
+      vibration: 1.5,
+      vibrationLimit: 3.5,
+      pressure: 0.8,
+      pressureLimit: 1.5,
+      historicalData: [
+        { time: "00:00", temperature: 44, vibration: 1.3, pressure: 0.8 },
+        { time: "01:00", temperature: 45, vibration: 1.4, pressure: 0.8 },
+        { time: "02:00", temperature: 46, vibration: 1.4, pressure: 0.8 },
+        { time: "03:00", temperature: 47, vibration: 1.5, pressure: 0.8 },
+        { time: "04:00", temperature: 48, vibration: 1.5, pressure: 0.8 }
+      ]
+    }
+  },
+  {
+    id: "crm-02",
+    name: "Cold Rolling Mill 4-Stand Tandem Mill Work Roll Spindle",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 24500,
+    processCriticality: "Critical",
+    telemetry: {
+      temperature: 62,
+      temperatureUnit: "°C",
+      temperatureLimit: 80,
+      vibration: 2.1,
+      vibrationLimit: 5.0,
+      pressure: 150,
+      pressureLimit: 180,
+      historicalData: [
+        { time: "00:00", temperature: 55, vibration: 1.8, pressure: 148 },
+        { time: "01:00", temperature: 58, vibration: 1.9, pressure: 149 },
+        { time: "02:00", temperature: 60, vibration: 2.0, pressure: 150 },
+        { time: "03:00", temperature: 61, vibration: 2.1, pressure: 150 },
+        { time: "04:00", temperature: 62, vibration: 2.1, pressure: 150 }
+      ]
+    }
+  },
+  {
+    id: "ld-03",
+    name: "LD Converter BOF Exhaust Gas Recovery ID Fan #1",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 17200,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 84,
+      temperatureUnit: "°C",
+      temperatureLimit: 105,
+      vibration: 3.2,
+      vibrationLimit: 5.5,
+      pressure: 45,
+      pressureLimit: 60,
+      historicalData: [
+        { time: "00:00", temperature: 78, vibration: 2.8, pressure: 44 },
+        { time: "01:00", temperature: 80, vibration: 2.9, pressure: 45 },
+        { time: "02:00", temperature: 82, vibration: 3.0, pressure: 45 },
+        { time: "03:00", temperature: 83, vibration: 3.1, pressure: 45 },
+        { time: "04:00", temperature: 84, vibration: 3.2, pressure: 45 }
+      ]
+    }
+  },
+  {
+    id: "utl-02",
+    name: "Primary Water Treatment Clarifier Feed Pump #2",
+    area: "Utilities",
+    status: "Healthy",
+    delayCostPerHour: 8200,
+    processCriticality: "Medium",
+    telemetry: {
+      temperature: 36,
+      temperatureUnit: "°C",
+      temperatureLimit: 55,
+      vibration: 1.2,
+      vibrationLimit: 3.0,
+      pressure: 4.5,
+      pressureLimit: 6.0,
+      historicalData: [
+        { time: "00:00", temperature: 32, vibration: 1.0, pressure: 4.3 },
+        { time: "01:00", temperature: 33, vibration: 1.1, pressure: 4.4 },
+        { time: "02:00", temperature: 34, vibration: 1.1, pressure: 4.4 },
+        { time: "03:00", temperature: 35, vibration: 1.2, pressure: 4.5 },
+        { time: "04:00", temperature: 36, vibration: 1.2, pressure: 4.5 }
+      ]
+    }
+  },
+  {
+    id: "oxy-01",
+    name: "Oxygen Plant Cryogenic MAC Stand #1",
+    area: "Utilities",
+    status: "Healthy",
+    delayCostPerHour: 19800,
+    processCriticality: "Critical",
+    telemetry: {
+      temperature: 98,
+      temperatureUnit: "°C",
+      temperatureLimit: 115,
+      vibration: 1.8,
+      vibrationLimit: 3.5,
+      pressure: 8.5,
+      pressureLimit: 11.0,
+      historicalData: [
+        { time: "00:00", temperature: 90, vibration: 1.5, pressure: 8.2 },
+        { time: "01:00", temperature: 92, vibration: 1.6, pressure: 8.3 },
+        { time: "02:00", temperature: 94, vibration: 1.7, pressure: 8.4 },
+        { time: "03:00", temperature: 96, vibration: 1.7, pressure: 8.4 },
+        { time: "04:00", temperature: 98, vibration: 1.8, pressure: 8.5 }
+      ]
+    }
+  },
+  {
+    id: "bf-05",
+    name: "Blast Furnace #4 Gas Cleaning Plant Venturi Scrubber",
+    area: "Ironmaking",
+    status: "Healthy",
+    delayCostPerHour: 14500,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 62,
+      temperatureUnit: "°C",
+      temperatureLimit: 85,
+      vibration: 2.1,
+      vibrationLimit: 4.5,
+      pressure: 1.2,
+      pressureLimit: 2.0,
+      historicalData: [
+        { time: "00:00", temperature: 58, vibration: 1.9, pressure: 1.1 },
+        { time: "01:00", temperature: 59, vibration: 1.9, pressure: 1.1 },
+        { time: "02:00", temperature: 60, vibration: 2.0, pressure: 1.2 },
+        { time: "03:00", temperature: 61, vibration: 2.0, pressure: 1.2 },
+        { time: "04:00", temperature: 62, vibration: 2.1, pressure: 1.2 }
+      ]
+    }
+  },
+  {
+    id: "bf-06",
+    name: "Blast Furnace #4 Hot Blast Stove Combustion Air Fan",
+    area: "Ironmaking",
+    status: "Healthy",
+    delayCostPerHour: 11200,
+    processCriticality: "Medium",
+    telemetry: {
+      temperature: 74,
+      temperatureUnit: "°C",
+      temperatureLimit: 95,
+      vibration: 2.8,
+      vibrationLimit: 5.0,
+      pressure: 0.15,
+      pressureLimit: 0.3,
+      historicalData: [
+        { time: "00:00", temperature: 70, vibration: 2.5, pressure: 0.12 },
+        { time: "01:00", temperature: 71, vibration: 2.6, pressure: 0.13 },
+        { time: "02:00", temperature: 72, vibration: 2.7, pressure: 0.14 },
+        { time: "03:00", temperature: 73, vibration: 2.8, pressure: 0.14 },
+        { time: "04:00", temperature: 74, vibration: 2.8, pressure: 0.15 }
+      ]
+    }
+  },
+  {
+    id: "bf-07",
+    name: "Blast Furnace #4 Slag Granulation Water Pump",
+    area: "Ironmaking",
+    status: "Healthy",
+    delayCostPerHour: 9800,
+    processCriticality: "Medium",
+    telemetry: {
+      temperature: 52,
+      temperatureUnit: "°C",
+      temperatureLimit: 70,
+      vibration: 1.9,
+      vibrationLimit: 3.5,
+      pressure: 4.2,
+      pressureLimit: 6.0,
+      historicalData: [
+        { time: "00:00", temperature: 48, vibration: 1.7, pressure: 4.0 },
+        { time: "01:00", temperature: 49, vibration: 1.8, pressure: 4.1 },
+        { time: "02:00", temperature: 50, vibration: 1.8, pressure: 4.1 },
+        { time: "03:00", temperature: 51, vibration: 1.9, pressure: 4.2 },
+        { time: "04:00", temperature: 52, vibration: 1.9, pressure: 4.2 }
+      ]
+    }
+  },
+  {
+    id: "cc-04",
+    name: "Continuous Caster Tundish Car Travel Drive",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 16500,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 78,
+      temperatureUnit: "°C",
+      temperatureLimit: 105,
+      vibration: 2.4,
+      vibrationLimit: 4.5,
+      pressure: 140,
+      pressureLimit: 180,
+      historicalData: [
+        { time: "00:00", temperature: 72, vibration: 2.1, pressure: 135 },
+        { time: "01:00", temperature: 74, vibration: 2.2, pressure: 136 },
+        { time: "02:00", temperature: 75, vibration: 2.3, pressure: 138 },
+        { time: "03:00", temperature: 77, vibration: 2.3, pressure: 140 },
+        { time: "04:00", temperature: 78, vibration: 2.4, pressure: 140 }
+      ]
+    }
+  },
+  {
+    id: "cc-05",
+    name: "Continuous Caster Secondary Cooling Spray Booms",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 15200,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 41,
+      temperatureUnit: "°C",
+      temperatureLimit: 60,
+      vibration: 1.1,
+      vibrationLimit: 2.5,
+      pressure: 12.4,
+      pressureLimit: 18.0,
+      historicalData: [
+        { time: "00:05", temperature: 38, vibration: 0.9, pressure: 12.0 },
+        { time: "01:05", temperature: 39, vibration: 1.0, pressure: 12.2 },
+        { time: "02:05", temperature: 40, vibration: 1.0, pressure: 12.3 },
+        { time: "03:05", temperature: 40, vibration: 1.1, pressure: 12.4 },
+        { time: "04:05", temperature: 41, vibration: 1.1, pressure: 12.4 }
+      ]
+    }
+  },
+  {
+    id: "cc-06",
+    name: "Continuous Caster Discharge Roller Table",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 11800,
+    processCriticality: "Medium",
+    telemetry: {
+      temperature: 88,
+      temperatureUnit: "°C",
+      temperatureLimit: 120,
+      vibration: 3.2,
+      vibrationLimit: 5.5,
+      pressure: 14.5,
+      pressureLimit: 20.0,
+      historicalData: [
+        { time: "00:00", temperature: 82, vibration: 2.8, pressure: 14.0 },
+        { time: "01:00", temperature: 84, vibration: 2.9, pressure: 14.2 },
+        { time: "02:00", temperature: 85, vibration: 3.0, pressure: 14.3 },
+        { time: "03:00", temperature: 87, vibration: 3.1, pressure: 14.5 },
+        { time: "04:00", temperature: 88, vibration: 3.2, pressure: 14.5 }
+      ]
+    }
+  },
+  {
+    id: "hsm-04",
+    name: "Hot Strip Mill Descaling Pump No. 3",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 23500,
+    processCriticality: "Critical",
+    telemetry: {
+      temperature: 58,
+      temperatureUnit: "°C",
+      temperatureLimit: 85,
+      vibration: 2.2,
+      vibrationLimit: 4.5,
+      pressure: 242,
+      pressureLimit: 280,
+      historicalData: [
+        { time: "00:00", temperature: 54, vibration: 1.9, pressure: 240 },
+        { time: "01:00", temperature: 55, vibration: 2.0, pressure: 241 },
+        { time: "02:00", temperature: 56, vibration: 2.1, pressure: 241 },
+        { time: "03:00", temperature: 57, vibration: 2.1, pressure: 242 },
+        { time: "04:00", temperature: 58, vibration: 2.2, pressure: 242 }
+      ]
+    }
+  },
+  {
+    id: "hsm-05",
+    name: "Hot Strip Mill Runout Table Cooling Water Spray Sector 4",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 18450,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 44,
+      temperatureUnit: "°C",
+      temperatureLimit: 65,
+      vibration: 1.2,
+      vibrationLimit: 3.0,
+      pressure: 6.8,
+      pressureLimit: 10.0,
+      historicalData: [
+        { time: "00:00", temperature: 40, vibration: 1.0, pressure: 6.5 },
+        { time: "01:00", temperature: 41, vibration: 1.1, pressure: 6.6 },
+        { time: "02:00", temperature: 42, vibration: 1.1, pressure: 6.6 },
+        { time: "03:00", temperature: 43, vibration: 1.2, pressure: 6.7 },
+        { time: "04:00", temperature: 44, vibration: 1.2, pressure: 6.8 }
+      ]
+    }
+  },
+  {
+    id: "hsm-06",
+    name: "Hot Strip Mill Crop Shear Drive Motor",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 22800,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 71,
+      temperatureUnit: "°C",
+      temperatureLimit: 90,
+      vibration: 2.3,
+      vibrationLimit: 4.8,
+      pressure: 185,
+      pressureLimit: 220,
+      historicalData: [
+        { time: "00:00", temperature: 65, vibration: 2.0, pressure: 180 },
+        { time: "01:00", temperature: 67, vibration: 2.1, pressure: 181 },
+        { time: "02:00", temperature: 68, vibration: 2.2, pressure: 183 },
+        { time: "03:00", temperature: 70, vibration: 2.2, pressure: 185 },
+        { time: "04:00", temperature: 71, vibration: 2.3, pressure: 185 }
+      ]
+    }
+  },
+  {
+    id: "ld-04",
+    name: "LD Converter Oxygen Lance Hoist Winch",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 20500,
+    processCriticality: "Critical",
+    telemetry: {
+      temperature: 68,
+      temperatureUnit: "°C",
+      temperatureLimit: 90,
+      vibration: 1.8,
+      vibrationLimit: 4.0,
+      pressure: 175,
+      pressureLimit: 210,
+      historicalData: [
+        { time: "00:00", temperature: 62, vibration: 1.5, pressure: 170 },
+        { time: "01:00", temperature: 64, vibration: 1.6, pressure: 172 },
+        { time: "02:00", temperature: 65, vibration: 1.7, pressure: 173 },
+        { time: "03:00", temperature: 67, vibration: 1.7, pressure: 175 },
+        { time: "04:00", temperature: 68, vibration: 1.8, pressure: 175 }
+      ]
+    }
+  },
+  {
+    id: "ld-05",
+    name: "LD Converter Sub-Lance Measuring System Drive",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 18100,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 61,
+      temperatureUnit: "°C",
+      temperatureLimit: 85,
+      vibration: 1.3,
+      vibrationLimit: 3.0,
+      pressure: 120,
+      pressureLimit: 150,
+      historicalData: [
+        { time: "00:00", temperature: 55, vibration: 1.1, pressure: 118 },
+        { time: "01:00", temperature: 56, vibration: 1.2, pressure: 119 },
+        { time: "02:00", temperature: 58, vibration: 1.2, pressure: 120 },
+        { time: "03:00", temperature: 60, vibration: 1.3, pressure: 120 },
+        { time: "04:00", temperature: 61, vibration: 1.3, pressure: 120 }
+      ]
+    }
+  },
+  {
+    id: "ld-06",
+    name: "LD Converter Scrap Charging Crane Main Hoist",
+    area: "Steelmaking",
+    status: "Healthy",
+    delayCostPerHour: 19400,
+    processCriticality: "Critical",
+    telemetry: {
+      temperature: 55,
+      temperatureUnit: "°C",
+      temperatureLimit: 80,
+      vibration: 1.4,
+      vibrationLimit: 3.5,
+      pressure: 45,
+      pressureLimit: 60,
+      historicalData: [
+        { time: "00:00", temperature: 50, vibration: 1.2, pressure: 42 },
+        { time: "01:00", temperature: 51, vibration: 1.2, pressure: 43 },
+        { time: "02:00", temperature: 53, vibration: 1.3, pressure: 44 },
+        { time: "03:00", temperature: 54, vibration: 1.3, pressure: 45 },
+        { time: "04:00", temperature: 55, vibration: 1.4, pressure: 45 }
+      ]
+    }
+  },
+  {
+    id: "cogc-04",
+    name: "Coke Oven Ammonia Washer Recirculation Pump",
+    area: "Utilities",
+    status: "Healthy",
+    delayCostPerHour: 10400,
+    processCriticality: "Medium",
+    telemetry: {
+      temperature: 48,
+      temperatureUnit: "°C",
+      temperatureLimit: 70,
+      vibration: 1.6,
+      vibrationLimit: 3.5,
+      pressure: 3.8,
+      pressureLimit: 5.5,
+      historicalData: [
+        { time: "00:00", temperature: 44, vibration: 1.3, pressure: 3.5 },
+        { time: "01:00", temperature: 45, vibration: 1.4, pressure: 3.6 },
+        { time: "02:00", temperature: 46, vibration: 1.4, pressure: 3.7 },
+        { time: "03:00", temperature: 47, vibration: 1.5, pressure: 3.8 },
+        { time: "04:00", temperature: 48, vibration: 1.6, pressure: 3.8 }
+      ]
+    }
+  },
+  {
+    id: "cogc-05",
+    name: "Coke Oven Exhaust Gas Suction Main Valve",
+    area: "Utilities",
+    status: "Healthy",
+    delayCostPerHour: 11500,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 82,
+      temperatureUnit: "°C",
+      temperatureLimit: 110,
+      vibration: 1.5,
+      vibrationLimit: 3.0,
+      pressure: 0.18,
+      pressureLimit: 0.35,
+      historicalData: [
+        { time: "00:00", temperature: 75, vibration: 1.2, pressure: 0.15 },
+        { time: "01:00", temperature: 77, vibration: 1.3, pressure: 0.16 },
+        { time: "02:00", temperature: 79, vibration: 1.4, pressure: 0.17 },
+        { time: "03:00", temperature: 80, vibration: 1.4, pressure: 0.18 },
+        { time: "04:00", temperature: 82, vibration: 1.5, pressure: 0.18 }
+      ]
+    }
+  },
+  {
+    id: "wrm-02",
+    name: "Wire Rod Mill Finishing Block Drive Shaft",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 16200,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 78,
+      temperatureUnit: "°C",
+      temperatureLimit: 95,
+      vibration: 2.1,
+      vibrationLimit: 4.5,
+      pressure: 12.0,
+      pressureLimit: 16.0,
+      historicalData: [
+        { time: "00:00", temperature: 72, vibration: 1.8, pressure: 11.5 },
+        { time: "01:00", temperature: 74, vibration: 1.9, pressure: 11.7 },
+        { time: "02:00", temperature: 75, vibration: 2.0, pressure: 11.8 },
+        { time: "03:00", temperature: 76, vibration: 2.0, pressure: 12.0 },
+        { time: "04:00", temperature: 78, vibration: 2.1, pressure: 12.0 }
+      ]
+    }
+  },
+  {
+    id: "crm-03",
+    name: "Cold Rolling Mill Tension Leveler Centering Guide",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 20250,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 55,
+      temperatureUnit: "°C",
+      temperatureLimit: 75,
+      vibration: 1.4,
+      vibrationLimit: 3.2,
+      pressure: 145,
+      pressureLimit: 190,
+      historicalData: [
+        { time: "00:00", temperature: 50, vibration: 1.1, pressure: 140 },
+        { time: "01:00", temperature: 52, vibration: 1.2, pressure: 142 },
+        { time: "02:00", temperature: 53, vibration: 1.3, pressure: 143 },
+        { time: "03:00", temperature: 54, vibration: 1.3, pressure: 145 },
+        { time: "04:00", temperature: 55, vibration: 1.4, pressure: 145 }
+      ]
+    }
+  },
+  {
+    id: "crm-04",
+    name: "Cold Rolling Mill Entry Tension Reel Mandrel",
+    area: "Rolling Mill",
+    status: "Healthy",
+    delayCostPerHour: 22300,
+    processCriticality: "Critical",
+    telemetry: {
+      temperature: 66,
+      temperatureUnit: "°C",
+      temperatureLimit: 90,
+      vibration: 1.9,
+      vibrationLimit: 4.5,
+      pressure: 210,
+      pressureLimit: 250,
+      historicalData: [
+        { time: "00:00", temperature: 60, vibration: 1.6, pressure: 205 },
+        { time: "01:00", temperature: 62, vibration: 1.7, pressure: 207 },
+        { time: "02:00", temperature: 63, vibration: 1.8, pressure: 208 },
+        { time: "03:00", temperature: 65, vibration: 1.8, pressure: 210 },
+        { time: "04:00", temperature: 66, vibration: 1.9, pressure: 210 }
+      ]
+    }
+  },
+  {
+    id: "utl-03",
+    name: "Boiler House High-Pressure Deaerator Feedwater Pump",
+    area: "Utilities",
+    status: "Healthy",
+    delayCostPerHour: 9100,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 110,
+      temperatureUnit: "°C",
+      temperatureLimit: 140,
+      vibration: 1.7,
+      vibrationLimit: 4.0,
+      pressure: 8.4,
+      pressureLimit: 12.0,
+      historicalData: [
+        { time: "00:00", temperature: 102, vibration: 1.4, pressure: 8.0 },
+        { time: "01:00", temperature: 104, vibration: 1.5, pressure: 8.1 },
+        { time: "02:00", temperature: 106, vibration: 1.5, pressure: 8.2 },
+        { time: "03:00", temperature: 108, vibration: 1.6, pressure: 8.3 },
+        { time: "04:00", temperature: 110, vibration: 1.7, pressure: 8.4 }
+      ]
+    }
+  },
+  {
+    id: "oxy-02",
+    name: "Oxygen Plant Air Suction Filter Baghouse Radial Fan",
+    area: "Utilities",
+    status: "Healthy",
+    delayCostPerHour: 15400,
+    processCriticality: "High",
+    telemetry: {
+      temperature: 52,
+      temperatureUnit: "°C",
+      temperatureLimit: 75,
+      vibration: 2.2,
+      vibrationLimit: 4.8,
+      pressure: 2.1,
+      pressureLimit: 3.5,
+      historicalData: [
+        { time: "00:00", temperature: 46, vibration: 1.8, pressure: 1.9 },
+        { time: "01:00", temperature: 48, vibration: 1.9, pressure: 2.0 },
+        { time: "02:00", temperature: 49, vibration: 2.0, pressure: 2.1 },
+        { time: "03:00", temperature: 51, vibration: 2.1, pressure: 2.1 },
+        { time: "04:00", temperature: 52, vibration: 2.2, pressure: 2.1 }
+      ]
+    }
   }
 ];
 
@@ -295,7 +1087,17 @@ function safeSetItem<T>(key: string, val: T) {
 // Client Side Database Manager Cache
 export class ClientStore {
   static getAssets(): Asset[] {
-    return safeGetItem<Asset[]>("ts_mw_assets", INITIAL_ASSETS);
+    const list = safeGetItem<Asset[]>("ts_mw_assets", INITIAL_ASSETS);
+    if (list.length < INITIAL_ASSETS.length) {
+      const map = new Map(list.map(a => [a.id, a]));
+      INITIAL_ASSETS.forEach(a => {
+        if (!map.has(a.id)) {
+          list.push(a);
+        }
+      });
+      this.saveAssets(list);
+    }
+    return list;
   }
 
   static saveAssets(assetsList: Asset[]) {

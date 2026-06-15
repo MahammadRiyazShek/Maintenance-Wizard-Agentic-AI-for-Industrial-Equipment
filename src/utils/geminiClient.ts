@@ -514,9 +514,9 @@ function generateSimulatedChatResponse(
         return "Checking the stock database for Hot Strip Mill Roll Bearings:\n- Spare Part: Model WRB-SL90\n- Stock status: 4 units available in Warehouse A (above safety level of 2 units).\n- Procurement Lead Time: 60 days standard factory cycle.\n- Requisition advice: Ready for roll changeover allocation.";
       }
       if (text.includes("lubrication") || text.includes("grease") || text.includes("purge")) {
-        return "SOP-301-HSM guidelines mandate high-temperature synthetic chemical lithium-complex grease. Purging forced grease pushes contaminants out and serves to lower local friction dissipation in the housing.";
+        return "SOP-301-HSM guidelines mandate high-temperature synthetic chemical lithium-complex grease. Purging forced grease pushes contaminants out and serves to lower local friction dissipation in the housing. Refer to lubrication maintenance standard SOP-LUB-01 for exact volume coefficients.";
       }
-      return `Welcome to the Hot Strip Mill Roll Stand #1 Console. Current readings are Temp: ${asset.telemetry.temperature}°C and Vib: ${asset.telemetry.vibration} mm/s. Safe operation is monitored. Ask about 'limits', 'lubrication', or 'bearing spares'.`;
+      return `Welcome to the Hot Strip Mill Roll Stand #1 Console. Current readings are Temp: ${asset.telemetry.temperature}°C and Vib: ${asset.telemetry.vibration} mm/s. Safe operation is monitored. Ask about 'limits', 'lubrication' (SOP-LUB-01), or 'bearing spares'.`;
     }
 
     if (asset.id === "cogc-03") {
@@ -535,11 +535,11 @@ function generateSimulatedChatResponse(
     return "Blast Furnace furnace dump guidelines require isolation of the outer stoves within 30 minutes of a cooling water burn-through to prevent hot liquid iron from encountering oxygenated steam, which triggers dangerous thermal vapor eruptions. Refer to Safety Incident INC-BF4-2024-03.";
   }
   
-  if (text.includes("grease") || text.includes("lubricant") || text.includes("kluber")) {
-    return "For heavy mill roller stands and mould oscillators, SMS Demag guidelines dictate high-temperature synthetic Lithium complex grease, specifically Klüberplex BE 31-502. Do not mix with silicone-based oils which disintegrate at high casting temperatures.";
+  if (text.includes("grease") || text.includes("lubricant") || text.includes("kluber") || text.includes("bearing") || text.includes("gearbox")) {
+    return "For heavy mill roller stands and mould oscillators, SMS Demag guidelines dictate high-temperature synthetic Lithium complex grease, specifically Klüberplex BE 31-502 as mapped in standard SOP-LUB-01. For Flender or helical gearboxes, see gear speed maintenance guidelines in MAN-GBX-101-V1 to ensure optimal bearing tolerances are met.";
   }
 
-  return "I am the Tata Steel Maintenance Wizard assistant. Ask me questions regarding safety SOP guidelines, machinery limit boundaries, warehouse spare parts availability, or emergency shutdown procedures for blast furnace hearth tuyeres, mould oscillators, and roll stands.";
+  return "I am the Tata Steel Maintenance Wizard assistant. Ask me questions regarding safety SOP-LUB-01 guidelines, Flender gearbox manual MAN-GBX-101-V1, warehouse safety parts availability, or emergency shutdown procedures for blast furnace hearth tuyeres under WO-2026-1012.";
 }
 
 

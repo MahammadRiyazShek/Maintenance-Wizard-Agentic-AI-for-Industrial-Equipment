@@ -248,7 +248,7 @@ Generate the diagnostic report matching the strict JSON layout requested. Use pr
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: prompt,
       config: {
         systemInstruction,
@@ -383,7 +383,7 @@ ${ragContext}`;
 
     // Start Chat session using the proper SDK
     const chat = ai.chats.create({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       history: formattedHistory,
       config: {
         systemInstruction,
