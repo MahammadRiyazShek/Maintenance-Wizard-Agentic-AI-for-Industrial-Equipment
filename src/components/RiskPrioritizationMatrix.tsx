@@ -58,13 +58,13 @@ export default function RiskPrioritizationMatrix({
   // Comprehensive mathematical triangulation for ALL assets
   const assetsMpiData = useMemo(() => {
     return assets.map(asset => {
-      // 1. Criticality Factor (Safety / Criticality Weighting - 25% weight)
-      let crit = 30;
-      if (asset.processCriticality === "Critical") crit = 100;
-      else if (asset.processCriticality === "High") crit = 80;
-      else if (asset.processCriticality === "Medium") crit = 50;
+      // 1. Criticality Factor (C) - Range: 2 to 5
+      let c_factor = 2;
+      if (asset.processCriticality === "Critical") c_factor = 5;
+      else if (asset.processCriticality === "High") c_factor = 4;
+      else if (asset.processCriticality === "Medium") c_factor = 3;
 
-      // 2. Sensor Stress Level (Failure Probability Weighting - 25% weight)
+      // 2. Sensor Stress Level (Failure Probability - P_f) - Range: 0.1 to 1.0 (Mapped from telemetry stress)
       let stress = 35;
       if (asset.telemetry) {
         const tempLimit = asset.telemetry.temperatureLimit || 100;
@@ -73,55 +73,63 @@ export default function RiskPrioritizationMatrix({
         const vRatio = asset.telemetry.vibration / vibLimit;
         stress = Math.min(100, Math.round(((tRatio + vRatio) / 2) * 100));
       }
+      const pf_factor = Number((stress / 100).toFixed(2));
 
-      // 3. Delay Penalty Severity Rank (Plant Economic Impact - 20% weight)
-      // Normalizing against highest plant penalty Stand ($22,000 / hr)
-      const penalty = Math.min(100, Math.round((asset.delayCostPerHour / 22000) * 100));
+      // 3. Delay Penalty Severity (S_d) - Range: 2 to 10 (Derived from stoppage costs)
+      let sd_factor = 2;
+      if (asset.delayCostPerHour >= 20000) sd_factor = 10;
+      else if (asset.delayCostPerHour >= 15000) sd_factor = 8;
+      else if (asset.delayCostPerHour >= 10000) sd_factor = 6;
+      else if (asset.delayCostPerHour >= 5000) sd_factor = 4;
 
-      // 4 & 5. Spares Availability & Lead Time factor (30% total weight)
+      // 4. Spare Availability Scarcity Coefficient (A_s) - Range: 2 to 10
       let stock = 2;
       let leadTimeDays = 7;
+      let safetyLevel = 1;
       
       const relatedSpare = sparesCatalog.find((s: any) => s.compatibleAssets.includes(asset.id));
       if (relatedSpare) {
         stock = relatedSpare.currentStock !== undefined ? relatedSpare.currentStock : relatedSpare.safetyLevel;
         leadTimeDays = relatedSpare.leadTimeDays;
+        safetyLevel = relatedSpare.safetyLevel;
       } else {
         // Area-based heuristics for uncatalogued spares
-        if (asset.area === "Ironmaking") { stock = 1; leadTimeDays = 30; }
-        else if (asset.area === "Steelmaking") { stock = 1; leadTimeDays = 45; }
-        else if (asset.area === "Rolling Mill") { stock = 0; leadTimeDays = 60; }
-        else { stock = 2; leadTimeDays = 7; }
+        if (asset.area === "Ironmaking") { stock = 1; leadTimeDays = 30; safetyLevel = 1; }
+        else if (asset.area === "Steelmaking") { stock = 1; leadTimeDays = 45; safetyLevel = 1; }
+        else if (asset.area === "Rolling Mill") { stock = 0; leadTimeDays = 60; safetyLevel = 2; }
+        else { stock = 2; leadTimeDays = 7; safetyLevel = 1; }
       }
 
-      const sparesAvailability = stock === 0 ? 0 : stock < 2 ? 50 : 100;
-      const leadTimeFactor = Math.min(100, Math.round((leadTimeDays / 60) * 100));
+      let as_factor = 2; // Stock Level is secure
+      if (stock === 0) as_factor = 10; // Max lack of spares
+      else if (stock < safetyLevel) as_factor = 6; // Minor deficit
 
-      // Composite MPI formula:
-      // MPI = (FailureProbability * 0.25) + (SafetyCriticality * 0.25) + (EconomicImpact * 0.20) + ((100 - SparesAvailability) * 0.15) + (LeadTimeFactor * 0.15)
-      const mpi = Math.min(100, Math.round(
-        (stress * 0.25) + 
-        (crit * 0.25) + 
-        (penalty * 0.20) + 
-        ((100 - sparesAvailability) * 0.15) + 
-        (leadTimeFactor * 0.15)
-      ));
+      // Section 5.2 Deterministic Multiplicative Formula:
+      // Raw MPI = C * P_f * S_d * A_s
+      const rawMpi = Number((c_factor * pf_factor * sd_factor * as_factor).toFixed(2));
+      // Normalized Score (Raw ÷ 500 * 100 = Raw ÷ 5)
+      const mpi = Math.min(100, Math.max(1, Math.round(rawMpi * 0.2)));
 
       // Risk level mapping
       let riskTier: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW" = "LOW";
-      if (mpi >= 75) riskTier = "CRITICAL";
-      else if (mpi >= 55) riskTier = "HIGH";
-      else if (mpi >= 35) riskTier = "MEDIUM";
+      if (mpi >= 70) riskTier = "CRITICAL";
+      else if (mpi >= 48) riskTier = "HIGH";
+      else if (mpi >= 25) riskTier = "MEDIUM";
 
       return {
         asset,
         mpi,
-        crit,
+        rawMpi,
+        c_factor,
+        pf_factor,
+        sd_factor,
+        as_factor,
+        crit: c_factor * 20, // keep for UI compatibility
         stress,
-        penalty,
+        penalty: sd_factor,
         stock,
         leadTimeDays,
-        sparesAvailability,
+        sparesAvailability: stock === 0 ? 0 : stock < safetyLevel ? 50 : 100,
         riskTier
       };
     });
@@ -247,6 +255,42 @@ export default function RiskPrioritizationMatrix({
         </button>
       </div>
 
+      {/* Explicit Equation & Problem Statement Section 5.2 Header Banner */}
+      <div className="bg-slate-950 p-4 border-b border-slate-800 text-slate-300 font-sans leading-relaxed text-xs">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="bg-indigo-900 border border-indigo-750 text-indigo-300 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded tracking-wide uppercase">
+                Problem Statement Formula (Section 5.2)
+              </span>
+              <span className="text-slate-400 font-bold text-[10.5px]">DETERMINISTIC MULTI-FACTOR MATHEMATICAL COUPLING</span>
+            </div>
+            
+            <div className="mt-2 text-slate-100 font-mono text-[11px] bg-slate-900/90 border border-slate-800 rounded-lg p-3 inline-block font-extrabold max-w-full overflow-x-auto whitespace-nowrap">
+              <span className="text-indigo-400">MPI Score</span> = 
+              <span className="text-rose-450"> Criticality (C)</span> × 
+              <span className="text-amber-450 font-bold"> Failure Prob (P<sub>f</sub>)</span> × 
+              <span className="text-emerald-400"> Delay Severity (S<sub>d</sub>)</span> × 
+              <span className="text-blue-400"> Spare Avail (A<sub>s</sub>)</span>
+            </div>
+            
+            <p className="text-[9.5px] text-slate-400 leading-normal max-w-3xl">
+              This scoring system calculates the exact risk profile of a failure event. Raw score is the multiplicative product of <span className="font-mono text-indigo-400 font-bold">C × P<sub>f</sub> × S<sub>d</sub> × A<sub>s</sub></span> (Max: 500, Min: 0.8), which is normalized directly to. a <span className="font-mono font-bold text-slate-200">0 - 100% Normalized Index</span> (Product × 0.20).
+            </p>
+          </div>
+          
+          <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-3.5 space-y-2 max-w-xs shrink-0 self-stretch flex flex-col justify-center">
+            <span className="text-[8.5px] font-mono text-slate-400 uppercase font-bold tracking-wider block border-b border-slate-800 pb-1">Factor Values Mapping Range:</span>
+            <div className="grid grid-cols-2 gap-x-2 gap-y-1 font-mono text-[8px] text-slate-350">
+              <div>• <span className="text-rose-400 font-bold">C:</span> 2 (Low) to 5 (Critical)</div>
+              <div>• <span className="text-amber-400 font-bold">P<sub>f</sub>:</span> 0.1 to 1.0 (Sensor wear)</div>
+              <div>• <span className="text-emerald-400 font-bold">S<sub>d</sub>:</span> 2 to 10 (Loss hourly rate)</div>
+              <div>• <span className="text-blue-400 font-bold">A<sub>s</sub>:</span> 2 (Onhand) to 10 (Shortage)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Control Strip */}
       <div className="bg-slate-50 p-3 border-b border-slate-200 grid grid-cols-1 md:grid-cols-4 gap-3 items-center">
         {/* Search Input */}
@@ -356,7 +400,7 @@ export default function RiskPrioritizationMatrix({
                 </td>
               </tr>
             ) : (
-              processedData.map(({ asset, mpi, crit, stress, penalty, stock, leadTimeDays, sparesAvailability, riskTier }) => {
+              processedData.map(({ asset, mpi, rawMpi, c_factor, pf_factor, sd_factor, as_factor, crit, stress, penalty, stock, leadTimeDays, sparesAvailability, riskTier }) => {
                 const isSelected = selectedAssetId === asset.id;
                 return (
                   <tr 
@@ -387,22 +431,27 @@ export default function RiskPrioritizationMatrix({
 
                     {/* Criticality */}
                     <td className="p-3">
-                      <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide uppercase border ${
-                        asset.processCriticality === "Critical" 
-                          ? "bg-rose-50 border-rose-100 text-rose-700 font-extrabold" 
-                          : asset.processCriticality === "High"
-                          ? "bg-amber-50 border-amber-100 text-amber-700"
-                          : "bg-slate-50 border-slate-200 text-slate-500"
-                      }`}>
-                        {asset.processCriticality} (W:{crit}%)
-                      </span>
+                      <div className="space-y-0.5">
+                        <span className={`px-1.5 py-0.5 rounded text-[8.5px] font-bold tracking-wide uppercase border inline-block ${
+                          asset.processCriticality === "Critical" 
+                            ? "bg-rose-50 border-rose-100 text-rose-700 font-extrabold" 
+                            : asset.processCriticality === "High"
+                            ? "bg-amber-50 border-amber-100 text-amber-700"
+                            : "bg-slate-50 border-slate-200 text-slate-500"
+                        }`}>
+                          {asset.processCriticality}
+                        </span>
+                        <div className="text-[9px] font-mono text-indigo-650 font-bold">
+                          Factor C = <span className="font-extrabold bg-slate-100 px-1 py-0.2 rounded border text-indigo-700">{c_factor}</span>
+                        </div>
+                      </div>
                     </td>
 
                     {/* Sensor Wear Pressure */}
                     <td className="p-3 text-center">
-                      <div className="max-w-[70px] mx-auto space-y-1">
-                        <span className="font-mono font-bold text-slate-700 text-[10.5px]">
-                          {stress}%
+                      <div className="max-w-[75px] mx-auto space-y-1">
+                        <span className="font-mono font-bold text-slate-700 text-[10px] block">
+                          Stress {stress}%
                         </span>
                         <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
                           <div 
@@ -412,43 +461,51 @@ export default function RiskPrioritizationMatrix({
                             style={{ width: `${stress}%` }}
                           />
                         </div>
+                        <div className="text-[9px] font-mono text-amber-750 font-bold leading-none">
+                          P<sub>f</sub> = <span className="bg-amber-50 px-0.8 border border-amber-200 rounded">{pf_factor}</span>
+                        </div>
                       </div>
                     </td>
 
                     {/* Financial Loss */}
-                    <td className="p-3 text-right font-mono font-bold text-slate-750">
-                      <div>${asset.delayCostPerHour.toLocaleString()}/hr</div>
-                      <span className="text-[8.5px] text-slate-400 block font-normal leading-none mt-0.5">
-                        Tier Score: {penalty}
-                      </span>
+                    <td className="p-3 text-right">
+                      <div className="font-mono font-bold text-slate-800 text-[10.5px]">
+                        ${asset.delayCostPerHour.toLocaleString()}/hr
+                      </div>
+                      <div className="text-[9px] font-mono text-emerald-700 font-bold mt-0.5">
+                        S<sub>d</sub> = <span className="bg-emerald-50 px-0.8 border border-emerald-150 rounded">{sd_factor}</span>
+                      </div>
                     </td>
 
                     {/* Spares Outage constraints */}
                     <td className="p-3 text-center">
                       <div className="inline-flex flex-col items-center gap-0.5">
-                        <span className={`px-1.5 py-0.5 rounded text-[9.5px] font-mono leading-tight border font-extrabold ${
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono leading-tight border font-extrabold ${
                           stock === 0 
                             ? "bg-rose-950/20 text-rose-700 border-rose-250 font-black animate-pulse" 
                             : stock < 2 
                             ? "bg-amber-50 text-amber-700 border-amber-200" 
                             : "bg-emerald-50 text-emerald-700 border-emerald-200"
                         }`}>
-                          {stock} pcs onhand ({100 - sparesAvailability}% Deficit)
+                          {stock} pcs onhand
                         </span>
-                        <span className="text-[9px] text-slate-400 font-mono">
-                          LT: <b>{leadTimeDays} days</b> sourcing
-                        </span>
+                        <div className="text-[9px] font-mono text-blue-700 font-bold mt-0.5">
+                          A<sub>s</sub> = <span className="bg-blue-50 px-0.8 border border-blue-200 rounded">{as_factor}</span> • LT:{leadTimeDays}d
+                        </div>
                       </div>
                     </td>
 
                     {/* Overall Math MPI */}
                     <td className="p-3 text-center">
                       <div className="inline-flex flex-col items-center justify-center">
-                        <span className={`px-2.5 py-1 text-xs font-black font-mono rounded-lg border shadow-xs ${getRiskBadgeStyle(riskTier)}`}>
-                          MPI: {mpi}
+                        <span className={`px-2 py-0.5 text-[10px] font-black font-mono rounded border shadow-xs ${getRiskBadgeStyle(riskTier)}`}>
+                          MPI: {mpi}%
                         </span>
-                        <span className="text-[8.5px] text-slate-400 block font-mono font-extrabold mt-0.5 uppercase tracking-wider">
-                          {riskTier} HZ
+                        <span className="text-[8px] text-slate-400 block font-mono mt-0.5 leading-none">
+                          Product: <b>{rawMpi}</b>
+                        </span>
+                        <span className="text-[7.5px] bg-slate-900 text-slate-300 font-mono px-1 py-0.2 rounded mt-1 font-bold">
+                          C×P<sub>f</sub>×S<sub>d</sub>×A<sub>s</sub>
                         </span>
                       </div>
                     </td>

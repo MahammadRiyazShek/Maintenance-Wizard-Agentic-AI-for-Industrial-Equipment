@@ -302,12 +302,13 @@ export default function SparesProcurementPanel({ asset, onStockUpdate }: SparesP
                 Critical Warehouse Inventory & Stock Levels
               </h4>
               
-              <div className="border border-slate-200 rounded-xl overflow-hidden shadow-2xs bg-slate-50/50">
-                <div className="grid grid-cols-12 gap-1 bg-slate-200/65 px-3 py-2 font-mono text-[9px] text-slate-500 font-bold uppercase">
-                  <span className="col-span-5">Critical Component</span>
-                  <span className="col-span-3 text-center">Stock / safety</span>
+              <div className="border border-slate-200 rounded-xl overflow-hidden shadow-2xs bg-slate-50/50" id="spares-grid-table">
+                <div className="grid grid-cols-12 gap-1 bg-slate-200/65 px-3 py-2.5 font-mono text-[9px] text-slate-500 font-bold uppercase">
+                  <span className="col-span-4">Critical Component & Compatibility</span>
+                  <span className="col-span-2 text-center">SKU / Code</span>
+                  <span className="col-span-2 text-center">On-Hand Stock</span>
                   <span className="col-span-2 text-center">Lead Time</span>
-                  <span className="col-span-2 text-right">Cost (Unit)</span>
+                  <span className="col-span-2 text-right">Quick Dispatch</span>
                 </div>
 
                 <div className="divide-y divide-slate-150 bg-white">
@@ -315,41 +316,82 @@ export default function SparesProcurementPanel({ asset, onStockUpdate }: SparesP
                     const hasAlert = item.currentStock < item.safetyLevel;
                     
                     return (
-                      <div key={item.id} className="grid grid-cols-12 gap-1 px-3 py-2.5 items-center hover:bg-slate-50 transition">
+                      <div key={item.id} className="grid grid-cols-12 gap-1 px-3 py-3 items-center hover:bg-slate-50 transition">
                         {/* Component Info */}
-                        <div className="col-span-5 space-y-0.5">
-                          <div className="font-bold text-slate-800 flex items-center gap-1">
+                        <div className="col-span-4 space-y-0.5">
+                          <div className="font-bold text-slate-800 flex items-center gap-1 text-[11px]">
                             <span>{item.name}</span>
                             {hasAlert && (
                               <span className="inline-block w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
                             )}
                           </div>
-                          <div className="text-[9.5px] font-mono text-slate-400">
-                            {item.model} • Compatibility: {item.compatibleAssets.join(", ").toUpperCase()}
+                          <div className="text-[9.5px] text-slate-400 font-mono">
+                            Fits: {item.compatibleAssets.join(", ").toUpperCase()}
                           </div>
                         </div>
 
+                        {/* SKU code */}
+                        <div className="col-span-2 text-center font-mono text-[10px] bg-slate-100 text-slate-705 py-0.5 px-1 rounded border border-slate-200 self-center shrink-0">
+                          {item.model}
+                        </div>
+
                         {/* Stock level indicators */}
-                        <div className="col-span-3 text-center">
+                        <div className="col-span-2 text-center">
                           <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9.5px] font-mono font-bold border ${
                             item.currentStock === 0 
-                              ? "bg-rose-50 border-rose-200 text-rose-700" 
+                              ? "bg-rose-50 border-rose-200 text-rose-700 font-extrabold animate-pulse" 
                               : item.currentStock < item.safetyLevel 
                                 ? "bg-amber-50 border-amber-200 text-amber-700" 
                                 : "bg-emerald-50 border-emerald-200 text-emerald-700"
                           }`}>
-                            {item.currentStock} / {item.safetyLevel}
+                            {item.currentStock} pcs
+                          </span>
+                          <span className="block text-[8.5px] text-slate-400 font-mono mt-0.5">
+                            Min Safety: {item.safetyLevel}
                           </span>
                         </div>
 
                         {/* Supplier Baseline Lead Time */}
-                        <div className="col-span-2 text-center text-slate-600 font-mono font-medium">
-                          {item.leadTimeDays} days
+                        <div className="col-span-2 text-center text-slate-650 font-mono font-bold text-[10.5px]">
+                          {item.leadTimeDays} Days
                         </div>
 
-                        {/* Unit Cost */}
-                        <div className="col-span-2 text-right font-mono font-extrabold text-slate-800">
-                          ${item.unitCostUSD.toLocaleString()}
+                        {/* Quick Trigger Button */}
+                        <div className="col-span-2 text-right">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedSpareId(item.id);
+                              // Trigger state update
+                              const updated = spares.map(sp => {
+                                if (sp.id === item.id) {
+                                  return { ...sp, currentStock: sp.currentStock + 1 };
+                                }
+                                return sp;
+                              });
+                              saveToLocal(updated);
+                              
+                              // Log order
+                              const now = new Date();
+                              const arrivalDate = new Date();
+                              arrivalDate.setDate(now.getDate() + item.leadTimeDays);
+                              const dateString = arrivalDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+                              const totalCostRawINR = Math.round(item.unitCostUSD * usdToInr);
+                              const newLog = {
+                                id: `so-${Math.random().toString(36).substr(2, 5)}`,
+                                timestamp: now.toLocaleTimeString(),
+                                item: item.name,
+                                qty: 1,
+                                route: "OEM Direct Sourcing",
+                                estDelivery: `${dateString} (${item.leadTimeDays} Days)`,
+                                costINR: totalCostRawINR
+                              };
+                              setOrderLogs(prev => [newLog, ...prev]);
+                            }}
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-[9.5px] font-bold px-2 py-1 rounded shadow-2xs hover:cursor-pointer select-none transition border border-emerald-650"
+                          >
+                            +1 Procure
+                          </button>
                         </div>
                       </div>
                     );

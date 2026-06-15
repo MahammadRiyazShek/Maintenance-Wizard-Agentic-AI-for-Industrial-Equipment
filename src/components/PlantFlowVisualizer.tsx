@@ -44,87 +44,154 @@ export default function PlantFlowVisualizer({ assets }: PlantFlowVisualizerProps
   const [viewMode, setViewMode] = useState<"pipeline" | "dependency">("dependency");
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>("bf-04");
 
-  // Map our plant assets to our active structures
+  // Map our plant assets dynamically
   const getAssetByArea = (area: "Ironmaking" | "Steelmaking" | "Rolling Mill" | "Utilities") => {
     return assets.find(a => a.area === area);
   };
 
-  const utAsset = getAssetByArea("Utilities");
-  const bfAsset = getAssetByArea("Ironmaking");
-  const ccAsset = getAssetByArea("Steelmaking");
-  const hsmAsset = getAssetByArea("Rolling Mill");
-
-  // Hardcode the core interconnected nodes in our steelmaking stream
+  // 12 High Fidelity Interconnected nodes across the entire Jamshedpur steel production line
   const dependencyNodes: DependencyNode[] = [
     {
-      id: "cogc-03",
-      name: "COGC-03 Gas Compressor",
-      shortName: "Gas Compressor #3",
-      role: "Coke Oven Gas compression and fuel distribution to stoves.",
+      id: "oxy-01",
+      name: "Oxy-01 Air Separation Unit",
+      shortName: "O2 Separation Unit",
+      role: "High-purity oxygen blast enrichment stream for Blast Furnace hearth stoves.",
       area: "Utilities",
-      gridClass: "col-span-1 row-start-1 col-start-1 md:col-start-1",
+      gridClass: "col-span-1",
       upstreamIds: [],
       downstreamEffects: [
-        { nodeId: "sh-01", secondsToCritical: 7200, probability: 95, impactDescription: "Sintering ignition furnace loses fuel pressure within 10 mins." },
-        { nodeId: "bf-04", secondsToCritical: 5400, probability: 85, impactDescription: "Stoves temperature decay drops hot blast smelting rate by 60%." }
+        { nodeId: "bf-04", secondsToCritical: 1800, probability: 95, impactDescription: "Hot stoves blast temperature drops below smelting threshold in 30 mins." }
       ]
     },
     {
-      id: "sh-01",
-      name: "Sinter Machine #2 Ignition Fan & Feed",
-      shortName: "Sinter Machine Feed",
-      role: "Sinter ore particle binding and feed to Blast Furnace skip hoist.",
+      id: "cogc-03",
+      name: "COGC-03 Coke Oven Gas Compressor",
+      shortName: "Coke Gas Compressor",
+      role: "Coke Oven Gas compression and continuous fuel delivery to reheating heaters.",
+      area: "Utilities",
+      gridClass: "col-span-1",
+      upstreamIds: [],
+      downstreamEffects: [
+        { nodeId: "sinter-02", secondsToCritical: 3600, probability: 90, impactDescription: "Sintering furnace burner loses ignition temperature." },
+        { nodeId: "bf-04", secondsToCritical: 5400, probability: 85, impactDescription: "Blast Furnace stoves suffer combustion failure within 90 mins." }
+      ]
+    },
+    {
+      id: "sinter-02",
+      name: "Sinter Machine Furnace Blower #2",
+      shortName: "Sinter Furnace Feed",
+      role: "Iron ore sintering gas-heat agglomeration for direct Blast Furnace feed.",
       area: "Raw",
-      gridClass: "col-span-1 row-start-1 col-start-2 md:col-start-2",
+      gridClass: "col-span-1",
       upstreamIds: ["cogc-03"],
       downstreamEffects: [
-        { nodeId: "bf-04", secondsToCritical: 14400, probability: 70, impactDescription: "Blast Furnace loses raw input; slows melt rate by 45% if stockpile empty." }
+        { nodeId: "bf-04", secondsToCritical: 10800, probability: 75, impactDescription: "Sinter burden starvation halts hot liquid recharge within 3 hours." }
       ]
     },
     {
       id: "bf-04",
-      name: "BF-04 Hearth Tuyeres & Hot Blast stove",
+      name: "BF-04 Hearth Tuyeres & Cooling",
       shortName: "Blast Furnace #4",
-      role: "Hot liquid iron smelting. Primary thermodynamic vessel.",
+      role: "Liquid iron blast smelting. Core thermodynamic origin vessel.",
       area: "Ironmaking",
-      gridClass: "col-span-1 row-start-2 col-start-1 md:col-start-1",
-      upstreamIds: ["sh-01", "cogc-03"],
+      gridClass: "col-span-1",
+      upstreamIds: ["oxy-01", "cogc-03", "sinter-02"],
       downstreamEffects: [
-        { nodeId: "bof-01", secondsToCritical: 7200, probability: 99, impactDescription: "Starves LD steelmaking BOF converter of raw liquid pig iron." }
+        { nodeId: "ld-01", secondsToCritical: 7200, probability: 99, impactDescription: "Starves LD oxygen blowing converter of raw liquid pig iron." }
       ]
     },
     {
-      id: "bof-01",
+      id: "ld-01",
       name: "LD Converter BOF #1 Tilting Drive",
       shortName: "BOF Steelmaking",
-      role: "Molten iron chemical carbon blow. Refines iron into pure steel.",
+      role: "Chemical carbon reduction blow vessels. Pure steel refining.",
       area: "Steelmaking",
-      gridClass: "col-span-1 row-start-2 col-start-2 md:col-start-2",
+      gridClass: "col-span-1",
       upstreamIds: ["bf-04"],
       downstreamEffects: [
-        { nodeId: "cc-02", secondsToCritical: 3600, probability: 98, impactDescription: "Continuous Caster tundish runs cold, freezing the mould oscillator." }
+        { nodeId: "ld-02", secondsToCritical: 1200, probability: 90, impactDescription: "Slag splashing process fails due to vessel orientation lock." },
+        { nodeId: "cc-02", secondsToCritical: 3600, probability: 98, impactDescription: "Continuous Caster tundish runs cold, causing steel freezing." }
+      ]
+    },
+    {
+      id: "ld-02",
+      name: "LD Converter Slag Splashing Lance #5",
+      shortName: "Slag Lance Nozzle",
+      role: "Vessel lining slag protector coating spray blower.",
+      area: "Steelmaking",
+      gridClass: "col-span-1",
+      upstreamIds: ["ld-01"],
+      downstreamEffects: [
+        { nodeId: "cc-02", secondsToCritical: 7200, probability: 60, impactDescription: "Steelmaking cycle delays due to premature brick liner erosion." }
       ]
     },
     {
       id: "cc-02",
-      name: "CC Segment Rollers & Mould Oscillator",
-      shortName: "Continuous Caster",
-      role: "Continuous vertical solidification into steel slabs.",
+      name: "Continuous Caster Mould Oscillator #2",
+      shortName: "Mould Oscillator",
+      role: "Solidification system preventing strand sticking in mould jacket.",
       area: "Casting",
-      gridClass: "col-span-1 row-start-2 col-start-3 md:col-start-3",
-      upstreamIds: ["bof-01"],
+      gridClass: "col-span-1",
+      upstreamIds: ["ld-01", "ld-02"],
       downstreamEffects: [
-        { nodeId: "hsm-01", secondsToCritical: 1800, probability: 90, impactDescription: "Hot Strip Mill reheat furnace starves; finished roll cycle halt." }
+        { nodeId: "cc-03", secondsToCritical: 1200, probability: 95, impactDescription: "Tearing breakout risk freezes continuous vertical slab strand." }
+      ]
+    },
+    {
+      id: "cc-03",
+      name: "Continuous Caster Segment Roller Bearings #3",
+      shortName: "Segment Bearings",
+      role: "Slab guiding vertical-to-horizontal secondary cooling segment support.",
+      area: "Casting",
+      gridClass: "col-span-1",
+      upstreamIds: ["cc-02"],
+      downstreamEffects: [
+        { nodeId: "hsm-01", secondsToCritical: 5400, probability: 90, impactDescription: "Halts downstream roughing roll line slab re-entry." }
       ]
     },
     {
       id: "hsm-01",
-      name: "Hot Strip Mill Finished Work Rolls",
-      shortName: "Hot Strip Mill #1",
-      role: "Mechanical roll down to client thickness specifications.",
+      name: "HSM Roughing Stand Roll Bearing #1",
+      shortName: "HSM Rougher Stand",
+      role: "Initial heavy thickness reduction force for hot cast steel slabs.",
       area: "Rolling Mill",
-      gridClass: "col-span-1 row-start-3 col-start-2 md:col-start-2",
-      upstreamIds: ["cc-02"],
+      gridClass: "col-span-1",
+      upstreamIds: ["cc-03"],
+      downstreamEffects: [
+        { nodeId: "hsm-03", secondsToCritical: 2700, probability: 95, impactDescription: "Starves mill finishers of heat regulated slab bars." }
+      ]
+    },
+    {
+      id: "hsm-03",
+      name: "HSM Finishing Stand F5 Descaling Header Valve #2",
+      shortName: "Descaling Header",
+      role: "High-pressure descaling header stripping scale oxide from primary steel.",
+      area: "Rolling Mill",
+      gridClass: "col-span-1",
+      upstreamIds: ["hsm-01"],
+      downstreamEffects: [
+        { nodeId: "crm-02", secondsToCritical: 7200, probability: 80, impactDescription: "Low surface strip quality forces rejection in subsequent cold mills." },
+        { nodeId: "wrm-01", secondsToCritical: 5400, probability: 75, impactDescription: "Scale inclusions jam layoff guides in continuous wire laying blocks." }
+      ]
+    },
+    {
+      id: "crm-02",
+      name: "CRM 4-Stand Tandem Mill Work Roll Spindle",
+      shortName: "CRM Tandem Mill",
+      role: "High-precision cold reduction to microns. Final high-strength sheets.",
+      area: "Rolling Mill",
+      gridClass: "col-span-1",
+      upstreamIds: ["hsm-03"],
+      downstreamEffects: []
+    },
+    {
+      id: "wrm-01",
+      name: "Wire Rod Mill Laying Head Pinch Roll",
+      shortName: "WRM Laying Head",
+      role: "Pinch coiler laying head drawing wire rolls onto conveyor lines.",
+      area: "Rolling Mill",
+      gridClass: "col-span-1",
+      upstreamIds: ["hsm-03"],
       downstreamEffects: []
     }
   ];
@@ -151,14 +218,24 @@ export default function PlantFlowVisualizer({ assets }: PlantFlowVisualizerProps
   const { activeLoss, criticalNodes, warningNodes } = getCascadingRisk();
 
   const getStatusStyle = (nodeId: string) => {
-    // Map our simulated dependency node to an actual live asset state
-    let mappedStatus: "Healthy" | "Warning" | "Critical" = "Healthy";
+    // Dynamic query from central live asset database
+    const matchedAsset = assets.find(a => a.id === nodeId);
+    let mappedStatus: "Healthy" | "Warning" | "Critical" = matchedAsset ? matchedAsset.status : "Healthy";
     
-    if (nodeId === "cogc-03") mappedStatus = utAsset?.status || "Healthy";
-    else if (nodeId === "bf-04") mappedStatus = bfAsset?.status || "Healthy";
-    else if (nodeId === "cc-02") mappedStatus = ccAsset?.status || "Healthy";
-    else if (nodeId === "hsm-01") mappedStatus = hsmAsset?.status || "Healthy";
-    else if (nodeId === "bof-01" && (bfAsset?.status === "Critical" || ccAsset?.status === "Critical")) mappedStatus = "Warning"; // Dynamic downstream indicator
+    // Dynamic failure cascade propagation:
+    // If a node is healthy but ANY upstream node is critical, the current node is forced to a degraded 'Warning' state.
+    if (mappedStatus === "Healthy") {
+      const nodeObj = dependencyNodes.find(n => n.id === nodeId);
+      if (nodeObj && nodeObj.upstreamIds.length > 0) {
+        const hasCriticalUpstream = nodeObj.upstreamIds.some(upId => {
+          const upAsset = assets.find(a => a.id === upId);
+          return upAsset && upAsset.status === "Critical";
+        });
+        if (hasCriticalUpstream) {
+          mappedStatus = "Warning"; // Forced degraded mode
+        }
+      }
+    }
 
     const isSelected = selectedNodeId === nodeId;
 
@@ -263,7 +340,9 @@ export default function PlantFlowVisualizer({ assets }: PlantFlowVisualizerProps
               >
                 <div className="absolute top-1.5 right-1.5 font-mono text-[8px] text-slate-400">01</div>
                 <span className="text-[9px] uppercase font-bold tracking-wider opacity-80 block">Coke Ovens</span>
-                <span className="text-xs font-extrabold block truncate">{utAsset?.name.split(" ")[0]} COGC</span>
+                <span className="text-xs font-extrabold block truncate">
+                  {assets.find(a => a.id === "cogc-03")?.name.split(" ")[0] || "COGC"} Compressor
+                </span>
                 <div className="mt-1 flex items-center justify-center gap-1 text-[9px] font-mono">
                   <span className={`h-1.5 w-1.5 rounded-full ${getStatusStyle("cogc-03").accent}`}></span>
                   <span>{getStatusStyle("cogc-03").status}</span>
@@ -272,7 +351,7 @@ export default function PlantFlowVisualizer({ assets }: PlantFlowVisualizerProps
 
               {/* Connect 1 */}
               <div className="hidden md:flex items-center justify-center text-slate-300">
-                <ArrowRight className={`h-5 w-5 ${utAsset?.status === "Critical" ? "text-rose-400 animate-pulse" : "text-slate-300"}`} />
+                <ArrowRight className={`h-5 w-5 ${assets.find(a => a.id === "cogc-03")?.status === "Critical" ? "text-rose-400 animate-pulse" : "text-slate-300"}`} />
               </div>
 
               {/* Stage 2: Blast Furnace */}
@@ -293,7 +372,7 @@ export default function PlantFlowVisualizer({ assets }: PlantFlowVisualizerProps
 
               {/* Connect 2 */}
               <div className="hidden md:flex items-center justify-center text-slate-300">
-                <ArrowRight className={`h-5 w-5 ${bfAsset?.status === "Critical" ? "text-rose-400 animate-pulse" : "text-slate-300"}`} />
+                <ArrowRight className={`h-5 w-5 ${assets.find(a => a.id === "bf-04")?.status === "Critical" ? "text-rose-400 animate-pulse" : "text-slate-300"}`} />
               </div>
 
               {/* Stage 3: Casting */}
@@ -314,7 +393,7 @@ export default function PlantFlowVisualizer({ assets }: PlantFlowVisualizerProps
 
               {/* Connect 3 */}
               <div className="hidden md:flex items-center justify-center text-slate-300">
-                <ArrowRight className={`h-5 w-5 ${ccAsset?.status === "Critical" ? "text-rose-400 animate-pulse" : "text-slate-300"}`} />
+                <ArrowRight className={`h-5 w-5 ${assets.find(a => a.id === "cc-02")?.status === "Critical" ? "text-rose-400 animate-pulse" : "text-slate-300"}`} />
               </div>
 
               {/* Stage 4: Hot Rolling */}
