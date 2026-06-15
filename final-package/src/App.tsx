@@ -29,6 +29,7 @@ import ReportingIncidentCenter from "./components/ReportingIncidentCenter.tsx";
 import JudgeCriteriaCapabilityMap from "./components/JudgeCriteriaCapabilityMap.tsx";
 import RiskPrioritizationMatrix from "./components/RiskPrioritizationMatrix.tsx";
 import BusinessImpactPanel from "./components/BusinessImpactPanel.tsx";
+import CascadeDependencyGraph from "./components/CascadeDependencyGraph.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, generateSimulatedDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -65,7 +66,7 @@ export default function App() {
   
   // Tab within the Operations Toolkit (Right side)
   const [activeToolTab, setActiveToolTab] = useState<"chat" | "rag" | "logbook" | "sandbox" | "ml-engine" | "spares">("chat");
-  const [activeVisualizer, setActiveVisualizer] = useState<"twin" | "flow" | "replay" | "risk">("twin");
+  const [activeVisualizer, setActiveVisualizer] = useState<"twin" | "flow" | "replay" | "risk" | "cascade">("twin");
   const [showDocsModal, setShowDocsModal] = useState<boolean>(false);
   const [showComplianceMap, setShowComplianceMap] = useState<boolean>(false);
   const [hasEntered, setHasEntered] = useState<boolean>(false);
@@ -855,6 +856,14 @@ export default function App() {
                     <span>📊 Risk MPI Matrix</span>
                   </button>
                   <button
+                    onClick={() => setActiveVisualizer("cascade")}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
+                      activeVisualizer === "cascade" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    <span>🔗 Cascade Dependency</span>
+                  </button>
+                  <button
                     onClick={() => setActiveVisualizer("replay")}
                     className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
                       activeVisualizer === "replay" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
@@ -876,6 +885,13 @@ export default function App() {
                     onViewSpares={() => handleRoleChange("supply")}
                   />
                 )}
+                {activeVisualizer === "cascade" && (
+                  <CascadeDependencyGraph
+                    assets={assets}
+                    selectedAssetId={selectedAssetId}
+                    onSelectAsset={handleSelectAsset}
+                  />
+                )}
                 {activeVisualizer === "replay" && <ReportingIncidentCenter assets={assets} />}
               </div>
             </div>
@@ -883,7 +899,7 @@ export default function App() {
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
               
               {/* Columns 1-4: Telemetry feeds and active warnings ticker */}
-              <section className="xl:col-span-4 space-y-6 pr-0 xl:pr-1" id="left-telemetry-column">
+              <section className="xl:col-span-4 space-y-6 xl:h-[calc(100vh-320px)] xl:overflow-y-auto pr-0 xl:pr-1" id="left-telemetry-column">
                 {/* Asset list Grid selections */}
                 <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
                   <AssetSelector
@@ -906,7 +922,7 @@ export default function App() {
               </section>
 
               {/* Columns 5-8: Diagnostic Planning center stage */}
-              <section className="xl:col-span-5 pr-0 xl:pr-1" id="center-reasoning-column">
+              <section className="xl:col-span-5 xl:h-[calc(100vh-320px)] xl:overflow-y-auto pr-0 xl:pr-1" id="center-reasoning-column">
                 <div className="space-y-4">
                   <DiagnosisReport
                     asset={activeAsset}
@@ -922,7 +938,7 @@ export default function App() {
               </section>
 
               {/* Columns 9-12: Maintenance crew toolkit (Interactive Chat, RAG search and logbook tab selections) */}
-              <section className="xl:col-span-3 flex flex-col gap-4" id="right-toolkit-column">
+              <section className="xl:col-span-3 xl:h-[calc(100vh-320px)] flex flex-col gap-4" id="right-toolkit-column">
                 <VoiceAssistantCore
                   onTriggerDiagnosis={handleVoiceTriggerDiagnosis}
                   onSetTab={setActiveToolTab}
@@ -1083,24 +1099,53 @@ export default function App() {
 
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 {/* 1. Fully visible ML Engine & Retraining Workstation */}
-                <MLEnginePanel asset={activeAsset} />
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden flex flex-col h-[650px]">
+                  <div className="bg-indigo-50/50 border-b border-slate-100 p-2.5 px-4 font-mono text-[10px] text-indigo-805 font-bold flex items-center justify-between shrink-0">
+                    <span>ANOMALY MODEL & PHYSICS WORKSTATION</span>
+                    <span className="bg-indigo-100 text-indigo-900 px-2 py-0.5 rounded text-[8.5px] font-extrabold uppercase">
+                      ISOLATION FOREST + RUL
+                    </span>
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-slate-50/20">
+                    <MLEnginePanel asset={activeAsset} />
+                  </div>
+                </div>
 
                 {/* 2. Fully visible Spares Procurement Panel */}
-                <SparesProcurementPanel
-                  asset={activeAsset}
-                  onStockUpdate={() => {
-                    // Trigger state sync after purchasing stock to lower system risks
-                    const refreshedAssets = ClientStore.getAssets();
-                    setAssets(refreshedAssets);
-                  }}
-                />
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden flex flex-col h-[650px]">
+                  <div className="bg-emerald-50/50 border-b border-slate-100 p-2.5 px-4 font-mono text-[10px] text-emerald-800 font-bold flex items-center justify-between shrink-0">
+                    <span>WAREHOUSE STOCK CONTROLS</span>
+                    <span className="bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded text-[8.5px] font-extrabold uppercase">
+                      ACTIVE RISK PRIORITY (SPI) ENGAGED
+                    </span>
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-slate-50/20">
+                    <SparesProcurementPanel
+                      asset={activeAsset}
+                      onStockUpdate={() => {
+                        const refreshedAssets = ClientStore.getAssets();
+                        setAssets(refreshedAssets);
+                      }}
+                    />
+                  </div>
+                </div>
 
                 {/* 3. Fully visible Digital Logbook Browser */}
-                <LogbookBrowser
-                  assets={assets}
-                  logbook={logbook}
-                  onAddLog={handleAddLogbookEntry}
-                />
+                <div className="bg-white rounded-2xl border border-slate-250 shadow-xs overflow-hidden flex flex-col h-[650px]">
+                  <div className="bg-blue-50/50 border-b border-slate-100 p-2.5 px-4 font-mono text-[10px] text-blue-800 font-bold flex items-center justify-between shrink-0">
+                    <span>AUDITABLE PHYSICAL REPAIR RECORDS</span>
+                    <span className="bg-blue-100 text-blue-900 px-2 py-0.5 rounded text-[8.5px] font-extrabold uppercase">
+                      HUMAN-IN-THE-LOOP FEEDBACK ENABLED
+                    </span>
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-slate-50/20">
+                    <LogbookBrowser
+                      assets={assets}
+                      logbook={logbook}
+                      onAddLog={handleAddLogbookEntry}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 

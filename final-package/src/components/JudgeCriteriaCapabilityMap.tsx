@@ -36,7 +36,6 @@ interface JudgeCriteriaProps {
 
 export default function JudgeCriteriaCapabilityMap({ activeRole, activeToolTab, onNavigate }: JudgeCriteriaProps) {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
 
   const criteriaList: CriteriaItem[] = [
     {
@@ -164,7 +163,7 @@ export default function JudgeCriteriaCapabilityMap({ activeRole, activeToolTab, 
       {/* HEADER BAR */}
       <div className="bg-gradient-to-r from-slate-900 to-indigo-950 text-white p-4.5 border-b border-indigo-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <span className="p-1 px-1.5 bg-indigo-505 text-slate-950 font-bold font-mono text-[9px] uppercase tracking-wider rounded">
+          <span className="p-1 px-1.5 bg-indigo-500 text-slate-950 font-bold font-mono text-[9px] uppercase tracking-wider rounded">
             AUDITOR CONSOLE
           </span>
           <div>
@@ -178,28 +177,15 @@ export default function JudgeCriteriaCapabilityMap({ activeRole, activeToolTab, 
           </div>
         </div>
 
-        {/* Action Controls for Expanding/Collapsing capability table */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-2 bg-indigo-900/40 border border-indigo-800/80 px-2.5 py-1 rounded-lg text-[9.5px] font-mono leading-none">
-            <Sparkles className="h-3.5 w-3.5 text-indigo-400 animate-spin-slow" />
-            <span>PROJECT GRADE: <strong className="text-emerald-400 font-black">LIVE PLATFORM STATUS</strong></span>
-          </div>
-          
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            id="btn-toggle-judge-map"
-            type="button"
-            className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-500 hover:border-indigo-400 rounded-lg text-[10.5px] font-black font-mono tracking-wide transition cursor-pointer select-none shadow-xs"
-          >
-            {isExpanded ? "Hide Audit Table ▴" : "Show Audit Table (9 Items) ▾"}
-          </button>
+        {/* Highlight Score badge */}
+        <div className="flex items-center gap-2 bg-indigo-900/40 border border-indigo-800/80 px-2.5 py-1 rounded-lg text-[9.5px] font-mono leading-none">
+          <Sparkles className="h-3.5 w-3.5 text-indigo-400 animate-spin-slow" />
+          <span>PROJECT GRADE: <strong className="text-emerald-400 font-black">LIVE PLATFORM STATUS</strong></span>
         </div>
       </div>
 
-      {isExpanded && (
-        <>
-          {/* DETAILED INTERACTIVE GRID TABLE */}
-          <div className="overflow-x-auto text-[11.5px] font-sans">
+      {/* DETAILED INTERACTIVE GRID TABLE */}
+      <div className="overflow-x-auto text-[11.5px] font-sans">
         <table className="w-full border-collapse text-left">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-mono uppercase text-[9px] tracking-wider select-none">
@@ -300,8 +286,6 @@ export default function JudgeCriteriaCapabilityMap({ activeRole, activeToolTab, 
           TOTAL AUDITED WEIGHT: HIGH READINESS STATUS
         </span>
       </div>
-      </>
-      )}
 
     </div>
   );
