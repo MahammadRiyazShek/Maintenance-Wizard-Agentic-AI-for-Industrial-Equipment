@@ -12,16 +12,28 @@ import {
   Gauge,
   TrendingUp,
   FlaskConical,
-  Scale
+  Scale,
+  ThumbsUp,
+  ThumbsDown,
+  HeartHandshake
 } from "lucide-react";
+import { ClientStore } from "../utils/dataStore.ts";
 
 interface MLEnginePanelProps {
   asset: Asset | null;
 }
 
 export default function MLEnginePanel({ asset }: MLEnginePanelProps) {
-  const [activeSubTab, setActiveSubTab] = useState<"metrics" | "math" | "trace">("metrics");
+  const [activeSubTab, setActiveSubTab] = useState<"metrics" | "math" | "trace" | "feedback">("metrics");
   const [isValidating, setIsValidating] = useState<boolean>(false);
+  const [feedbacksList, setFeedbacksList] = useState(ClientStore.getFeedbacks());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFeedbacksList(ClientStore.getFeedbacks());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
   const [validationLogs, setValidationLogs] = useState<string[]>([]);
   const [trainedEpochs, setTrainedEpochs] = useState<number>(250);
   const [validationProgress, setValidationProgress] = useState<number>(100);
@@ -155,6 +167,18 @@ export default function MLEnginePanel({ asset }: MLEnginePanelProps) {
         >
           <Cpu className="h-3.5 w-3.5" />
           <span>Agent Routing DAG</span>
+        </button>
+
+        <button
+          onClick={() => setActiveSubTab("feedback")}
+          className={`flex-1 py-1 px-1.5 rounded-md text-[10.5px] font-mono font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
+            activeSubTab === "feedback"
+              ? "bg-indigo-50 text-indigo-700 border border-indigo-150"
+              : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
+          }`}
+        >
+          <HeartHandshake className="h-3.5 w-3.5 text-emerald-600" />
+          <span>Feedback Loop</span>
         </button>
       </div>
 
@@ -400,6 +424,103 @@ export default function MLEnginePanel({ asset }: MLEnginePanelProps) {
               <p>• <b>Manual RAG:</b> Localizes manual sections dynamically on active asset identifier matches.</p>
               <p>• <b>ML Predictor Node:</b> Combines telemetry with XGBoost metrics inside the local memory scope.</p>
               <p>• <b>Failure-Rule Node:</b> Feeds mechanical crack expansion rate and Arrhenius values back to the agent before compiling final recommendations.</p>
+            </div>
+          </div>
+        )}
+
+        {activeSubTab === "feedback" && (
+          <div className="space-y-4 text-xs font-sans">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[9px] font-mono uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-extrabold tracking-wider">
+                  Closed-Loop Feedback Engaged
+                </span>
+                <span className="text-[9px] font-mono text-slate-400">Section 6.6 Specification</span>
+              </div>
+              <p className="text-[11px] text-slate-600 leading-relaxed">
+                By submitting feedback on AI-diagnosed logs, human supervisors tune active RAG weighting margins. Below is the persistent audit trail of supervisor interventions captured in local state cache.
+              </p>
+            </div>
+
+            <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+              {feedbacksList.length === 0 ? (
+                <div className="space-y-2.5">
+                  <div className="bg-white border border-slate-150 p-3 rounded-lg shadow-2xs space-y-1.5">
+                    <div className="flex justify-between items-center text-[10px] font-mono text-slate-400">
+                      <span>USER: riyaz@tatasteel.com</span>
+                      <span>2026-06-11 14:40</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[9px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-extrabold border border-emerald-150 flex items-center gap-0.5">
+                        <ThumbsUp className="h-2.5 w-2.5" /> Helpful (1.0 weight penalty)
+                      </span>
+                      <strong className="text-slate-700 font-bold text-[11px]">BF-4 Tuyere Blockage</strong>
+                    </div>
+                    <p className="text-[10.5px] text-slate-500 italic bg-slate-50 p-1.5 rounded border border-slate-100">
+                      "Highly accurate. The Backpulsing nozzle purge advice matched the SMS SOP exactly and averted a continuous tap-hole blockage delay cascade!"
+                    </p>
+                  </div>
+
+                  <div className="bg-white border border-slate-150 p-3 rounded-lg shadow-2xs space-y-1.5">
+                    <div className="flex justify-between items-center text-[10px] font-mono text-slate-400">
+                      <span>USER: sengupta@tatasteel.com</span>
+                      <span>2026-06-10 11:15</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[9px] bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded font-extrabold border border-amber-150 flex items-center gap-0.5">
+                        <ThumbsUp className="h-2.5 w-2.5" /> Approved
+                      </span>
+                      <strong className="text-slate-700 font-bold text-[11px]">Mould Oscillator shaft play</strong>
+                    </div>
+                    <p className="text-[10.5px] text-slate-500 italic bg-slate-50 p-1.5 rounded border border-slate-100">
+                      "Good recommendation to utilize the spare bearing Model FAG 22352 from storeroom inventory B instead of ordering a new one (60 days lead time saved!)."
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  <div className="bg-white border border-slate-150 p-3 rounded-lg shadow-2xs space-y-1.5 opacity-75">
+                    <div className="flex justify-between items-center text-[10px] font-mono text-slate-400">
+                      <span>USER: riyaz@tatasteel.com</span>
+                      <span>2026-06-11 14:40</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[9px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-extrabold border border-emerald-150 flex items-center gap-0.5">
+                        <ThumbsUp className="h-2.5 w-2.5" /> Helpful (1.0 Weight)
+                      </span>
+                      <strong className="text-slate-700 font-bold text-[11px]">BF-4 Tuyere Blockage</strong>
+                    </div>
+                    <p className="text-[10.5px] text-slate-500 italic bg-slate-50 p-1.5 rounded border border-slate-100">
+                      "Highly accurate. The Backpulsing nozzle purge advice matched the SMS SOP exactly and averted a continuous tap-hole blockage delay cascade!"
+                    </p>
+                  </div>
+
+                  {feedbacksList.map((item) => (
+                    <div key={item.id} className="bg-gradient-to-br from-indigo-50/50 to-white border border-indigo-150 p-3 rounded-lg shadow-2xs space-y-1.5">
+                      <div className="flex justify-between items-center text-[10px] font-mono text-indigo-500 font-bold">
+                        <span>USER: {item.userEmail || "anonymous@tatasteel.com"}</span>
+                        <span>{new Date(item.timestamp).toLocaleTimeString()} ({new Date(item.timestamp).toLocaleDateString()})</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className={`text-[9px] px-1.5 py-0.5 rounded font-extrabold border flex items-center gap-0.5 ${
+                          item.rating === "helpful" 
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-200" 
+                            : "bg-rose-50 text-rose-700 border-rose-200"
+                        }`}>
+                          {item.rating === "helpful" ? <ThumbsUp className="h-2.5 w-2.5" /> : <ThumbsDown className="h-2.5 w-2.5" />}
+                          {item.rating === "helpful" ? "Helpful (1.0 Weight)" : "Correction Requested"}
+                        </span>
+                        <strong className="text-slate-800 font-bold text-[11px] uppercase">Asset: {item.assetId}</strong>
+                      </div>
+                      {item.correctionNote && (
+                        <p className="text-[10.5px] text-slate-600 font-medium bg-white p-1.5 rounded border border-indigo-100 select-all font-mono leading-normal">
+                          "{item.correctionNote}"
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
