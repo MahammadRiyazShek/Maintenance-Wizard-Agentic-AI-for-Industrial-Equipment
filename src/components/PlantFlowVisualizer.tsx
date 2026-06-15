@@ -431,6 +431,24 @@ export default function PlantFlowVisualizer({ assets }: PlantFlowVisualizerProps
                   </div>
                 </div>
 
+                {/* Upstream Feeds (Section 5.4) */}
+                <div className="space-y-1.5 pb-1 border-b border-slate-900/60">
+                  <span className="text-[9px] font-mono text-slate-400 font-bold uppercase tracking-wider block">
+                    Upstream Direct Inputs 🤝
+                  </span>
+                  {selectedNode.upstreamIds.length > 0 ? (
+                    <div className="flex flex-wrap gap-1.5">
+                      {selectedNode.upstreamIds.map((upId, i) => (
+                        <span key={i} className="px-2 py-0.5 bg-slate-900 border border-slate-800 text-indigo-400 font-mono text-[9.5px] font-bold rounded">
+                          {upId.toUpperCase()} Feed Anchor
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-[9.5px] italic text-slate-500 font-mono">No upstream dependencies - Primary input</span>
+                  )}
+                </div>
+
                 {/* Downstream Failure Cascade vectors (Section 5.4) */}
                 <div className="space-y-2">
                   <h5 className="text-[9.5px] font-mono text-slate-400 font-bold uppercase tracking-wider">

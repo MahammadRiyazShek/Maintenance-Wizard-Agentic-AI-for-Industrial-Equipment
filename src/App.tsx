@@ -69,6 +69,9 @@ export default function App() {
   
   // 6 Role-Based command surfaces & Sentinel Agent states
   const [activeRole, setActiveRole] = useState<"operator" | "reliability" | "supervisor" | "supply" | "compliance" | "executive">("operator");
+  const [sentinelProfile, setSentinelProfile] = useState<"sentry-1" | "sentry-2" | "sentry-3">("sentry-1");
+  const [scanSpeed, setScanSpeed] = useState<number>(3);
+  const [agentPhase, setAgentPhase] = useState<string>("Intel Ingest");
   const [sentinelLogs, setSentinelLogs] = useState<string[]>([
     "[08:00:00 INITIAL] SentinelAgent autonomous telemetry background hook established.",
     "[08:00:03 RECONCILE] XGBoost classifier report loaded (99.05% Accuracy target matched).",
@@ -100,27 +103,49 @@ export default function App() {
 
   // Autonomous Sentinel Agent continuous telemetry scanner simulation
   useEffect(() => {
+    const phases = ["Intel Ingest", "Vector RAG", "XGBoost Run", "RF RUL Curve", "MPI Solving", "Shift Sync"];
+    let phaseIdx = 0;
+
     const sentinelInterval = setInterval(() => {
-      const messages = [
-        "SentinelAgent: Core scan cycle completed. Thermal sensors nominal.",
-        "SentinelAgent: Re-calculated Sinter Machine #2 vibration harmonics. Anomaly vector: 0.015.",
-        "SentinelAgent: Estimating Random Forest RUL safety bands [95% CI: 74 hours remaining].",
-        "SentinelAgent: Historical case matching query completed. Top correlation: 89% similarity (Turbine-04).",
-        "SentinelAgent: Validating RAG citations path. Standards file SINTER-4.1 OK.",
-        "SentinelAgent: Syncing Region-3 warehouse inventory... Lead times recalculated.",
-        "SentinelAgent: Supervised training weights audited against operator feedback loops.",
-        "SentinelAgent: Delta Intelligence alert - minor acceleration delta detected on caster oscillators (delta-a = 0.02)."
-      ];
-      const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+      // Rotate phase
+      phaseIdx = (phaseIdx + 1) % phases.length;
+      const currentPh = phases[phaseIdx];
+      setAgentPhase(currentPh);
+
+      let customMsg = "";
+      if (sentinelProfile === "sentry-1") {
+        if (currentPh === "Intel Ingest") customMsg = "Ingested vibration sensor stream. Delta-a computed as +0.024 mm/s³.";
+        else if (currentPh === "Vector RAG") customMsg = "FAISS similarity search. Matched: SOP-SMS-MOLD-02 (vibration safety standard, 94.3% score).";
+        else if (currentPh === "XGBoost Run") customMsg = "XGBoost Classifier validates Overstrain Failure (OSF) on secondary cylinders.";
+        else if (currentPh === "RF RUL Curve") customMsg = "Estimated Random Forest RUL. Estimated life curve flattens towards 78 hours safely.";
+        else if (currentPh === "MPI Solving") customMsg = "Bespoke MPI matrix compiled. Risk index scored at 8.2 (Actions pending).";
+        else customMsg = "Synchronized shift logbook database. Telemetry alarm buffers checked and locked.";
+      } else if (sentinelProfile === "sentry-2") {
+        if (currentPh === "Intel Ingest") customMsg = "Ingested thermocouple stream. Active blast furnace tuyere thermal gradient rising.";
+        else if (currentPh === "Vector RAG") customMsg = "Matched SMS Group BF4 manual p. 142 (Tuyere thermal restriction guidelines).";
+        else if (currentPh === "XGBoost Run") customMsg = "XGBoost Classifier predicts Heat Dissipation Failure (HDF) with 92.4% confidence.";
+        else if (currentPh === "RF RUL Curve") customMsg = "Arrhenius acceleration coefficient set to 1.042x. Remaining Useful Life: 124 hours.";
+        else if (currentPh === "MPI Solving") customMsg = "Composite MPI evaluated. Urgency score set to 9.1. Immediate safe-mode speed limits calculated.";
+        else customMsg = "Dispatch trigger generated for copper tuyere body (sp-001) in central stores.";
+      } else {
+        if (currentPh === "Intel Ingest") customMsg = "Scanning warehouse inventory ledgers. Alert - low stock below critical safety limits.";
+        else if (currentPh === "Vector RAG") customMsg = "Cross-referenced SMS Group Germany and NSK Japan lead-times. Average duration: 30 days.";
+        else if (currentPh === "XGBoost Run") customMsg = "XGBoost models predict unmitigated run-to-failure penalties of up to ₹32.4 Lakhs.";
+        else if (currentPh === "RF RUL Curve") customMsg = "Calculated safe margin buffer. Machinery remaining useful hours: 48 Hrs.";
+        else if (currentPh === "MPI Solving") customMsg = "Net ROI calculated at +595% with scheduled weekend shutdown action.";
+        else customMsg = "Maintenance Priority Index logged. Ticket locked into executive operations workspace.";
+      }
+
       const ts = new Date().toLocaleTimeString();
       setSentinelLogs(prev => {
-        const next = [...prev, `[${ts} AGENT] ${randomMsg}`];
+        const next = [...prev, `[${ts} ${sentinelProfile.toUpperCase()}] [${currentPh.toUpperCase()}] ${customMsg}`];
         if (next.length > 15) next.shift(); // Keep last 15 logs
         return next;
       });
-    }, 12000);
+    }, scanSpeed * 1000);
+
     return () => clearInterval(sentinelInterval);
-  }, []);
+  }, [sentinelProfile, scanSpeed]);
 
   // Judges' reactive self-navigating capability auditor callback
   const handleJudgeNavigate = (
@@ -641,42 +666,94 @@ export default function App() {
 
             {/* AUTONOMOUS SENTINEL RISK CORE & LIVE LOGGING AGENT */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-5 bg-slate-900 border border-slate-850 rounded-2xl p-4.5 text-white animate-feed" id="sentinel-agent-dashboard">
-              <div className="md:col-span-4 flex flex-col justify-between space-y-3">
+              {/* Col 4: Sentry strategy & profiling */}
+              <div className="md:col-span-4 flex flex-col justify-between space-y-3 md:border-r md:border-slate-800/80 pr-2 text-left">
                 <div>
                   <span className="p-1 px-1.5 bg-rose-950 text-rose-400 border border-rose-900 rounded font-bold font-mono text-[8.5px] uppercase tracking-wide">
-                    AUTONOMOUS SYSTEM SENTRY
+                    Autonomous System Sentry
                   </span>
                   <h4 className="font-sans font-black text-xs text-white uppercase tracking-tight mt-1 flex items-center gap-1.5">
-                    <span>Autonomous "Sentinel" Agent</span>
+                    <span>"Sentinel" Profile Agent</span>
                     <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                   </h4>
-                  <p className="text-[10px] text-slate-400 font-medium font-sans leading-relaxed mt-1">
-                    Continuous background-sentry daemon querying thermal gradients, outer-race vibration counts, and regional warehouse lead-times to trigger automated pre-diagnostics.
+                  <div className="grid grid-cols-3 gap-1.5 mt-2.5">
+                    {[
+                      { id: "sentry-1", label: "🛡️ Wear", title: "Vibe & Wear profile" },
+                      { id: "sentry-2", label: "🌡️ Heat", title: "Thermal spike profile" },
+                      { id: "sentry-3", label: "🏦 Stock", title: "Low warehouse stocks" },
+                    ].map((p) => (
+                      <button
+                        key={p.id}
+                        onClick={() => setSentinelProfile(p.id as any)}
+                        title={p.title}
+                        className={`py-1 text-[9px] font-mono font-bold uppercase rounded-lg border cursor-pointer select-none transition ${
+                          sentinelProfile === p.id
+                            ? "bg-rose-950 text-rose-400 border-rose-800 shadow"
+                            : "bg-slate-950 text-slate-400 border-slate-800 hover:text-white"
+                        }`}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Slider for scan speed */}
+                <div className="space-y-1">
+                  <div className="flex justify-between text-[9px] text-slate-400 font-mono font-bold">
+                    <span>POLL PERIOD OVERRIDE:</span>
+                    <span className="text-rose-400">{scanSpeed} SECONDS</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    value={scanSpeed}
+                    onChange={(e) => setScanSpeed(Number(e.target.value))}
+                    className="w-full accent-rose-500 h-1 bg-slate-950 rounded-lg cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              {/* Col 3: Active Stage Status */}
+              <div className="md:col-span-3 flex flex-col justify-between space-y-3.5 md:border-r md:border-slate-800/80 pr-2 text-left">
+                <div>
+                  <span className="text-[9px] text-slate-400 font-mono block uppercase text-left">
+                    LangGraph Daemon State
+                  </span>
+                  <div className="flex items-center gap-1.5 mt-2">
+                    <span className="h-2.5 w-2.5 rounded-full bg-indigo-500 animate-ping" />
+                    <span className="font-mono text-xs font-black text-indigo-400 uppercase tracking-widest bg-indigo-950/40 px-2 py-0.5 rounded border border-indigo-900/40">
+                      {agentPhase}
+                    </span>
+                  </div>
+                  <p className="text-[9.5px] text-slate-400 font-mono mt-1 leading-normal italic">
+                    Executing active graph pipeline traversal on safe-run schedules.
                   </p>
                 </div>
 
-                <div className="p-2.5 bg-slate-950 rounded-xl border border-slate-800 space-y-1 text-[10px] font-mono">
+                <div className="p-2 bg-slate-950 rounded-xl border border-slate-800 space-y-1 text-[9px] font-mono leading-none">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Scanning Thread:</span>
-                    <strong className="text-emerald-400">THREAD-ONLINE</strong>
+                    <span className="text-slate-500">Thread Status:</span>
+                    <strong className="text-emerald-400">THREAD-ON-CRON</strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Autonomous Actions:</span>
-                    <strong className="text-indigo-400">DISPATCH ALIGNED</strong>
+                    <strong className="text-indigo-400">DISPATCH READY</strong>
                   </div>
                 </div>
               </div>
 
-              {/* Scrolling logs console */}
-              <div className="md:col-span-8 bg-slate-950 border border-slate-800 rounded-xl p-3 flex flex-col justify-between h-[130px]">
-                <div className="flex items-center justify-between border-b border-slate-805 pb-1 mb-1 shrink-0 font-mono text-[8.5px] text-slate-500">
-                  <span>SENTINEL SCAN DEPLOYMENT RECORD</span>
-                  <span className="animate-pulse text-indigo-400 font-bold uppercase">● MONITORING telemetries</span>
+              {/* Col 5: Scrolling logs console */}
+              <div className="md:col-span-5 bg-slate-950 border border-slate-800 rounded-xl p-3 flex flex-col justify-between h-[130px]">
+                <div className="flex items-center justify-between border-b border-slate-805 pb-1 mb-1 shrink-0 font-mono text-[8px] text-slate-500">
+                  <span>SENTINEL TELEMETRY DIRECTIVE MEMORY</span>
+                  <span className="animate-pulse text-indigo-400 font-bold uppercase flex items-center gap-0.5">● RUNNING DIALOGUES</span>
                 </div>
-                <div className="flex-1 overflow-y-auto pr-1 font-mono text-[9px] space-y-1 custom-scrollbar text-left text-emerald-400 h-[85px]">
+                <div className="flex-1 overflow-y-auto pr-1 font-mono text-[9px] space-y-1 custom-scrollbar text-left text-emerald-400 h-[85px] select-all">
                   {sentinelLogs.map((log, idx) => (
                     <div key={idx} className="leading-snug">
-                      <span className="text-emerald-500 mr-1">&gt;</span> <span className="text-slate-300 select-all">{log}</span>
+                      <span className="text-emerald-500 mr-1">&gt;</span> <span className="text-slate-300">{log}</span>
                     </div>
                   ))}
                 </div>
