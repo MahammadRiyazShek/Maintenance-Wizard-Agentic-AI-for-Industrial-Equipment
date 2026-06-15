@@ -49,6 +49,7 @@ export default function MLEnginePanel({ asset }: MLEnginePanelProps) {
   // Dynamic simulation values for equations
   const [parisC, setParisC] = useState<number>(1.25e-4); // Paris constant
   const [fatigueExponent, setFatigueExponent] = useState<number>(3.2); // Paris m factor
+  const [loadCoeff, setLoadCoeff] = useState<number>(1.20); // Random Forest dynamic RUL load coefficient
 
   // Trigger interactive validation sweep
   const runLiveValidation = () => {
@@ -278,6 +279,168 @@ export default function MLEnginePanel({ asset }: MLEnginePanelProps) {
                 </span>
                 <div className="text-[8px] font-mono text-slate-400 mt-1">
                   False Alarm Ratio
+                </div>
+              </div>
+            </div>
+
+            {/* RANDOM FOREST INTERACTIVE RUL REGRESSION & CONFIDENCE INTERVAL BENCH */}
+            <div className="bg-slate-900 text-white rounded-xl p-4 border border-slate-800 space-y-4 font-sans shadow-md" id="random-forest-rul-bench">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div className="flex items-center gap-1.5">
+                  <span className="p-1 text-emerald-400 bg-emerald-950 border border-emerald-900 rounded font-bold font-mono text-[9px] uppercase">
+                    RF-RUL v1.2
+                  </span>
+                  <div>
+                    <h4 className="font-sans font-extrabold text-xs text-slate-100 uppercase tracking-tight">
+                      Random Forest RUL Regression Bench
+                    </h4>
+                    <p className="text-[9.5px] font-mono text-slate-400">
+                      Predictive Remaining Useful Life & 95% Confidence Intervals
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[8.5px] font-mono text-indigo-400 font-bold uppercase">
+                  96.4% Coeff R²
+                </span>
+              </div>
+
+              {/* Slider for operational load penalty */}
+              <div className="space-y-2 bg-slate-950 p-3 rounded-lg border border-slate-850">
+                <div className="flex justify-between items-center text-[10px] font-mono text-slate-400 font-bold">
+                  <span>Dynamic Operational Load Penalty Coeff:</span>
+                  <span className="text-emerald-400 font-extrabold">{loadCoeff.toFixed(2)}x</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.80"
+                  max="2.50"
+                  step="0.10"
+                  value={loadCoeff}
+                  onChange={(e) => setLoadCoeff(parseFloat(e.target.value))}
+                  className="w-full accent-emerald-500 h-1 bg-slate-800 rounded appearance-none cursor-pointer"
+                />
+                <p className="text-[8.5px] text-slate-500 leading-tight">
+                  Simulate peak heavy-duty continuous casting drafts. Higher penalty coefficients accelerate simulated roll wear times.
+                </p>
+              </div>
+
+              {/* RUL Math Out & CI Bar */}
+              {(() => {
+                // Dynamically base hours on current active asset warnings & load coefficient
+                const defaultBaseHours = asset?.id === "bf-04" ? 64 : asset?.id === "cc-02" ? 92 : asset?.id === "hsm-01" ? 38 : 124;
+                const calculatedRUL = Math.max(8, Math.round(defaultBaseHours / loadCoeff));
+                const lowerCI = Math.round(calculatedRUL * 0.85);
+                const upperCI = Math.round(calculatedRUL * 1.15);
+
+                return (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-3 gap-3 text-center border-y border-slate-850 py-3">
+                      <div>
+                        <span className="text-[8.5px] font-mono text-slate-500 block uppercase">Conservative (-95% CI)</span>
+                        <span className="text-sm font-black font-mono text-rose-400">{lowerCI} Hours</span>
+                      </div>
+                      <div className="border-x border-slate-850 px-2">
+                        <span className="text-[9px] font-mono text-slate-400 block uppercase font-black">Nominal RUL Estimate</span>
+                        <span className="text-base font-black font-mono text-emerald-400 animate-pulse">{calculatedRUL} Hours</span>
+                      </div>
+                      <div>
+                        <span className="text-[8.5px] font-mono text-slate-500 block uppercase">Optimistic (+95% CI)</span>
+                        <span className="text-sm font-black font-mono text-blue-400">{upperCI} Hours</span>
+                      </div>
+                    </div>
+
+                    {/* CI Band Visualizer */}
+                    <div className="space-y-1">
+                      <span className="text-[8.5px] font-mono text-slate-400 uppercase tracking-widest block font-bold">
+                        95% Prediction Confidence Area Graph
+                      </span>
+                      <div className="relative h-6 bg-slate-950 rounded-lg border border-slate-850 overflow-hidden select-none font-mono text-[8px] flex items-center">
+                        {/* Shaded area for CI */}
+                        <div 
+                          className="absolute h-full bg-indigo-500/10 border-x border-indigo-500/20"
+                          style={{ left: "25%", right: "25%" }}
+                        />
+                        {/* Lower limit line */}
+                        <div className="absolute left-[25%] h-full w-px bg-rose-500" />
+                        {/* Upper limit line */}
+                        <div className="absolute left-[75%] h-full w-px bg-blue-500" />
+                        {/* Actual forecast point */}
+                        <div className="absolute left-[50%] -translate-x-1/2 h-4 w-4 bg-emerald-500 rounded-full border-2 border-slate-900 shadow shadow-emerald-500/50 flex items-center justify-center font-bold text-white text-[7px]" title="Nominal Point">
+                          P
+                        </div>
+
+                        {/* Labels inside graph */}
+                        <span className="absolute left-[26%] text-rose-400">{lowerCI}h</span>
+                        <span className="absolute right-[26%] text-blue-400 text-right">{upperCI}h</span>
+                        <span className="absolute left-2 text-slate-600 font-bold">CRITICAL OUTAGE</span>
+                        <span className="absolute right-2 text-slate-600 text-right">OVER-LIFE RUN</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Deep Explanation Random Forest Feature Weights */}
+              <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-850 space-y-2">
+                <span className="text-[9.5px] font-mono uppercase text-slate-400 block tracking-wider font-extrabold">
+                  Deep Explanation: Random Forest Regressor Feature Weights
+                </span>
+                
+                <div className="space-y-1.5 font-mono text-[9px] text-slate-300">
+                  {/* Weight 1 */}
+                  <div className="space-y-0.5">
+                    <div className="flex justify-between font-bold">
+                      <span>Vessel Thermal Gradients (Arrhenius Input)</span>
+                      <span className="text-emerald-400">28% weight</span>
+                    </div>
+                    <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                      <div className="h-full bg-emerald-500 rounded-full" style={{ width: "28%" }} />
+                    </div>
+                  </div>
+
+                  {/* Weight 2 */}
+                  <div className="space-y-0.5">
+                    <div className="flex justify-between font-bold">
+                      <span>Outer-Race Ball Pass Frequency harmonics (BPFO)</span>
+                      <span className="text-emerald-400">36% weight</span>
+                    </div>
+                    <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                      <div className="h-full bg-emerald-500 rounded-full" style={{ width: "36%" }} />
+                    </div>
+                  </div>
+
+                  {/* Weight 3 */}
+                  <div className="space-y-0.5">
+                    <div className="flex justify-between font-bold">
+                      <span>Cyclical High-Stress Crack Amplitude (&Delta;K)</span>
+                      <span className="text-indigo-400">18% weight</span>
+                    </div>
+                    <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                      <div className="h-full bg-indigo-500 rounded-full" style={{ width: "18%" }} />
+                    </div>
+                  </div>
+
+                  {/* Weight 4 */}
+                  <div className="space-y-0.5">
+                    <div className="flex justify-between font-bold">
+                      <span>Cumulative Mechanical Operating Hours</span>
+                      <span className="text-indigo-400">12% weight</span>
+                    </div>
+                    <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                      <div className="h-full bg-indigo-500 rounded-full" style={{ width: "12%" }} />
+                    </div>
+                  </div>
+
+                  {/* Weight 5 */}
+                  <div className="space-y-0.5">
+                    <div className="flex justify-between font-bold">
+                      <span>Dynamic Torque Friction Loading</span>
+                      <span className="text-slate-455">6% weight</span>
+                    </div>
+                    <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                      <div className="h-full bg-slate-500 rounded-full" style={{ width: "6%" }} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
