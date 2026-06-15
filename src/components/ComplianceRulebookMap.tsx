@@ -145,13 +145,13 @@ export default function ComplianceRulebookMap() {
         
         <div className="max-w-3xl space-y-2 relative">
           <div className="flex items-center gap-2">
-            <span className="p-1 text-xs font-mono font-black bg-indigo-500 text-slate-950 rounded uppercase tracking-wider">
-              JUDGE COMPLIANCE AUDIT
+            <span className="p-1 px-1.5 text-xs font-mono font-black bg-indigo-500 text-slate-950 rounded uppercase tracking-wider">
+              REQUIREMENTS ↔ CAPABILITY MAP
             </span>
             <span className="text-xs text-indigo-300 font-mono">Tata Steel Round 2 Guidelines</span>
           </div>
           <h2 className="text-xl md:text-2xl font-black font-sans tracking-tight uppercase">
-            Tata Steel Rulebook ↔ Capability Matrix
+            Tata Steel Requirements ↔ Capability Map
           </h2>
           <p className="text-xs md:text-sm text-slate-300 leading-relaxed">
             This dashboard maps every single requirement under sections **4, 5.1, 5.2, and 5.3** of the hackathon rulebook, alongside **Functional Requirements 1–6**, to the active visual systems running in our code. Trace code files and functional outcomes cleanly.

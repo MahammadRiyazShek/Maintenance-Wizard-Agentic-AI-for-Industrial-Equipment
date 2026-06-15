@@ -41,7 +41,7 @@ interface DependencyNode {
 }
 
 export default function PlantFlowVisualizer({ assets }: PlantFlowVisualizerProps) {
-  const [viewMode, setViewMode] = useState<"pipeline" | "dependency">("pipeline");
+  const [viewMode, setViewMode] = useState<"pipeline" | "dependency">("dependency");
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>("bf-04");
 
   // Map our plant assets to our active structures
@@ -205,13 +205,13 @@ export default function PlantFlowVisualizer({ assets }: PlantFlowVisualizerProps
           </span>
           <div>
             <h4 className="font-sans font-black text-xs text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-              <span>Plant Interdependence & Cascade Modeler</span>
+              <span>Cascading Failure Propagation Graph (Asset Dependency Chain)</span>
               <span className="text-[8px] bg-indigo-100 text-indigo-700 font-mono font-extrabold px-1.5 py-0.2 rounded-full uppercase">
                 FR-4 & Section 5.4 Compliant
               </span>
             </h4>
             <p className="text-[10px] text-slate-400 font-mono">
-              Live Interdependent Risk Modeling • Click nodes to view failure propagation vectors
+              Live Interdependent Failure Cascade Modeling • Click nodes to view failure propagation vectors & lead-time propagation
             </p>
           </div>
         </div>
