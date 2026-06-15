@@ -78,7 +78,7 @@ async function callGeminiLiveAPI(apiKey: string, prompt: string, systemInstructi
 /* ========================================================
    2. INTELLIGENT RULE-BASED EXPERT COGNITIVE SIMULATOR
    ======================================================== */
-function generateSimulatedDiagnosis(
+export function generateSimulatedDiagnosis(
   asset: Asset,
   alert: ControlRoomAlert | null,
   userNotes: string,

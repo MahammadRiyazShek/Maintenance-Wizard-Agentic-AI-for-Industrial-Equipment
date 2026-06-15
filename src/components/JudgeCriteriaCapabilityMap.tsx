@@ -128,6 +128,32 @@ export default function JudgeCriteriaCapabilityMap({ activeRole, activeToolTab, 
       targetTab: "rag",
       scrollToId: "dashboard-workbench",
       docCitation: "FAG-OEM-ROLLER-V3.pdf"
+    },
+    {
+      id: "MPI_MATRIX_CRIT",
+      criterion: "Risk-Priority MPI Matrix",
+      subtext: "Prioritizes maintenance sequence based on actual risk criteria under Section 5.1 & 5.2.",
+      scoreTerm: "Quantitative Triangulation",
+      scoreValue: 99,
+      liveCapability: "Deterministic risk scoring combining wear metrics, safety index, lost production penalties, and spare constraints.",
+      technicalDetails: "Real-time cost calculator displays downtime loss per hour ($22,000 max) and relative asset safety tiers.",
+      targetRole: "supervisor",
+      targetTab: "logbook",
+      scrollToId: "center-reasoning-column",
+      docCitation: "TS_OPS_DECISION_FRAMEWORK_V4.pdf"
+    },
+    {
+      id: "SPARES_PROC_ENG",
+      criterion: "Spares Procurement Engine",
+      subtext: "Interactive supply scheduler mitigating lead-time blockages under Section 5.3.",
+      scoreTerm: "Adityapur Sourcing Sched",
+      scoreValue: 100,
+      liveCapability: "Emergency regional sourcing dispatch, stock-level buffers, and real logistics premium calculation models.",
+      technicalDetails: "Allows user to order replacement high-conductivity copper bodies or spherical roller bearings with automated routing.",
+      targetRole: "supply",
+      targetTab: "spares",
+      scrollToId: "assets-grid-selector",
+      docCitation: "TS_SCM_SPARES_SOP_2026.pdf"
     }
   ];
 

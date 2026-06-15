@@ -47,6 +47,13 @@ export default function AssetSelector({
     setEditingAssetId(null);
   };
 
+  const handleResetDB = () => {
+    localStorage.removeItem("ts_mw_assets");
+    localStorage.removeItem("ts_mw_alerts");
+    localStorage.removeItem("ts_mw_logbook");
+    window.location.reload();
+  };
+
   const getStatusIcon = (status: Asset["status"]) => {
     switch (status) {
       case "Critical":
@@ -99,6 +106,14 @@ export default function AssetSelector({
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
             </span>
             <span>1. Telemetry Core ({assets.length} Nodes)</span>
+            <button
+              onClick={handleResetDB}
+              title="Reset and re-sync database with default 37 assets"
+              className="px-1.5 py-0.5 text-[8.5px] font-mono font-extrabold text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded cursor-pointer transition flex items-center gap-0.5 leading-none select-none"
+            >
+              <RefreshCw className="h-2.5 w-2.5" />
+              <span>Reset DB Cache</span>
+            </button>
           </h3>
           <div className="flex bg-slate-200/60 p-0.5 rounded-lg border border-slate-250 font-mono text-[10px]">
             <button

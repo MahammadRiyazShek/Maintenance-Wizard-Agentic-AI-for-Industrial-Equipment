@@ -27,9 +27,10 @@ import VoiceAssistantCore from "./components/VoiceAssistantCore.tsx";
 import { TataSteelLogo } from "./components/TataSteelLogo.tsx";
 import ReportingIncidentCenter from "./components/ReportingIncidentCenter.tsx";
 import JudgeCriteriaCapabilityMap from "./components/JudgeCriteriaCapabilityMap.tsx";
+import RiskPrioritizationMatrix from "./components/RiskPrioritizationMatrix.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
-import { runAssetDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
+import { runAssetDiagnosis, generateSimulatedDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
 
 import { 
   Activity, 
@@ -63,6 +64,7 @@ export default function App() {
   
   // Tab within the Operations Toolkit (Right side)
   const [activeToolTab, setActiveToolTab] = useState<"chat" | "rag" | "logbook" | "sandbox" | "ml-engine" | "spares">("chat");
+  const [activeVisualizer, setActiveVisualizer] = useState<"twin" | "flow" | "replay" | "risk">("twin");
   const [showDocsModal, setShowDocsModal] = useState<boolean>(false);
   const [showComplianceMap, setShowComplianceMap] = useState<boolean>(false);
   const [hasEntered, setHasEntered] = useState<boolean>(false);
@@ -155,6 +157,16 @@ export default function App() {
   ) => {
     setActiveRole(role);
     setActiveToolTab(tab);
+    
+    // Auto-switch visualizer tab matching this role
+    if (role === "executive") {
+      setActiveVisualizer("flow");
+    } else if (role === "operator" || role === "reliability") {
+      setActiveVisualizer("twin");
+    } else if (role === "supervisor" || role === "supply") {
+      setActiveVisualizer("risk");
+    }
+
     if (targetElementId) {
       setTimeout(() => {
         const el = document.getElementById(targetElementId);
@@ -206,10 +218,20 @@ export default function App() {
 
       // Default select first asset on start
       if (liveAssets.length > 0) {
-        setSelectedAssetId(liveAssets[0].id);
-        const relatedAlert = liveAlerts.find(a => a.assetId === liveAssets[0].id && a.status !== "Resolved");
+        const defaultAsset = liveAssets[0];
+        setSelectedAssetId(defaultAsset.id);
+        const relatedAlert = liveAlerts.find(a => a.assetId === defaultAsset.id && a.status !== "Resolved");
         if (relatedAlert) {
           setSelectedAlertId(relatedAlert.id);
+        }
+        
+        // Pre-compute and load dynamic diagnostic report on startup so UI is fully populated
+        try {
+          const defaultFeedbacks = ClientStore.getFeedbacks();
+          const defaultReport = generateSimulatedDiagnosis(defaultAsset, relatedAlert || null, "", defaultFeedbacks);
+          setActiveDiagnosis(defaultReport);
+        } catch (diagErr) {
+          console.error("Failed to generate preload diagnostic report on startup:", diagErr);
         }
       }
     } catch (e) {
@@ -229,8 +251,19 @@ export default function App() {
       setSelectedAlertId(null);
     }
 
-    // Reset active loaded diagnoses since target shifted
-    setActiveDiagnosis(null);
+    // Load active loaded diagnoses immediately for high-fidelity zero cold start
+    const tgtAsset = assets.find(a => a.id === assetId);
+    if (tgtAsset) {
+      try {
+        const defaultReport = generateSimulatedDiagnosis(tgtAsset, relatedAlert || null, "", ClientStore.getFeedbacks());
+        setActiveDiagnosis(defaultReport);
+      } catch (err) {
+        console.error(err);
+        setActiveDiagnosis(null);
+      }
+    } else {
+      setActiveDiagnosis(null);
+    }
     setFeedbackSaved(false);
     // Clear chat contextual stream to start a fresh thread for this tool
     setChatHistory([]);
@@ -241,8 +274,19 @@ export default function App() {
     setSelectedAssetId(alert.assetId);
     setSelectedAlertId(alert.id);
     
-    // Reset active report
-    setActiveDiagnosis(null);
+    // Load active report immediately for high-fidelity zero cold start
+    const tgtAsset = assets.find(a => a.id === alert.assetId);
+    if (tgtAsset) {
+      try {
+        const defaultReport = generateSimulatedDiagnosis(tgtAsset, alert, "", ClientStore.getFeedbacks());
+        setActiveDiagnosis(defaultReport);
+      } catch (err) {
+        console.error(err);
+        setActiveDiagnosis(null);
+      }
+    } else {
+      setActiveDiagnosis(null);
+    }
     setFeedbackSaved(false);
     setChatHistory([]);
   };
@@ -402,18 +446,22 @@ export default function App() {
       setActiveToolTab("sandbox");
       setShowComplianceMap(false);
       setShowDocsModal(false);
+      setActiveVisualizer("twin");
     } else if (role === "reliability") {
       setActiveToolTab("ml-engine");
       setShowComplianceMap(false);
       setShowDocsModal(false);
+      setActiveVisualizer("twin");
     } else if (role === "supervisor") {
       setActiveToolTab("logbook");
       setShowComplianceMap(false);
       setShowDocsModal(false);
+      setActiveVisualizer("risk");
     } else if (role === "supply") {
       setActiveToolTab("spares");
       setShowComplianceMap(false);
       setShowDocsModal(false);
+      setActiveVisualizer("risk");
     } else if (role === "compliance") {
       setShowComplianceMap(true);
       setShowDocsModal(false);
@@ -421,6 +469,7 @@ export default function App() {
       setActiveToolTab("chat");
       setShowComplianceMap(false);
       setShowDocsModal(false);
+      setActiveVisualizer("flow");
     }
   };
 
@@ -760,14 +809,75 @@ export default function App() {
               </div>
             </div>
 
-            {/* Plant bottleneck and delay flow cascade summary */}
-            <PlantFlowVisualizer assets={assets} />
+            {/* UNIFIED TATA INDUS-MONITOR SCADA COCKPIT */}
+            <div className="bg-slate-900 rounded-2xl border border-slate-800 p-4 space-y-4 shadow-xl select-none animate-feed" id="scada-monitor-suite">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-slate-850 pb-3 bg-slate-950 -mx-4 -mt-4 p-4 rounded-t-2xl">
+                <div className="flex items-center gap-2 text-left">
+                  <span className="p-1 px-1.5 bg-indigo-950 text-indigo-400 border border-indigo-900/40 font-extrabold rounded font-mono text-[9px] uppercase tracking-wider">
+                    SCADA PANEL
+                  </span>
+                  <div>
+                    <h3 className="font-sans font-black text-xs text-white uppercase tracking-wider flex items-center gap-2 leading-none">
+                      <span>Jamshedpur Works Industrial SCADA Monitor</span>
+                      <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse inline-block" />
+                    </h3>
+                    <p className="text-[10px] text-slate-400 font-mono mt-1">
+                      Dynamic 3D Twin telemetry, cascade failure propagation modeling & incident log replayers
+                    </p>
+                  </div>
+                </div>
 
-            {/* Breathtaking pseudo-3D Digital twin workspace with dynamic Delta-Intelligence (second derivative metrics) */}
-            <PlantDigitalTwin3D />
+                {/* Tab selector */}
+                <div className="flex bg-slate-900 border border-slate-800 p-1 rounded-xl text-[9.5px] font-mono font-extrabold flex-wrap gap-1">
+                  <button
+                    onClick={() => setActiveVisualizer("twin")}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
+                      activeVisualizer === "twin" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    <span>🌐 3D Digital Twin</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveVisualizer("flow")}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
+                      activeVisualizer === "flow" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    <span>⚡ Process Cascade Graph</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveVisualizer("risk")}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
+                      activeVisualizer === "risk" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    <span>📊 Risk MPI Matrix</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveVisualizer("replay")}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
+                      activeVisualizer === "replay" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    <span>🕒 Incident Replay System</span>
+                  </button>
+                </div>
+              </div>
 
-            {/* Unified Historic Incident Replay with mathematical Failure Probability Engine, FAISS Case-Matching, and Excel/JSON export controls */}
-            <ReportingIncidentCenter assets={assets} />
+              <div className="min-h-[250px] transition-all duration-300">
+                {activeVisualizer === "twin" && <PlantDigitalTwin3D />}
+                {activeVisualizer === "flow" && <PlantFlowVisualizer assets={assets} />}
+                {activeVisualizer === "risk" && (
+                  <RiskPrioritizationMatrix
+                    assets={assets}
+                    selectedAssetId={selectedAssetId}
+                    onSelectAsset={handleSelectAsset}
+                    onViewSpares={() => handleRoleChange("supply")}
+                  />
+                )}
+                {activeVisualizer === "replay" && <ReportingIncidentCenter assets={assets} />}
+              </div>
+            </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
               
@@ -803,6 +913,7 @@ export default function App() {
                   onExecuteDiagnosis={handleRunDiagnosis}
                   onSubmitFeedback={handleSubmitFeedback}
                   feedbackLogged={feedbackSaved}
+                  onViewSpares={() => handleRoleChange("supply")}
                 />
               </section>
 

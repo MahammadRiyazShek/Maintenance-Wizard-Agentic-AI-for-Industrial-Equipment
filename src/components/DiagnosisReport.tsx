@@ -38,6 +38,7 @@ interface DiagnosisReportProps {
   onExecuteDiagnosis: (userNotes: string) => void;
   onSubmitFeedback: (rating: "helpful" | "unhelpful", note: string) => Promise<void>;
   feedbackLogged: boolean;
+  onViewSpares?: () => void;
 }
 
 export default function DiagnosisReport({
@@ -46,7 +47,8 @@ export default function DiagnosisReport({
   loading,
   onExecuteDiagnosis,
   onSubmitFeedback,
-  feedbackLogged
+  feedbackLogged,
+  onViewSpares
 }: DiagnosisReportProps) {
   const [notesInput, setNotesInput] = useState("");
   const [auditStep, setAuditStep] = useState<number>(0);
@@ -56,6 +58,8 @@ export default function DiagnosisReport({
   const [showSapModal, setShowSapModal] = useState(false);
   const [copiedSapText, setCopiedSapText] = useState(false);
   const [selectedCitationId, setSelectedCitationId] = useState<string | null>(null);
+  const [downtimeHours, setDowntimeHours] = useState<number>(6);
+  const [emergencyOverhaulUSD, setEmergencyOverhaulUSD] = useState<number>(15050);
 
   const sparesMaster = [
     {
@@ -453,15 +457,12 @@ export default function DiagnosisReport({
   };
 
   // Dynamic Cost Impact Intelligence Calculations
-  // Catastrophic cold stand crash averages 6 hours recovery time.
-  // Delay Lost Production + Standard Emergency parts fabrication is $15,000.
+  // Catastrophic cold stand crash recovery time depends on sliding parameters.
   const calculateCostImpact = () => {
     if (!asset) return { unmitigatedUSD: 0, unmitigatedINR: 0, plannedUSD: 0, plannedINR: 0, netSavingsUSD: 0, netSavingsINR: 0, roi: 0 };
     
-    const recoveryHours = 6;
-    const lossProductionUSD = asset.delayCostPerHour * recoveryHours;
-    const directOverhaulHardwareUSD = 15000;
-    const unmitigatedUSD = lossProductionUSD + directOverhaulHardwareUSD;
+    const lossProductionUSD = asset.delayCostPerHour * downtimeHours;
+    const unmitigatedUSD = lossProductionUSD + emergencyOverhaulUSD;
     
     // Spares parts scheduling + minor off-peak team hours during standard planned weekend turn
     const plannedUSD = 6000;
@@ -1328,86 +1329,179 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                     Where FailureProbability is real-time sensor wear, Safety is plant asset criticality, PlantImpact is normalized lost production penalties, and Spares/Lead Time are dynamic warehouse risks.
                   </p>
                 </div>
-                
-                <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5 pt-1 text-center font-sans">
-                  <div className="bg-white p-2 rounded-lg border border-slate-150 shadow-2xs">
-                    <span className="text-[8.5px] text-slate-400 block font-mono uppercase font-bold leading-none">Failure Prob. (25%)</span>
-                    <strong className="text-[10px] sm:text-xs text-slate-700 font-extrabold block mt-1.5">
-                      {mpiData.stress}% Wear ({mpiData.stress})
-                    </strong>
-                  </div>
-                  <div className="bg-white p-2 rounded-lg border border-slate-150 shadow-2xs">
-                    <span className="text-[8.5px] text-slate-400 block font-mono uppercase font-bold leading-none">Safety/Crit. (25%)</span>
-                    <strong className="text-[10px] sm:text-xs text-slate-700 font-extrabold block mt-1.5 font-sans">
-                      {report.priorityAnalysis.factors.criticality} ({mpiData.crit})
-                    </strong>
-                  </div>
-                  <div className="bg-white p-2 rounded-lg border border-slate-150 shadow-2xs">
-                    <span className="text-[8.5px] text-slate-400 block font-mono uppercase font-bold leading-none">Plant Impact (20%)</span>
-                    <strong className="text-[10px] sm:text-xs text-slate-700 font-extrabold block mt-1.5">
-                      ₹{(asset.delayCostPerHour * 83.40 / 1000).toFixed(0)}k/Hr ({mpiData.penalty})
-                    </strong>
-                  </div>
-                  <div className="bg-white p-2 rounded-lg border border-slate-150 shadow-2xs">
-                    <span className="text-[8.5px] text-slate-400 block font-mono uppercase font-bold leading-none">Spares Stock (15%)</span>
-                    <strong className="text-[10px] sm:text-xs text-slate-700 font-extrabold block mt-1.5">
-                      {mpiData.stock} in stock ({100 - mpiData.sparesAvailability})
-                    </strong>
-                  </div>
-                  <div className="bg-white p-2 rounded-lg border border-slate-150 shadow-2xs">
-                    <span className="text-[8.5px] text-slate-400 block font-mono uppercase font-bold leading-none">Lead Time (15%)</span>
-                    <strong className="text-[10px] sm:text-xs text-slate-700 font-extrabold block mt-1.5">
-                      {mpiData.leadTimeDays} days ({mpiData.leadTimeFactor})
-                    </strong>
-                  </div>
-                </div>
 
-                {/* Display core composite score badge */}
-                <div className="bg-gradient-to-r from-slate-900 to-indigo-950 p-2.5 rounded-lg border border-indigo-950 flex justify-between items-center text-white">
-                  <div className="space-y-0.5">
-                    <span className="text-[9px] font-mono uppercase text-indigo-300 block font-bold tracking-wider">
-                      Composite Maintenance Priority Index Summary
-                    </span>
-                    <p className="text-[10px] text-slate-300 font-medium font-sans">
-                      {mpiData.mpi >= 75 
-                        ? "Critical Interventions Mandated (Exceeds Redline)" 
-                        : mpiData.mpi >= 50 
-                          ? "Mitigate via supplemented preventative routines"
-                          : "Nominal Operating State (Continuous Monitoring)"
-                      }
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span className="text-[9px] font-mono text-slate-400 block uppercase">Calculated Index</span>
-                    <strong className="text-base font-black text-indigo-300 font-mono leading-none">
-                      {mpiData.mpi} / 100
-                    </strong>
-                  </div>
-                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Left block holding scores and gauges (span 2) */}
+                  <div className="md:col-span-2 space-y-4 text-left">
+                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 pt-1 text-center font-sans">
+                      <div className="bg-white p-2 rounded-lg border border-slate-150 shadow-2xs">
+                        <span className="text-[8.5px] text-slate-400 block font-mono uppercase font-bold leading-none">Failure Prob. (25%)</span>
+                        <strong className="text-[10.5px] text-slate-700 font-extrabold block mt-1.5 font-mono">
+                          {mpiData.stress}% Wear ({mpiData.stress})
+                        </strong>
+                      </div>
+                      <div className="bg-white p-2 rounded-lg border border-slate-150 shadow-2xs">
+                        <span className="text-[8.5px] text-slate-400 block font-mono uppercase font-bold leading-none">Safety/Crit. (25%)</span>
+                        <strong className="text-[10px] text-slate-700 font-extrabold block mt-1.5 font-sans leading-none truncate">
+                          {report.priorityAnalysis.factors.criticality.split(" ")[0]} ({mpiData.crit})
+                        </strong>
+                      </div>
+                      <div className="bg-white p-2 rounded-lg border border-slate-150 shadow-2xs">
+                        <span className="text-[8.5px] text-slate-400 block font-mono uppercase font-bold leading-none">Plant Impact (20%)</span>
+                        <strong className="text-[10px] text-slate-700 font-extrabold block mt-1.5 font-mono">
+                          ₹{(asset.delayCostPerHour * 83.40 / 1000).toFixed(0)}k/Hr ({mpiData.penalty})
+                        </strong>
+                      </div>
+                      <div className="bg-white p-2 rounded-lg border border-slate-150 shadow-2xs">
+                        <span className="text-[8.5px] text-slate-400 block font-mono uppercase font-bold leading-none">Spares Stock (15%)</span>
+                        <strong className="text-[10px] text-slate-700 font-extrabold block mt-1.5 font-mono">
+                          {mpiData.stock} pcs ({100 - mpiData.sparesAvailability})
+                        </strong>
+                      </div>
+                      <div className="bg-white p-2 rounded-lg border border-slate-150 shadow-2xs">
+                        <span className="text-[8.5px] text-slate-400 block font-mono uppercase font-bold leading-none">Lead Time (15%)</span>
+                        <strong className="text-[10.5px] text-slate-700 font-extrabold block mt-1.5 font-mono">
+                          {mpiData.leadTimeDays}d ({mpiData.leadTimeFactor})
+                        </strong>
+                      </div>
+                    </div>
 
-                {/* Progress bar representing MPI priority */}
-                <div className="space-y-1">
-                  <div className="flex justify-between text-[9px] text-slate-400 font-mono">
-                    <span>Low Hazard (0)</span>
-                    <span>Action Required (75+)</span>
-                    <span>Extreme Risk (100)</span>
+                    {/* Display core composite score badge */}
+                    <div className="bg-gradient-to-r from-slate-900 to-indigo-950 p-2.5 rounded-lg border border-indigo-950 flex justify-between items-center text-white">
+                      <div className="space-y-0.5">
+                        <span className="text-[9px] font-mono uppercase text-indigo-300 block font-bold tracking-wider">
+                          Composite Maintenance Priority Index Summary
+                        </span>
+                        <p className="text-[10px] text-slate-300 font-medium font-sans">
+                          {mpiData.mpi >= 75 
+                            ? "Critical Interventions Mandated (Exceeds Redline)" 
+                            : mpiData.mpi >= 50 
+                              ? "Mitigate via supplemented preventative routines"
+                              : "Nominal Operating State (Continuous Monitoring)"
+                          }
+                        </p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <span className="text-[9px] font-mono text-slate-400 block uppercase">Calculated Index</span>
+                        <strong className="text-base font-black text-indigo-300 font-mono leading-none">
+                          {mpiData.mpi} / 100
+                        </strong>
+                      </div>
+                    </div>
+
+                    {/* Progress bar representing MPI priority */}
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[9px] text-slate-400 font-mono">
+                        <span>Low Hazard (0)</span>
+                        <span>Action Required (75+)</span>
+                        <span>Extreme Risk (100)</span>
+                      </div>
+                      <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full transition-all duration-500 rounded-full ${
+                            mpiData.mpi >= 75 
+                              ? "bg-gradient-to-r from-red-500 to-orange-500" 
+                              : mpiData.mpi >= 50 
+                                ? "bg-gradient-to-r from-amber-500 to-yellow-500" 
+                                : "bg-gradient-to-r from-emerald-500 to-teal-500"
+                          }`}
+                          style={{ width: `${mpiData.mpi}%` }}
+                        ></div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full transition-all duration-500 rounded-full ${
-                        mpiData.mpi >= 75 
-                          ? "bg-gradient-to-r from-red-500 to-orange-500" 
-                          : mpiData.mpi >= 50 
-                            ? "bg-gradient-to-r from-amber-500 to-yellow-500" 
-                            : "bg-gradient-to-r from-emerald-500 to-teal-500"
-                      }`}
-                      style={{ width: `${mpiData.mpi}%` }}
-                    ></div>
+
+                  {/* Right Column: Clickable Heatmap Risk Priority Matrix (span 1) */}
+                  <div className="md:col-span-1 border border-slate-200 rounded-xl p-3 bg-white flex flex-col justify-between">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-1 mb-1.5 text-left">
+                      <span className="text-[9.5px] font-mono uppercase font-black text-slate-700 tracking-wider">
+                        🗺️ COMPLIANCE HEATMAP
+                      </span>
+                      <span className="text-[8.5px] font-mono bg-rose-50 border border-rose-250 text-rose-700 font-bold px-1 rounded uppercase">
+                        {asset?.name.split(" ")[0]} Active
+                      </span>
+                    </div>
+
+                    {/* Heatmap Grid canvas */}
+                    <div className="relative py-0.5 flex items-center justify-center">
+                      <svg viewBox="0 0 160 160" className="w-[120px] font-mono h-auto block select-none">
+                        {/* Rows: Y from 0 to 4 (criticality 5 down to 1) */}
+                        {/* Cols: X from 0 to 4 (likelihood 1 to 5) */}
+                        {[0, 1, 2, 3, 4].map((r) =>
+                          [0, 1, 2, 3, 4].map((c) => {
+                            let cellColor = "fill-emerald-50/50 stroke-emerald-100/40";
+                            if (r + (4 - c) <= 2) {
+                              cellColor = "fill-rose-55/70 stroke-rose-100/40";
+                            } else if (r + (4 - c) <= 4) {
+                              cellColor = "fill-amber-50/70 stroke-amber-100/40";
+                            }
+                            return (
+                              <rect
+                                key={`${r}-${c}`}
+                                x={12 + c * 26}
+                                y={12 + r * 26}
+                                width="23"
+                                height="23"
+                                rx="3.5"
+                                className={`${cellColor} transition-all`}
+                              />
+                            );
+                          })
+                        )}
+
+                        <rect x="12" y="12" width="130" height="130" fill="none" stroke="#e2e8f0" strokeWidth="1" />
+
+                        {/* Axis Labels */}
+                        <text x="77" y="152" fill="#94a3b8" fontSize="6.2" textAnchor="middle" className="font-extrabold uppercase">
+                          Wear / Prob. →
+                        </text>
+                        <text x="5" y="77" fill="#94a3b8" fontSize="6.2" textAnchor="middle" className="font-extrabold uppercase" transform="rotate(-90 5 77)">
+                          Criticality →
+                        </text>
+
+                        {/* Other healthy background assets in the asset pool mapped as small dots */}
+                        <circle cx="28" cy="116" r="2.8" fill="#cbd5e1" className="opacity-70" />
+                        <circle cx="54" cy="90" r="2.8" fill="#cbd5e1" className="opacity-70" />
+                        <circle cx="80" cy="116" r="2.8" fill="#cbd5e1" className="opacity-70" />
+                        <circle cx="28" cy="64" r="2.8" fill="#cbd5e1" className="opacity-70" />
+                        <circle cx="106" cy="90" r="3.2" fill="#f59e0b" className="opacity-60" />
+
+                        {/* Selected Asset Position marker! */}
+                        {(() => {
+                          let focusX = 116;
+                          let focusY = 24;
+                          if (asset?.id === "cc-02") {
+                            focusX = 90;
+                            focusY = 50;
+                          } else if (asset?.id === "hsm-01") {
+                            focusX = 116;
+                            focusY = 76;
+                          } else if (asset?.status === "Healthy") {
+                            focusX = 38;
+                            focusY = 116;
+                          }
+
+                          return (
+                            <g>
+                              <circle cx={focusX} cy={focusY} r="7.5" fill="none" stroke="#ef4444" strokeWidth="1.5" className="animate-pulse" />
+                              <circle cx={focusX} cy={focusY} r="3.5" className="fill-rose-600 stroke-white" strokeWidth="1" />
+                            </g>
+                          );
+                        })()}
+                      </svg>
+                    </div>
+
+                    {/* Heatmap Legend */}
+                    <div className="flex justify-between items-center text-[7.5px] font-mono text-slate-400 mt-1 pb-0.5">
+                      <span className="flex items-center gap-0.5"><span className="h-1.5 w-1.5 rounded bg-emerald-450" /> Low Risk</span>
+                      <span className="flex items-center gap-0.5"><span className="h-1.5 w-1.5 rounded bg-amber-450" /> Medium</span>
+                      <span className="flex items-center gap-0.5"><span className="h-1.5 w-1.5 rounded bg-rose-500" /> Critical</span>
+                    </div>
                   </div>
                 </div>
 
                 <div className="pt-2 border-t border-slate-150 flex items-center justify-between text-xs">
-                  <div className="space-y-0.5">
+                  <div className="space-y-0.5 text-left">
                     <p className="text-[10px] text-slate-400 uppercase font-mono">Dynamic Line Bottleneck Rating</p>
                     <p className="text-xs text-slate-700 font-bold leading-relaxed font-sans">{report.priorityAnalysis.bottleneckStatus}</p>
                   </div>
@@ -1440,9 +1534,52 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                 </div>
 
                 <div className="p-4 md:p-5 space-y-4 text-xs font-sans leading-normal">
+                  {/* Interactive Downtime Calculator Controls */}
+                  <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-3">
+                    <span className="text-[9.5px] text-amber-400 font-mono font-black uppercase tracking-widest block">
+                      ⚙️ INTERACTIVE DOWNTIME IMPACT ESTIMATOR (FINANCIAL SIMULATOR)
+                    </span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Slider 1: Recovery Hours */}
+                      <div className="space-y-1.5 text-left">
+                        <div className="flex justify-between items-center text-[10.5px]">
+                          <span className="text-slate-300 font-bold">Estimated Outage Duration:</span>
+                          <span className="font-mono text-amber-300 font-extrabold">{downtimeHours} Hrs</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="1"
+                          max="24"
+                          value={downtimeHours}
+                          onChange={(e) => setDowntimeHours(parseInt(e.target.value))}
+                          className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                        />
+                        <span className="text-[8.5px] text-slate-550 font-mono block">Calculated Loss: ${(asset.delayCostPerHour * downtimeHours).toLocaleString()} USD (@ ${asset.delayCostPerHour.toLocaleString()}/Hr)</span>
+                      </div>
+
+                      {/* Slider 2: Procurement Costs */}
+                      <div className="space-y-1.5 text-left">
+                        <div className="flex justify-between items-center text-[10.5px]">
+                          <span className="text-slate-300 font-bold">Emergency Overhaul & Fabrication:</span>
+                          <span className="font-mono text-amber-300 font-extrabold">${emergencyOverhaulUSD.toLocaleString()} USD</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="2000"
+                          max="50000"
+                          step="500"
+                          value={emergencyOverhaulUSD}
+                          onChange={(e) => setEmergencyOverhaulUSD(parseInt(e.target.value))}
+                          className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                        />
+                        <span className="text-[8.5px] text-slate-550 font-mono block">Includes emergency freight & technician dispatch</span>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Unmitigated Failure */}
-                    <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-2">
+                    <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-2 text-left">
                       <div className="text-[9.5px] text-rose-400 uppercase font-mono font-bold tracking-wide">
                         Unmitigated Failure Cost:
                       </div>
@@ -1455,12 +1592,12 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                         </div>
                       </div>
                       <p className="text-[9.5px] text-slate-500 leading-relaxed font-sans border-t border-slate-900 pt-1.5">
-                        Consists of <b>6 hours standalone line outage delay</b> (penalty of ${asset.delayCostPerHour.toLocaleString()}/Hr) + <b>$15,000 emergency structural overhaul</b> of bearings and housing gears.
+                        Consists of <b>{downtimeHours} hours standalone line outage delay</b> (penalty of ${asset.delayCostPerHour.toLocaleString()}/Hr) + <b>${emergencyOverhaulUSD.toLocaleString()} emergency structural overhaul</b> of bearings and housing gears.
                       </p>
                     </div>
 
                     {/* Mitigated Action Cost */}
-                    <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-2">
+                    <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-2 text-left">
                       <div className="text-[9.5px] text-emerald-400 uppercase font-mono font-bold tracking-wide">
                         Mitigated AI Action Cost:
                       </div>
@@ -2087,6 +2224,17 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                           </div>
                         </div>
                       </div>
+
+                      {onViewSpares && (
+                        <button
+                          type="button"
+                          onClick={onViewSpares}
+                          className="w-full py-2 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[10.5px] font-black font-mono uppercase rounded-lg border border-emerald-250 transition-all flex items-center justify-center gap-1.5 cursor-pointer hover:shadow-1xl select-none active:scale-[0.99] animate-pulse"
+                        >
+                          <span>📦 Open Full Adityapur Spares Procurement Engine</span>
+                          <ArrowRight className="h-3.5 w-3.5 text-emerald-650" />
+                        </button>
+                      )}
 
                       {/* Procurement plan alignment descriptor */}
                       <p className="text-[10px] text-slate-500 leading-normal bg-white p-2.5 rounded-lg border border-slate-200">
