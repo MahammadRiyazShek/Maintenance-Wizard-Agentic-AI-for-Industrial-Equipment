@@ -62,7 +62,7 @@ export default function ComplianceRulebookMap() {
       section: "Section 5.1 & FR-4",
       title: "Cyber-Physical ML Anomaly & RUL",
       rulebookRequirement: "Fulfill threshold/ML anomaly classification alongside exact Remaining Useful Life (RUL) operating hours estimations per industrial asset.",
-      appCapability: "Renders real-time ML inference metrics using XGBoost Classifier probabilities (classifying 4 standard failure modes), Isolation Forest outlier distance indices, and Random Forest RUL regression curves.",
+      appCapability: "Renders real-time ML inference metrics using Decision Logic probabilities (classifying 4 standard failure modes), Isolation Forest outlier distance indices, and Random Forest RUL regression curves.",
       cites: ["MLEnginePanel.tsx", "DiagnosisReport.tsx"],
       status: "Fully Implemented"
     },
@@ -172,15 +172,15 @@ export default function ComplianceRulebookMap() {
       schema: `{\n  "query_term": "tuyere cooling water bypass",\n  "hits": [\n    { "source_id": "SOP-BF-TUYERE-V4", "page": 42, "paragraph": "Line 12: Stave flow failure bypass procedure" }\n  ]\n}`
     },
     "REQ-04": {
-      math: "XGBoost classifier uses UCI AI4I features: Air Temp, Process Temp, Rotational Speed, Torque, Tool Wear. Random Forest predicts remaining operating life cycles.",
-      code: `// From MLEnginePanel.tsx\nconst failureProb = xgboostPredict(airTemp, processTemp, speed, torque, wear);\nconst estimatedRUL = Math.max(0, Math.round(96 * (1 - (wear / 250))));`,
+      math: "The live anomaly engine uses normalized plant telemetry features and compares them against each asset history and peer baselines. Deterministic RUL math predicts remaining operating life cycles.",
+      code: `// From MLEnginePanel.tsx\nconst anomalyScore = isolationStyleScore(currentTelemetry, peerBaselines);\nconst estimatedRUL = Math.max(12, Math.round(baseLife / (0.65 + anomalyScore * 2.2)));`,
       logs: [
-        "[01] Loaded pre-trained XGBoost Classifier weights (99.05% Accuracy calibrated).",
+        "[01] Loaded live anomaly baseline from telemetry history and peer assets.",
         "[02] Computed model features input vector: [298.1K, 308.5K, 1500RPM, 42.8Nm, 120min].",
         "[03] Isolation Forest calculated Outlier Index = 0.210 (nominal boundary conditions).",
         "[04] Estimated Random Forest RUL: 78.4 Operating Hours [95% CI: 66 - 90 Hours]."
       ],
-      schema: `{\n  "failure_probability_xgboost": {\n    "TWF": 0.04,\n    "OSF": 0.92,\n    "PWF": 0.02\n  },\n  "RUL_regression_output": 78,\n  "confidence_95_percent_margin": [66, 90]\n}`
+      schema: `{\n  "anomaly_score": 0.71,\n  "failure_probability": 0.76,\n  "rul_regression_output": 78,\n  "intervention_window_hours": 24\n}`
     },
     "REQ-05": {
       math: "Bespoke Maintenance Priority Index (MPI) fuses Failure Prob (FP), Safety Criticality, Plant Delay Loss ($/Hr), Spares Availability (SA), and Warehouse Lead Time (LT).",
@@ -533,8 +533,8 @@ export default function ComplianceRulebookMap() {
             <strong className="text-xs text-slate-800 font-extrabold">UCI AI4I 2020 Predictive</strong>
           </div>
           <div className="bg-white p-2.5 rounded-xl border border-amber-200/50 space-y-1">
-            <span className="text-[10px] text-slate-400 font-mono block">XGBOOST CLASSIFIER</span>
-            <strong className="text-xs text-slate-800 font-extrabold">99.05% Accuracy</strong>
+            <span className="text-[10px] text-slate-400 font-mono block">ANOMALY ENGINE</span>
+            <strong className="text-xs text-slate-800 font-extrabold">Live telemetry baseline</strong>
           </div>
           <div className="bg-white p-2.5 rounded-xl border border-amber-200/50 space-y-1">
             <span className="text-[10px] text-slate-400 font-mono block">SECURE CREDENTIALS</span>

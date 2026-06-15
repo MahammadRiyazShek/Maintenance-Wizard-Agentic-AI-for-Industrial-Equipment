@@ -100,8 +100,8 @@ export default function CinematicLanding({ onEnter, apiActive }: CinematicLandin
 
             <p className="text-xs md:text-sm text-slate-400 leading-relaxed max-w-lg">
               A high-precision predictive decision system integrated with server-side 
-              <b> Google Gemini AI</b>. Engine features real-time <b>99.05% Accuracy XGBoost</b>, 
-              <b> Isolation Forest Anomaly classification</b>, <b>Delta sensor acceleration indexes</b>, 
+              <b> Google Gemini AI</b>. Engine features a <b>live Isolation-Forest-style anomaly model</b>, 
+              <b> Remaining Useful Life forecasting</b>, <b>delta sensor acceleration indexes</b>, 
               interactive <b>pseudo-3D thermal scans</b>, and closed-loop expert feedback vectors.
             </p>
 
@@ -113,9 +113,9 @@ export default function CinematicLanding({ onEnter, apiActive }: CinematicLandin
                 <span className="text-[9px] text-slate-400 block font-normal">Active bottleneck loss</span>
               </div>
               <div>
-                <span className="text-[9px] font-mono text-slate-500 block uppercase">MODEL PERFORMANCE</span>
-                <span className="text-lg md:text-xl font-bold font-mono text-emerald-400">99.05% Acc.</span>
-                <span className="text-[9px] text-slate-400 block font-normal">UCI AI4I 2020 trained</span>
+                <span className="text-[9px] font-mono text-slate-500 block uppercase">MODEL STATUS</span>
+                <span className="text-lg md:text-xl font-bold font-mono text-emerald-400">Live IF Score</span>
+                <span className="text-[9px] text-slate-400 block font-normal">Telemetry + peer baselines</span>
               </div>
               <div>
                 <span className="text-[8.5px] font-mono text-slate-500 block uppercase font-bold">REDUCTION METRIC</span>
@@ -273,7 +273,7 @@ export default function CinematicLanding({ onEnter, apiActive }: CinematicLandin
                     </li>
                     <li className="flex items-start gap-1.5">
                       <span className="text-emerald-500 font-bold">✔</span>
-                      <span><b>AI Rigor & Retraining Workbench:</b> XGBoost 99.05% Accuracy, Isolation Forest outlier indexing, and Paris-Erdogan math.</span>
+                      <span><b>AI Rigor & Retraining Workbench:</b> live anomaly scoring, RUL forecasting, and Paris-Erdogan math.</span>
                     </li>
                     <li className="flex items-start gap-1.5">
                       <span className="text-emerald-500 font-bold">✔</span>

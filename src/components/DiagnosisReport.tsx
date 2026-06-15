@@ -641,8 +641,8 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                 </div>
                 <div className="space-y-0.5 flex-1">
                   <div className="flex justify-between items-baseline">
-                    <strong className="text-slate-150 text-[11px] font-bold">XGBoost Decision Fault Symptom Classifier</strong>
-                    <span className="font-mono text-[8.5px] text-emerald-400 font-extrabold">99.05% Accuracy</span>
+                    <strong className="text-slate-150 text-[11px] font-bold">Deterministic decision logic</strong>
+                    <span className="font-mono text-[8.5px] text-emerald-400 font-extrabold">Live telemetry scoring</span>
                   </div>
                   <p className="text-[10px] text-slate-400 leading-relaxed">
                     Instantly classifies 4 severe mechanical fail states (Tool Wear, Heat Dissipation, Power Degradation, Overstrain) tuned on UCI AI4I industrial assets.
@@ -704,7 +704,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                 </span>
               </div>
               <div className="text-[10px] font-mono text-indigo-300">
-                XGBoost Model Tuning Status: <span className="font-bold text-emerald-400">OPTIMIZED</span>
+                Anomaly model status: <span className="font-bold text-emerald-400">OPTIMIZED</span>
               </div>
             </div>
 
@@ -713,11 +713,11 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
               {/* XGBoost Anomaly Profiler */}
               <div className="bg-slate-950/70 p-2.5 rounded-lg border border-slate-850 space-y-1">
                 <div className="flex items-center justify-between text-[9.5px] font-mono text-slate-400">
-                  <span>XGBoost Classifier</span>
+                  <span>Decision Logic</span>
                   <span className="text-indigo-400 text-[8px] uppercase">UCI AI4I Dataset</span>
                 </div>
                 <div className="flex items-baseline gap-1 pt-0.5">
-                  <span className="text-sm font-extrabold font-mono text-white">99.05%</span>
+                  <span className="text-sm font-extrabold font-mono text-white">Live</span>
                   <span className="text-[9px] text-slate-400 font-mono">accuracy</span>
                 </div>
                 <p className="text-[9.5px] text-slate-400 leading-normal">
@@ -803,7 +803,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                     </div>
                   </div>
                   <span className="text-[8px] bg-indigo-50 text-indigo-700 border border-indigo-150 font-mono px-1.5 py-0.5 rounded-full font-bold">
-                    XGBOOST V1.0
+                    DECISION LOGIC
                   </span>
                 </div>
 
@@ -951,7 +951,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                   <div className="bg-white p-3 rounded-xl border border-slate-200 flex flex-col justify-between space-y-2">
                     <div className="space-y-1">
                       <div className="flex justify-between items-center text-[9px] font-mono text-slate-400 uppercase font-bold">
-                        <span>XGBoost Classifier</span>
+                        <span>Decision Logic</span>
                         <span className="text-rose-600 bg-rose-50 px-1 py-0.2 rounded-sm border border-rose-100">XG-v1.0</span>
                       </div>
                       <h4 className="text-[11px] font-sans font-black text-slate-805 leading-tight">Failure Mode Probabilistic Inference</h4>
@@ -1026,7 +1026,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                 </div>
 
                 <p className="text-[11.5px] text-slate-500 leading-relaxed font-sans">
-                  The Tata Steel Agentic AI Engine (utilizing <b>Isolation Forest</b> feature triangulation and <b>99.05% XGBoost Classification accuracy</b> trained on the <b>UCI AI4I Dataset</b>) has processed cyber-physical telemetry parameters, retrieved matching maintenance manual guidelines via vectorized RAG, integrated historical human supervisor corrections, and run safety-weight constraint calculations.
+                  The Tata Steel Agentic AI Engine (utilizing <b>Isolation-Forest-style</b> feature triangulation, live telemetry ratios, and deterministic maintenance-priority calculations) has processed cyber-physical telemetry parameters, retrieved matching maintenance manual guidelines via vectorized RAG, integrated historical human supervisor corrections, and run safety-weight constraint calculations.
                 </p>
 
                 {/* Vertical Stepper Timeline */}
@@ -1233,7 +1233,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                   {/* Ranked Comparative RCA Table */}
                   <div className="space-y-2 pt-2 border-t border-slate-100">
                     <span className="text-[9px] font-bold text-slate-450 uppercase tracking-widest block font-mono">
-                      XGBoost & Isolation Forest Classifier Rankings:
+                      Decision logic & Isolation-Forest rankings:
                     </span>
                     <div className="space-y-1.5 font-mono text-[10px]">
                       {getRankedCauses(asset?.id || "").map((candidate, idx) => (
@@ -1736,12 +1736,12 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                           <span>STAGE 2: Multi-Sensor Failure Modes & Anomaly Profiling</span>
                         </div>
                         <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
-                          Our pre-trained **XGBoost Classifier (99.05% Accuracy target matched on AI4I 2020 dataset)** evaluates sensor interactions. Simultaneously, the **Isolation Forest Anomaly Model** calculates structural spatial boundary shifts.
+                          Our **decision logic layer** evaluates sensor interactions while the **Isolation-Forest-style anomaly model** calculates structural boundary shifts from telemetry history and peer baselines.
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1 text-[10px] font-mono leading-normal">
                           <div className="bg-slate-900/60 p-2 rounded-lg border border-slate-850">
                             <span className="text-slate-500 block">Model Selection / Metric:</span>
-                            <strong className="text-white font-bold block">XGBoost Ensemble v1.4 (99.05% accuracy)</strong>
+                            <strong className="text-white font-bold block">Decision logic ensemble (live telemetry)</strong>
                             <p className="text-slate-400 mt-1">
                               Classified fault mode: <b className="text-indigo-300 uppercase">{asset.id === "bf-04" ? "HDF (Heat Dissipation Failure)" : asset.id === "cc-02" ? "OSF (Overstrain Failure)" : asset.id === "hsm-01" ? "PWF (Power Wear Failure)" : "TWF (Tool Wear Failure)"}</b> with high likelihood.
                             </p>
@@ -2015,7 +2015,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                               </div>
                             </div>
                             <div className="text-[9.5px] italic text-slate-400 leading-normal font-mono">
-                              * XGBoost Ensemble confirms: High probability of copper tuyere snout silt plugging from water cooling blockage.
+                              * Decision logic indicates: High probability of copper tuyere snout silt plugging from water cooling blockage.
                             </div>
                           </>
                         ) : asset?.id === "cc-02" ? (

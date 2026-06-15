@@ -19,7 +19,7 @@ import {
 import { DiagnosticResult, EngineerFeedback, LogbookEntry } from "./src/types.ts";
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT || 8080);
 
 app.use(express.json());
 

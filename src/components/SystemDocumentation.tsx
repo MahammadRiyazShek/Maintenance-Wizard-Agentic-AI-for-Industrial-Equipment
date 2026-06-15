@@ -154,9 +154,9 @@ export default function SystemDocumentation() {
             Our predictive maintenance center is engineered with two parallel pipelines for cyber-physical feedback loops:
           </p>
           <div className="bg-slate-50 p-4 rounded-lg font-mono text-[10.5px] text-gray-700 leading-relaxed border border-slate-100 space-y-2">
-            <p><strong>1. Quantitative ML Model (UCI AI4I 2020 Benchmark):</strong></p>
-            <p>• <b>Core Classification:</b> XGBoost Classifier trained on 10,000 tool fatigue instances. Accuracy: <b>99.05%</b> | ROC-AUC: <b>0.994</b> | Recall: <b>98.70%</b>.</p>
-            <p>• <b>Outlier Profiler:</b> Isolation Forest anomaly score filtering (contamination: 0.03) to automatically capture sensor divergence.</p>
+            <p><strong>1. Quantitative ML Model (live app implementation):</strong></p>
+            <p>• <b>Core anomaly engine:</b> a lightweight Isolation-Forest-style ensemble built from each asset's telemetry history plus peer asset baselines.</p>
+            <p>• <b>Output signals:</b> anomaly score, failure probability, health score, intervention window, and avoidable-loss estimate.</p>
             
             <p className="mt-2 text-indigo-700"><strong>2. Dynamic Failure-Rule Physics Mathematics:</strong></p>
             <p>• <b>Paris-Erdogan Law (Fatigue expansion rate):</b> da/dN = C · (&Delta;K)<sup>m</sup> (predicts real-time physical crack growth rates in bearings, where m = 3.2).</p>

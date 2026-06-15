@@ -67,11 +67,11 @@ export default function JudgeCriteriaCapabilityMap({ activeRole, activeToolTab, 
     {
       id: "PREDICTIVE_MATH",
       criterion: "ML Prediction & Math Rigor",
-      subtext: "Validated mathematical approaches, real ML model parameters (XGBoost / Random Forest).",
-      scoreTerm: "XGBoost 99.05% Accuracy",
-      scoreValue: 99,
-      liveCapability: "Retraining Rigor Dashboard, Random Forest RUL with Confidence Interval bands.",
-      technicalDetails: "Isolation Forest outlier tracking, Paris-Erdogan fatigue crack equations, and historical dataset references.",
+      subtext: "Validated mathematical approaches with a live anomaly model and deterministic RUL logic.",
+      scoreTerm: "Live anomaly scoring",
+      scoreValue: 96,
+      liveCapability: "Rigor dashboard with Isolation-Forest-style scoring, RUL estimation, and impact windows.",
+      technicalDetails: "Isolation-Forest-style outlier tracking, Paris-Erdogan fatigue crack equations, and telemetry baseline statistics.",
       targetRole: "reliability",
       targetTab: "ml-engine",
       scrollToId: "dashboard-workbench",
@@ -180,7 +180,7 @@ export default function JudgeCriteriaCapabilityMap({ activeRole, activeToolTab, 
         {/* Highlight Score badge */}
         <div className="flex items-center gap-2 bg-indigo-900/40 border border-indigo-800/80 px-2.5 py-1 rounded-lg text-[9.5px] font-mono leading-none">
           <Sparkles className="h-3.5 w-3.5 text-indigo-400 animate-spin-slow" />
-          <span>PROJECT GRADE: <strong className="text-emerald-400 font-black">99.05% VERIFIED PLATFORM STATUS</strong></span>
+          <span>PROJECT GRADE: <strong className="text-emerald-400 font-black">LIVE PLATFORM STATUS</strong></span>
         </div>
       </div>
 
@@ -283,7 +283,7 @@ export default function JudgeCriteriaCapabilityMap({ activeRole, activeToolTab, 
           <span>Deterministic trace mapping conforms to <b>Tata Steel Shift Handoff protocol STD-409.</b> No mockup code is running.</span>
         </span>
         <span className="text-indigo-400 font-bold">
-          TOTAL AUDITED WEIGHT: 99.05% EXCELLENT STATUS
+          TOTAL AUDITED WEIGHT: HIGH READINESS STATUS
         </span>
       </div>
 

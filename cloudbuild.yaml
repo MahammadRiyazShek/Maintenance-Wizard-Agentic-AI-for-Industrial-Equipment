@@ -1,0 +1,48 @@
+# Google Cloud Build pipeline for Maintenance Wizard
+# Usage:  gcloud builds submit --config cloudbuild.yaml \
+#           --substitutions=_GEMINI_KEY=YOUR_KEY
+# Then deploy:  gcloud run deploy maintenance-wizard --image gcr.io/$PROJECT_ID/maintenance-wizard \
+#                  --region=asia-southeast1 --allow-unauthenticated \
+#                  --set-env-vars GEMINI_API_KEY=$_GEMINI_KEY
+
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/maintenance-wizard:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/maintenance-wizard:latest'
+      - '.'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '--all-tags', 'gcr.io/$PROJECT_ID/maintenance-wizard']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'maintenance-wizard'
+      - '--image=gcr.io/$PROJECT_ID/maintenance-wizard:$SHORT_SHA'
+      - '--region=asia-southeast1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--port=8080'
+      - '--memory=1Gi'
+      - '--cpu=1'
+      - '--max-instances=10'
+      - '--set-env-vars=NODE_ENV=production,GEMINI_API_KEY=${_GEMINI_KEY}'
+
+images:
+  - 'gcr.io/$PROJECT_ID/maintenance-wizard:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/maintenance-wizard:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+
+substitutions:
+  _GEMINI_KEY: ''  # Override at submit-time
+
+timeout: '1200s'

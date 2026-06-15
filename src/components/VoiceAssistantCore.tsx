@@ -128,7 +128,7 @@ export default function VoiceAssistantCore({
       setVoiceText("STAFF STATUS: Cyber physical link online. Blast furnace tuyeres degradation index is 3% per hour.");
       speakResponse("System status reading. Cyber physical link stable. Outliers detected in Coke gas compressor, accelerating status.");
     } else if (clean.includes("machine learning") || clean.includes("validation")) {
-      setVoiceText("SUCCESS: Loading XGBoost performance test matrices.");
+      setVoiceText("SUCCESS: Loading anomaly and impact matrices.");
       speakResponse("Redirecting focus to machine learning model performance logs.");
       onSetTab("ml-engine");
     } else {

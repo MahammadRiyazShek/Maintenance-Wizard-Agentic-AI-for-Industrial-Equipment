@@ -486,7 +486,7 @@ export default function ReportingIncidentCenter({ assets }: ReportingIncidentCen
             </div>
 
             <p className="text-[8.5px] text-slate-400 leading-snug font-sans">
-              *The dynamic mathematical failure weights are continuously listening to <b>XGBoost Classifier outputs</b> and <b>Sintering feed pressure ratios</b> in the background.
+              *The dynamic mathematical failure weights are continuously listening to <b>Decision Logic outputs</b> and <b>Sintering feed pressure ratios</b> in the background.
             </p>
           </div>
 

@@ -467,7 +467,7 @@ export default function AssetSelector({
                           </span>
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-slate-400 text-[8.5px] uppercase tracking-wider leading-none">XGBoost Classifier</span>
+                          <span className="text-slate-400 text-[8.5px] uppercase tracking-wider leading-none">Decision logic</span>
                           <span className={`text-[9px] mt-0.5 truncate px-1 py-0.5 rounded-sm border leading-none font-bold text-center ${classBg}`}>
                             {xgMode}
                           </span>

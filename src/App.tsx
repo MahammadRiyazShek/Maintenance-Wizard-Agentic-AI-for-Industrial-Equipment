@@ -28,6 +28,7 @@ import { TataSteelLogo } from "./components/TataSteelLogo.tsx";
 import ReportingIncidentCenter from "./components/ReportingIncidentCenter.tsx";
 import JudgeCriteriaCapabilityMap from "./components/JudgeCriteriaCapabilityMap.tsx";
 import RiskPrioritizationMatrix from "./components/RiskPrioritizationMatrix.tsx";
+import BusinessImpactPanel from "./components/BusinessImpactPanel.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, generateSimulatedDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -76,7 +77,7 @@ export default function App() {
   const [agentPhase, setAgentPhase] = useState<string>("Intel Ingest");
   const [sentinelLogs, setSentinelLogs] = useState<string[]>([
     "[08:00:00 INITIAL] SentinelAgent autonomous telemetry background hook established.",
-    "[08:00:03 RECONCILE] XGBoost classifier report loaded (99.05% Accuracy target matched).",
+    "[08:00:03 RECONCILE] Isolation-Forest anomaly baseline loaded from telemetry history and peer assets.",
     "[08:00:10 AGENTIC] Historical database matched: similarity score 89% (BF-04 thermal breach casing)."
   ]);
   
@@ -105,7 +106,7 @@ export default function App() {
 
   // Autonomous Sentinel Agent continuous telemetry scanner simulation
   useEffect(() => {
-    const phases = ["Intel Ingest", "Vector RAG", "XGBoost Run", "RF RUL Curve", "MPI Solving", "Shift Sync"];
+    const phases = ["Intel Ingest", "Vector RAG", "Anomaly Scoring", "RUL Curve", "MPI Solving", "Shift Sync"];
     let phaseIdx = 0;
 
     const sentinelInterval = setInterval(() => {
@@ -118,22 +119,22 @@ export default function App() {
       if (sentinelProfile === "sentry-1") {
         if (currentPh === "Intel Ingest") customMsg = "Ingested vibration sensor stream. Delta-a computed as +0.024 mm/s³.";
         else if (currentPh === "Vector RAG") customMsg = "FAISS similarity search. Matched: SOP-SMS-MOLD-02 (vibration safety standard, 94.3% score).";
-        else if (currentPh === "XGBoost Run") customMsg = "XGBoost Classifier validates Overstrain Failure (OSF) on secondary cylinders.";
-        else if (currentPh === "RF RUL Curve") customMsg = "Estimated Random Forest RUL. Estimated life curve flattens towards 78 hours safely.";
+        else if (currentPh === "Anomaly Scoring") customMsg = "Isolation-style ensemble flagged vibration divergence against the peer baseline.";
+        else if (currentPh === "RUL Curve") customMsg = "Estimated RUL curve updated from live telemetry stress and anomaly compression.";
         else if (currentPh === "MPI Solving") customMsg = "Bespoke MPI matrix compiled. Risk index scored at 8.2 (Actions pending).";
         else customMsg = "Synchronized shift logbook database. Telemetry alarm buffers checked and locked.";
       } else if (sentinelProfile === "sentry-2") {
         if (currentPh === "Intel Ingest") customMsg = "Ingested thermocouple stream. Active blast furnace tuyere thermal gradient rising.";
         else if (currentPh === "Vector RAG") customMsg = "Matched SMS Group BF4 manual p. 142 (Tuyere thermal restriction guidelines).";
-        else if (currentPh === "XGBoost Run") customMsg = "XGBoost Classifier predicts Heat Dissipation Failure (HDF) with 92.4% confidence.";
-        else if (currentPh === "RF RUL Curve") customMsg = "Arrhenius acceleration coefficient set to 1.042x. Remaining Useful Life: 124 hours.";
+        else if (currentPh === "Anomaly Scoring") customMsg = "Thermal pattern isolated from historical furnace behavior with high anomaly confidence.";
+        else if (currentPh === "RUL Curve") customMsg = "Arrhenius acceleration coefficient refreshed. Remaining Useful Life forecast tightened from live stress.";
         else if (currentPh === "MPI Solving") customMsg = "Composite MPI evaluated. Urgency score set to 9.1. Immediate safe-mode speed limits calculated.";
         else customMsg = "Dispatch trigger generated for copper tuyere body (sp-001) in central stores.";
       } else {
         if (currentPh === "Intel Ingest") customMsg = "Scanning warehouse inventory ledgers. Alert - low stock below critical safety limits.";
         else if (currentPh === "Vector RAG") customMsg = "Cross-referenced SMS Group Germany and NSK Japan lead-times. Average duration: 30 days.";
-        else if (currentPh === "XGBoost Run") customMsg = "XGBoost models predict unmitigated run-to-failure penalties of up to ₹32.4 Lakhs.";
-        else if (currentPh === "RF RUL Curve") customMsg = "Calculated safe margin buffer. Machinery remaining useful hours: 48 Hrs.";
+        else if (currentPh === "Anomaly Scoring") customMsg = "Business-impact engine quantified avoidable loss from an unmitigated run-to-failure scenario.";
+        else if (currentPh === "RUL Curve") customMsg = "Calculated safe margin buffer. Machinery remaining useful hours refreshed from current telemetry.";
         else if (currentPh === "MPI Solving") customMsg = "Net ROI calculated at +595% with scheduled weekend shutdown action.";
         else customMsg = "Maintenance Priority Index logged. Ticket locked into executive operations workspace.";
       }
@@ -642,7 +643,7 @@ export default function App() {
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
                 {[
                   { id: "operator", label: "Control Room Operator", desc: "Live 3D Twin & Sensors", icon: "⚙", color: "border-blue-200 hover:border-blue-500 text-blue-700 bg-blue-50/20" },
-                  { id: "reliability", label: "Reliability Eng / ML Lead", desc: "RF RUL & XGBoost Weights", icon: "🔬", color: "border-purple-200 hover:border-purple-500 text-purple-700 bg-purple-50/20" },
+                  { id: "reliability", label: "Reliability Eng / ML Lead", desc: "RUL & anomaly weights", icon: "🔬", color: "border-purple-200 hover:border-purple-500 text-purple-700 bg-purple-50/20" },
                   { id: "supervisor", label: "Maintenance Crew Lead", desc: "AI Diagnosis & Task Order", icon: "👷", color: "border-amber-200 hover:border-amber-500 text-amber-700 bg-amber-50/20" },
                   { id: "supply", label: "Supply Chain Advisor", desc: "Lead-time Warehouse Spares", icon: "📦", color: "border-emerald-200 hover:border-emerald-500 text-emerald-700 bg-emerald-50/20" },
                   { id: "compliance", label: "QA & Compliance Auditor", desc: "Regulatory Mapping Bench", icon: "🏆", color: "border-rose-200 hover:border-rose-500 text-rose-700 bg-rose-50/20" },
@@ -687,7 +688,7 @@ export default function App() {
                 )}
                 {activeRole === "reliability" && (
                   <p>
-                    <b>🔬 RELIABILITY ENGINEERING WORKSTATION ACTIVE:</b> Focusing mathematical failure engines, Paris-Erdogan crack propagation fatigue model thresholds, Random Forest RUL projections, and XGBoost cross-entropy evaluation. <b>ML Rigor Tab</b> selected.
+                    <b>🔬 RELIABILITY ENGINEERING WORKSTATION ACTIVE:</b> Focusing mathematical failure engines, Paris-Erdogan crack propagation fatigue model thresholds, RUL projections, anomaly scoring, and impact evaluation. <b>ML Rigor Tab</b> selected.
                   </p>
                 )}
                 {activeRole === "supervisor" && (
@@ -906,15 +907,18 @@ export default function App() {
 
               {/* Columns 5-8: Diagnostic Planning center stage */}
               <section className="xl:col-span-5 xl:h-[calc(100vh-320px)] xl:overflow-y-auto pr-0 xl:pr-1" id="center-reasoning-column">
-                <DiagnosisReport
-                  asset={activeAsset}
-                  report={activeDiagnosis}
-                  loading={diagnosisLoading}
-                  onExecuteDiagnosis={handleRunDiagnosis}
-                  onSubmitFeedback={handleSubmitFeedback}
-                  feedbackLogged={feedbackSaved}
-                  onViewSpares={() => handleRoleChange("supply")}
-                />
+                <div className="space-y-4">
+                  <DiagnosisReport
+                    asset={activeAsset}
+                    report={activeDiagnosis}
+                    loading={diagnosisLoading}
+                    onExecuteDiagnosis={handleRunDiagnosis}
+                    onSubmitFeedback={handleSubmitFeedback}
+                    feedbackLogged={feedbackSaved}
+                    onViewSpares={() => handleRoleChange("supply")}
+                  />
+                  <BusinessImpactPanel asset={activeAsset} assets={assets} />
+                </div>
               </section>
 
               {/* Columns 9-12: Maintenance crew toolkit (Interactive Chat, RAG search and logbook tab selections) */}
@@ -1081,9 +1085,9 @@ export default function App() {
                 {/* 1. Fully visible ML Engine & Retraining Workstation */}
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden flex flex-col h-[650px]">
                   <div className="bg-indigo-50/50 border-b border-slate-100 p-2.5 px-4 font-mono text-[10px] text-indigo-805 font-bold flex items-center justify-between shrink-0">
-                    <span>SUPERVISED ML ENSEMBLE & PHYSICS WORKSTATION</span>
+                    <span>ANOMALY MODEL & PHYSICS WORKSTATION</span>
                     <span className="bg-indigo-100 text-indigo-900 px-2 py-0.5 rounded text-[8.5px] font-extrabold uppercase">
-                      XGBOOST + ISOLATION FOREST
+                      ISOLATION FOREST + RUL
                     </span>
                   </div>
                   <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-slate-50/20">
