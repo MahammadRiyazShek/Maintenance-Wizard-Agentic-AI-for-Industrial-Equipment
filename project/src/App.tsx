@@ -29,6 +29,8 @@ import ReportingIncidentCenter from "./components/ReportingIncidentCenter.tsx";
 import JudgeCriteriaCapabilityMap from "./components/JudgeCriteriaCapabilityMap.tsx";
 import RiskPrioritizationMatrix from "./components/RiskPrioritizationMatrix.tsx";
 import BusinessImpactPanel from "./components/BusinessImpactPanel.tsx";
+import LiveROICalculator from "./components/LiveROICalculator.tsx";
+import FailureCascadeGraph from "./components/FailureCascadeGraph.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, generateSimulatedDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -65,7 +67,7 @@ export default function App() {
   
   // Tab within the Operations Toolkit (Right side)
   const [activeToolTab, setActiveToolTab] = useState<"chat" | "rag" | "logbook" | "sandbox" | "ml-engine" | "spares">("chat");
-  const [activeVisualizer, setActiveVisualizer] = useState<"twin" | "flow" | "replay" | "risk">("twin");
+  const [activeVisualizer, setActiveVisualizer] = useState<"twin" | "flow" | "replay" | "risk" | "cascade" | "roi">("twin");
   const [showDocsModal, setShowDocsModal] = useState<boolean>(false);
   const [showComplianceMap, setShowComplianceMap] = useState<boolean>(false);
   const [hasEntered, setHasEntered] = useState<boolean>(false);
@@ -855,12 +857,28 @@ export default function App() {
                     <span>📊 Risk MPI Matrix</span>
                   </button>
                   <button
+                    onClick={() => setActiveVisualizer("cascade")}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
+                      activeVisualizer === "cascade" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    <span>🔗 Cascade Impact</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveVisualizer("roi")}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
+                      activeVisualizer === "roi" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    <span>💰 Live ROI</span>
+                  </button>
+                  <button
                     onClick={() => setActiveVisualizer("replay")}
                     className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
                       activeVisualizer === "replay" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
                     }`}
                   >
-                    <span>🕒 Incident Replay System</span>
+                    <span>🕒 Incident Replay</span>
                   </button>
                 </div>
               </div>
@@ -874,6 +892,18 @@ export default function App() {
                     selectedAssetId={selectedAssetId}
                     onSelectAsset={handleSelectAsset}
                     onViewSpares={() => handleRoleChange("supply")}
+                  />
+                )}
+                {activeVisualizer === "cascade" && (
+                  <FailureCascadeGraph
+                    assets={assets}
+                    selectedAssetId={selectedAssetId}
+                    onSelectAsset={handleSelectAsset}
+                  />
+                )}
+                {activeVisualizer === "roi" && (
+                  <LiveROICalculator
+                    defaultDelayCostPerHour={activeAsset?.delayCostPerHour || 22000}
                   />
                 )}
                 {activeVisualizer === "replay" && <ReportingIncidentCenter assets={assets} />}
