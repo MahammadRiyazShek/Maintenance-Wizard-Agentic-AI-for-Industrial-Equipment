@@ -43,6 +43,7 @@ import AnomalyHeatmapMatrix from "./components/AnomalyHeatmapMatrix.tsx";
 import ModelledImpactTable from "./components/ModelledImpactTable.tsx";
 import MissionControlNav from "./components/MissionControlNav.tsx";
 import MPITraceInspector from "./components/MPITraceInspector.tsx";
+import DecisionRecommendationCards from "./components/DecisionRecommendationCards.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, generateSimulatedDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -1194,11 +1195,18 @@ export default function App() {
 
             </div>
 
-            {/* MPI TRACE INSPECTOR — Auditable Maintenance Priority Index (NEW · v4 FINAL) */}
+            {/* MPI TRACE INSPECTOR — Auditable Maintenance Priority Index (v4) */}
             <MPITraceInspector
               assets={assets}
               selectedAssetId={selectedAssetId}
               onSelectAsset={handleSelectAsset}
+            />
+
+            {/* DECISION RECOMMENDATION CARDS — Top-3 actionable verdicts (NEW · v5 FINAL) */}
+            <DecisionRecommendationCards
+              assets={assets}
+              onSelectAsset={handleSelectAsset}
+              onJumpTo={jumpTo}
             />
 
             {/* AI OPTIMIZATION ENGINE — deterministic, sensor-grounded $ recommendations */}
@@ -1255,6 +1263,76 @@ export default function App() {
                 />
               </div>
             </div>
+
+            {/* WIN-VERDICT FOOTER — final judge-facing pitch (NEW · v5 FINAL) */}
+            <section id="win-verdict-banner" className="mw-verdict animate-feed">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="max-w-3xl">
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-indigo-300 mb-1">
+                    Tata Steel AI Hackathon 2026 · Round 2 · Final Submission
+                  </div>
+                  <h4 className="text-xl md:text-2xl font-black tracking-tight text-white">
+                    From Alarm to Action in Seconds.
+                  </h4>
+                  <p className="text-sm text-slate-300 mt-2 leading-relaxed">
+                    A 35-component cognitive cockpit covering all four official judging axes —
+                    <b className="text-white"> Mission &amp; Knowledge Alignment</b>,
+                    <b className="text-white"> Responsible &amp; Evidence-Grounded AI</b>,
+                    <b className="text-white"> Technical Execution &amp; Feasibility</b>, and
+                    <b className="text-white"> Clarity of Communication</b> —
+                    with a fully auditable Maintenance Priority Index, top-3 actionable
+                    decision cards, a live 3D digital twin, and an autonomous LangGraph
+                    sentinel agent. Built solo, deployed on Google Cloud Run.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <a
+                    href="https://github.com/MahammadRiyazShek/Maintenance-Wizard-Agentic-AI-for-Industrial-Equipment"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-slate-900 text-xs font-black uppercase tracking-wide hover:bg-slate-100 transition"
+                  >
+                    <Github className="h-3.5 w-3.5" /> Source
+                  </a>
+                  <a
+                    href="https://www.youtube.com/watch?v=56f9MAxLd-k"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500 text-white text-xs font-black uppercase tracking-wide hover:bg-rose-600 transition"
+                  >
+                    <Youtube className="h-3.5 w-3.5" /> Demo
+                  </a>
+                  <a
+                    href="https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-500 text-white text-xs font-black uppercase tracking-wide hover:bg-indigo-600 transition"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" /> Live on Cloud Run
+                  </a>
+                </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="rounded-xl bg-white/5 border border-white/10 p-3">
+                  <div className="text-[9.5px] font-mono uppercase tracking-widest text-indigo-200">Components</div>
+                  <div className="text-lg font-black tabular-nums text-white mt-0.5">35</div>
+                </div>
+                <div className="rounded-xl bg-white/5 border border-white/10 p-3">
+                  <div className="text-[9.5px] font-mono uppercase tracking-widest text-indigo-200">Specialist agents</div>
+                  <div className="text-lg font-black tabular-nums text-white mt-0.5">5</div>
+                </div>
+                <div className="rounded-xl bg-white/5 border border-white/10 p-3">
+                  <div className="text-[9.5px] font-mono uppercase tracking-widest text-indigo-200">Role surfaces</div>
+                  <div className="text-lg font-black tabular-nums text-white mt-0.5">6</div>
+                </div>
+                <div className="rounded-xl bg-white/5 border border-white/10 p-3">
+                  <div className="text-[9.5px] font-mono uppercase tracking-widest text-indigo-200">Cmd-K actions</div>
+                  <div className="text-lg font-black tabular-nums text-white mt-0.5">32+</div>
+                </div>
+              </div>
+            </section>
 
           </div>
         )}
@@ -1314,6 +1392,9 @@ function buildCommandActions(ctx: {
     { id: "nav-roles", group: "Navigation", label: "Jump to Role Surfaces", hint: "6 role-based command surfaces", keywords: ["role", "persona"], run: () => jumpTo("role-command-surfaces-hud") },
     { id: "nav-optim", group: "Navigation", label: "Jump to AI Optimization Panel", hint: "Sensor-grounded $ recommendations", keywords: ["optimization", "savings", "ai"], run: () => jumpTo("ai-optimization-panel") },
     { id: "nav-ops", group: "Navigation", label: "Jump to Operations Suite", hint: "ML · Spares · Logbook", keywords: ["executive", "ops", "suite"], run: () => jumpTo("executive-ops-suite") },
+    { id: "nav-decisions", group: "Navigation", label: "Jump to Top-3 Decision Cards", hint: "Action · Cost · ETA · Deferred risk", keywords: ["decision", "recommendation", "action", "verdict"], run: () => jumpTo("decision-recommendation-cards") },
+    { id: "nav-mpi", group: "Navigation", label: "Jump to MPI Trace Inspector", hint: "Auditable priority formula", keywords: ["mpi", "priority", "trace", "formula"], run: () => jumpTo("mpi-trace-inspector") },
+    { id: "nav-verdict", group: "Navigation", label: "Jump to Win Verdict", hint: "Final judge-facing pitch", keywords: ["verdict", "win", "footer", "summary"], run: () => jumpTo("win-verdict-banner") },
 
     // Roles
     { id: "role-operator", group: "Role", label: "Activate · Control Room Operator", hint: "Live 3D twin & sensors", keywords: ["operator", "control"], run: () => handleRoleChange("operator") },
