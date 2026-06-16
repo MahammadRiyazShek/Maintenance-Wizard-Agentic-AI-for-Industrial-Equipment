@@ -286,7 +286,8 @@ If any reviewer needs a deeper originality audit (commit-history walkthrough, de
 **Mahammad Riyaz Shek** — *Solo participant, Tata Steel AI Hackathon 2026*  
 🔗 GitHub: <https://github.com/MahammadRiyazShek>  
 🎬 Demo video: <https://www.youtube.com/watch?v=56f9MAxLd-k>  
-🌐 Live prototype: <https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/>
+🌐 Live prototype (Google Cloud Run): <https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/>
+🌐 Live prototype (Vercel): <https://maintenance-wizard-agentic-ai-for-industrial-equipment.vercel.app/>
 
 ---
 
