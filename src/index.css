@@ -29,3 +29,50 @@
 .glow-emerald-pulse {
   animation: pulseGlowEmerald 2s infinite ease-in-out;
 }
+
+/* =========================================================
+   Alignment & rhythm polish — added in WINNING enhancement
+   ========================================================= */
+
+/* Consistent feed-in animation for new panels */
+@keyframes feedIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-feed { animation: feedIn 0.45s ease-out both; }
+
+/* Custom scrollbar for dense console / log panels */
+.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.35);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.6);
+}
+
+/* Slow rotation for settings icon */
+@keyframes spinSlow {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow { animation: spinSlow 6s linear infinite; }
+
+/* Unified card baseline — every dashboard panel inherits the same rhythm  */
+[id$="-panel"], [id$="-strip"], [id$="-suite"], [id$="-dashboard"], [id$="-hud"] {
+  scroll-margin-top: 96px;     /* anchor-jump offset so headers don't hide it */
+}
+
+/* Smooth highlight ring used by jumpTo() */
+.ring-pulse {
+  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.45);
+  transition: box-shadow 0.45s ease-out;
+}
+
+/* xs breakpoint helper for header alignment (Tailwind v4 has no xs by default) */
+@media (min-width: 480px) {
+  .xs\:block { display: block !important; }
+}
+
+/* Make sure long inline kbd elements stay aligned with their button text */
+kbd { line-height: 1; }

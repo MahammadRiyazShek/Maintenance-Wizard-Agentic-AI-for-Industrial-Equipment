@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { 
   Asset, 
   ControlRoomAlert, 
@@ -31,6 +31,10 @@ import RiskPrioritizationMatrix from "./components/RiskPrioritizationMatrix.tsx"
 import BusinessImpactPanel from "./components/BusinessImpactPanel.tsx";
 import LiveROICalculator from "./components/LiveROICalculator.tsx";
 import FailureCascadeGraph from "./components/FailureCascadeGraph.tsx";
+import CommandPalette, { CmdAction } from "./components/CommandPalette.tsx";
+import FleetHealthStrip from "./components/FleetHealthStrip.tsx";
+import AIOptimizationPanel from "./components/AIOptimizationPanel.tsx";
+import WinPillarsBanner from "./components/WinPillarsBanner.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, generateSimulatedDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -51,7 +55,10 @@ import {
   Key,
   Cpu,
   Binary,
-  Package
+  Package,
+  Command as CommandIcon,
+  Github,
+  Youtube
 } from "lucide-react";
 
 export default function App() {
@@ -87,6 +94,8 @@ export default function App() {
   const [keyInput, setKeyInput] = useState<string>(getSavedApiKey());
   const [showKeyPanel, setShowKeyPanel] = useState<boolean>(false);
   const [apiActive, setApiActive] = useState<boolean>(!!getSavedApiKey());
+  // Command Palette (Cmd/Ctrl+K)
+  const [cmdOpen, setCmdOpen] = useState<boolean>(false);
 
   // Diagnostics & Chats Logic States
   const [activeDiagnosis, setActiveDiagnosis] = useState<DiagnosticResult | null>(null);
@@ -98,6 +107,28 @@ export default function App() {
 
   // Time ticker
   const [currentTime, setCurrentTime] = useState(new Date().toISOString());
+
+  // Global Cmd/Ctrl+K listener
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setCmdOpen((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Smooth scroll to any section id (used by Win Pillars banner & Cmd palette)
+  const jumpTo = useCallback((sectionId: string) => {
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.classList.add("ring-4", "ring-indigo-400/70", "transition-all", "duration-500");
+      setTimeout(() => el.classList.remove("ring-4", "ring-indigo-400/70"), 1800);
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -551,6 +582,42 @@ export default function App() {
             <span>{showComplianceMap ? "Return" : "🏆 Compliance Map"}</span>
           </button>
 
+          {/* Cmd+K Command Palette trigger */}
+          <button
+            onClick={() => setCmdOpen(true)}
+            id="btn-cmd-palette"
+            title="Open Command Palette  (⌘K / Ctrl+K)"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-indigo-500 rounded-lg text-xs font-bold font-mono tracking-wide transition cursor-pointer"
+          >
+            <CommandIcon className="h-3.5 w-3.5 text-indigo-400" />
+            <span className="hidden sm:inline">Quick Nav</span>
+            <kbd className="hidden md:inline-flex items-center px-1.5 py-0.5 bg-slate-900 border border-slate-700 rounded text-[9px] text-slate-400">
+              ⌘K
+            </kbd>
+          </button>
+
+          {/* GitHub & Demo links — judge visibility */}
+          <a
+            href="https://github.com/MahammadRiyazShek/Maintenance-Wizard-Agentic-AI-for-Industrial-Equipment"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="View source on GitHub"
+            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 hover:border-slate-500 rounded-lg text-[11px] font-bold font-mono tracking-wide transition cursor-pointer"
+          >
+            <Github className="h-3.5 w-3.5" />
+            <span className="hidden lg:inline">GitHub</span>
+          </a>
+          <a
+            href="https://www.youtube.com/watch?v=56f9MAxLd-k"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Watch the demo video"
+            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 hover:border-rose-500 rounded-lg text-[11px] font-bold font-mono tracking-wide transition cursor-pointer"
+          >
+            <Youtube className="h-3.5 w-3.5 text-rose-400" />
+            <span className="hidden lg:inline">Demo</span>
+          </a>
+
           <ShiftHandoffModal assets={assets} alerts={alerts} logbook={logbook} />
 
           <button
@@ -609,6 +676,16 @@ export default function App() {
           /* Main Cockpit Split Layout grid and flex boxes */
           <div className="space-y-6 overflow-y-auto xl:h-[calc(100vh-120px)] pr-1 font-sans" id="dashboard-workbench">
             
+            {/* WIN PILLARS — judge-facing axes → evidence (click to jump) */}
+            <WinPillarsBanner onJumpTo={jumpTo} />
+
+            {/* FLEET HEALTH STRIP — plant-wide status at a glance */}
+            <FleetHealthStrip
+              assets={assets}
+              selectedAssetId={selectedAssetId}
+              onSelectAsset={handleSelectAsset}
+            />
+
             {/* INCREDIBLE JUDGE-FACING CRITERIA TO CAPABILITY WORKBENCH MAP */}
             <JudgeCriteriaCapabilityMap 
               activeRole={activeRole} 
@@ -1085,6 +1162,9 @@ export default function App() {
 
             </div>
 
+            {/* AI OPTIMIZATION ENGINE — deterministic, sensor-grounded $ recommendations */}
+            <AIOptimizationPanel assets={assets} onFocusAsset={handleSelectAsset} />
+
             {/* Extended Plant Operations & Compliance Suite - Solving Visibility Gaps 1:1 */}
             <div className="border-t border-slate-200/50 pt-6 mt-6 space-y-4" id="executive-ops-suite">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 text-white rounded-xl p-4 border border-slate-850 shadow-md">
@@ -1137,6 +1217,93 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {/* Global Command Palette overlay */}
+      <CommandPalette
+        open={cmdOpen}
+        onClose={() => setCmdOpen(false)}
+        actions={buildCommandActions({
+          handleRoleChange,
+          setActiveToolTab,
+          setActiveVisualizer,
+          setShowComplianceMap,
+          setShowDocsModal,
+          setShowKeyPanel,
+          jumpTo,
+        })}
+      />
     </div>
   );
+}
+
+// ----------------------------------------------------------------------
+// Command palette action factory — kept outside the component to avoid
+// re-creating the array on every render.
+// ----------------------------------------------------------------------
+function buildCommandActions(ctx: {
+  handleRoleChange: (
+    role: "operator" | "reliability" | "supervisor" | "supply" | "compliance" | "executive"
+  ) => void;
+  setActiveToolTab: (
+    tab: "chat" | "rag" | "logbook" | "sandbox" | "ml-engine" | "spares"
+  ) => void;
+  setActiveVisualizer: (
+    v: "twin" | "flow" | "replay" | "risk" | "cascade" | "roi"
+  ) => void;
+  setShowComplianceMap: (b: boolean) => void;
+  setShowDocsModal: (b: boolean) => void;
+  setShowKeyPanel: (b: boolean) => void;
+  jumpTo: (sectionId: string) => void;
+}): CmdAction[] {
+  const {
+    handleRoleChange,
+    setActiveToolTab,
+    setActiveVisualizer,
+    setShowComplianceMap,
+    setShowDocsModal,
+    jumpTo,
+  } = ctx;
+  return [
+    // Navigation
+    { id: "nav-fleet", group: "Navigation", label: "Jump to Fleet Health Strip", hint: "Top-of-page plant-wide health", keywords: ["fleet", "overview", "health"], run: () => jumpTo("fleet-health-strip") },
+    { id: "nav-pillars", group: "Navigation", label: "Jump to Win Pillars", hint: "4 judging axes → evidence", keywords: ["win", "judge", "pillars"], run: () => jumpTo("win-pillars-banner") },
+    { id: "nav-sentinel", group: "Navigation", label: "Jump to Autonomous Sentinel", hint: "LangGraph daemon log feed", keywords: ["sentinel", "agent", "langgraph"], run: () => jumpTo("sentinel-agent-dashboard") },
+    { id: "nav-scada", group: "Navigation", label: "Jump to SCADA Cockpit", hint: "3D Twin · Cascade · Risk · ROI", keywords: ["scada", "cockpit", "twin"], run: () => jumpTo("scada-monitor-suite") },
+    { id: "nav-roles", group: "Navigation", label: "Jump to Role Surfaces", hint: "6 role-based command surfaces", keywords: ["role", "persona"], run: () => jumpTo("role-command-surfaces-hud") },
+    { id: "nav-optim", group: "Navigation", label: "Jump to AI Optimization Panel", hint: "Sensor-grounded $ recommendations", keywords: ["optimization", "savings", "ai"], run: () => jumpTo("ai-optimization-panel") },
+    { id: "nav-ops", group: "Navigation", label: "Jump to Operations Suite", hint: "ML · Spares · Logbook", keywords: ["executive", "ops", "suite"], run: () => jumpTo("executive-ops-suite") },
+
+    // Roles
+    { id: "role-operator", group: "Role", label: "Activate · Control Room Operator", hint: "Live 3D twin & sensors", keywords: ["operator", "control"], run: () => handleRoleChange("operator") },
+    { id: "role-reliab", group: "Role", label: "Activate · Reliability / ML Lead", hint: "RUL · anomaly weights", keywords: ["reliability", "ml"], run: () => handleRoleChange("reliability") },
+    { id: "role-supv", group: "Role", label: "Activate · Maintenance Crew Lead", hint: "Diagnosis & task order", keywords: ["supervisor", "crew"], run: () => handleRoleChange("supervisor") },
+    { id: "role-supply", group: "Role", label: "Activate · Supply Chain Advisor", hint: "Lead-time · warehouse", keywords: ["supply", "spares"], run: () => handleRoleChange("supply") },
+    { id: "role-comp", group: "Role", label: "Activate · QA / Compliance Auditor", hint: "Rulebook map", keywords: ["compliance", "qa"], run: () => handleRoleChange("compliance") },
+    { id: "role-exec", group: "Role", label: "Activate · Executive Ops Director", hint: "Cascading loss · metrics", keywords: ["executive", "director"], run: () => handleRoleChange("executive") },
+
+    // Visualizer
+    { id: "vis-twin", group: "Visualizer", label: "Open 3D Digital Twin", keywords: ["twin", "3d"], run: () => setActiveVisualizer("twin") },
+    { id: "vis-flow", group: "Visualizer", label: "Open Process Cascade Graph", keywords: ["flow", "cascade"], run: () => setActiveVisualizer("flow") },
+    { id: "vis-risk", group: "Visualizer", label: "Open Risk MPI Matrix", keywords: ["risk", "matrix", "mpi"], run: () => setActiveVisualizer("risk") },
+    { id: "vis-cascade", group: "Visualizer", label: "Open Cascade Impact", keywords: ["impact", "propagation"], run: () => setActiveVisualizer("cascade") },
+    { id: "vis-roi", group: "Visualizer", label: "Open Live ROI Calculator", keywords: ["roi", "calculator", "$"], run: () => setActiveVisualizer("roi") },
+    { id: "vis-replay", group: "Visualizer", label: "Open Incident Replay", keywords: ["replay", "incident"], run: () => setActiveVisualizer("replay") },
+
+    // Toolkit
+    { id: "tool-chat", group: "Toolkit", label: "Switch to Wizard Chat", keywords: ["chat", "gemini"], run: () => setActiveToolTab("chat") },
+    { id: "tool-rag", group: "Toolkit", label: "Switch to RAG Knowledge Base", keywords: ["rag", "kb", "manuals"], run: () => setActiveToolTab("rag") },
+    { id: "tool-log", group: "Toolkit", label: "Switch to Engineer Logbook", keywords: ["logbook", "log"], run: () => setActiveToolTab("logbook") },
+    { id: "tool-sandbox", group: "Toolkit", label: "Switch to Sandbox Simulator", keywords: ["sandbox", "simulate"], run: () => setActiveToolTab("sandbox") },
+    { id: "tool-ml", group: "Toolkit", label: "Switch to ML Engine", keywords: ["ml", "engine", "rigor"], run: () => setActiveToolTab("ml-engine") },
+    { id: "tool-spares", group: "Toolkit", label: "Switch to Spares Procurement", keywords: ["spares", "procure"], run: () => setActiveToolTab("spares") },
+
+    // Compliance / System
+    { id: "sys-compliance", group: "Compliance", label: "Open Compliance Rulebook Map", keywords: ["compliance", "rulebook", "map"], run: () => { setShowComplianceMap(true); setShowDocsModal(false); } },
+    { id: "sys-docs", group: "System", label: "Open System Documentation", keywords: ["docs", "manual", "system"], run: () => { setShowDocsModal(true); setShowComplianceMap(false); } },
+
+    // External links
+    { id: "ext-github", group: "System", label: "Open GitHub Repository", hint: "Source code", keywords: ["github", "code", "source"], run: () => window.open("https://github.com/MahammadRiyazShek/Maintenance-Wizard-Agentic-AI-for-Industrial-Equipment", "_blank") },
+    { id: "ext-demo", group: "System", label: "Open YouTube Demo", hint: "Walk-through video", keywords: ["youtube", "demo", "video"], run: () => window.open("https://www.youtube.com/watch?v=56f9MAxLd-k", "_blank") },
+    { id: "ext-live", group: "System", label: "Open Live Cloud Run Deployment", hint: "Production URL", keywords: ["live", "deploy", "cloud run"], run: () => window.open("https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/", "_blank") },
+  ];
 }
