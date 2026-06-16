@@ -287,6 +287,7 @@ If any reviewer needs a deeper originality audit (commit-history walkthrough, de
 🔗 GitHub: <https://github.com/MahammadRiyazShek>  
 🎬 Demo video: <https://www.youtube.com/watch?v=56f9MAxLd-k>  
 🌐 Live prototype (Google Cloud Run): <https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/>
+
 🌐 Live prototype (Vercel): <https://maintenance-wizard-agentic-ai-for-industrial-equipment.vercel.app/>
 
 ---
