@@ -7,7 +7,8 @@
   
 Problem Statement: *Maintenance Wizard for Industrial Equipment*
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Cloud%20Run-4285F4?logo=googlecloud&logoColor=white)](https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Google%20Cloud%20Run-4285F4?logo=googlecloud&logoColor=white)](https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-4285F4?logo=googlecloud&logoColor=white)](https://maintenance-wizard-agentic-ai-for-industrial-equipment.vercel.app/)
 [![Video Walkthrough](https://img.shields.io/badge/Video-YouTube-red?logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=56f9MAxLd-k)
 [![Stack](https://img.shields.io/badge/Stack-React%20%2B%20Node%20%2B%20Gemini-success)](#-technical-architecture)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](#-license)
@@ -286,7 +287,9 @@ If any reviewer needs a deeper originality audit (commit-history walkthrough, de
 **Mahammad Riyaz Shek** — *Solo participant, Tata Steel AI Hackathon 2026*  
 🔗 GitHub: <https://github.com/MahammadRiyazShek>  
 🎬 Demo video: <https://www.youtube.com/watch?v=56f9MAxLd-k>  
-🌐 Live prototype: <https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/>
+🌐 Live prototype (Google Cloud Run): <https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/>
+
+🌐 Live prototype (Vercel): <https://maintenance-wizard-agentic-ai-for-industrial-equipment.vercel.app/>
 
 ---
 
