@@ -76,3 +76,29 @@
 
 /* Make sure long inline kbd elements stay aligned with their button text */
 kbd { line-height: 1; }
+
+/* =========================================================
+   v3 WINNING enhancements — alignment polish
+   ========================================================= */
+
+/* Anchor offset for scroll-to-section jumps */
+section[id], div[id^="ai-"], div[id^="agent-"], div[id^="predicted-"],
+div[id^="anomaly-"], div[id^="modelled-"], div[id^="headline-"] {
+  scroll-margin-top: 7rem;
+}
+
+/* Gradient-text rendering fix on Safari */
+.bg-clip-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Subtle elevation hover for new cards */
+.animate-feed:hover {
+  transition: box-shadow 0.25s ease;
+}
+
+/* Unify gutters in the workbench column */
+#dashboard-workbench > * + * {
+  margin-top: 1.5rem;
+}

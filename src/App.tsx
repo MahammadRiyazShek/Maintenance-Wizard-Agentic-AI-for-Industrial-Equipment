@@ -35,6 +35,12 @@ import CommandPalette, { CmdAction } from "./components/CommandPalette.tsx";
 import FleetHealthStrip from "./components/FleetHealthStrip.tsx";
 import AIOptimizationPanel from "./components/AIOptimizationPanel.tsx";
 import WinPillarsBanner from "./components/WinPillarsBanner.tsx";
+import HeadlineKPIBanner from "./components/HeadlineKPIBanner.tsx";
+import AIConfidenceIndex from "./components/AIConfidenceIndex.tsx";
+import AgentPipelineLive from "./components/AgentPipelineLive.tsx";
+import PredictedEventTimeline from "./components/PredictedEventTimeline.tsx";
+import AnomalyHeatmapMatrix from "./components/AnomalyHeatmapMatrix.tsx";
+import ModelledImpactTable from "./components/ModelledImpactTable.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, generateSimulatedDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -676,6 +682,9 @@ export default function App() {
           /* Main Cockpit Split Layout grid and flex boxes */
           <div className="space-y-6 overflow-y-auto xl:h-[calc(100vh-120px)] pr-1 font-sans" id="dashboard-workbench">
             
+            {/* HEADLINE KPI BANNER — judge-facing hero numbers (NEW · v3) */}
+            <HeadlineKPIBanner assets={assets} alerts={alerts} />
+
             {/* WIN PILLARS — judge-facing axes → evidence (click to jump) */}
             <WinPillarsBanner onJumpTo={jumpTo} />
 
@@ -685,6 +694,18 @@ export default function App() {
               selectedAssetId={selectedAssetId}
               onSelectAsset={handleSelectAsset}
             />
+
+            {/* AGENTIC PIPELINE — 5 named specialist agents · live state (NEW · v3) */}
+            <AgentPipelineLive sentinelPhase={agentPhase} />
+
+            {/* AI CONFIDENCE INDEX — explainable 5-factor composite (NEW · v3) */}
+            <AIConfidenceIndex assets={assets} alerts={alerts} diagnosis={activeDiagnosis} />
+
+            {/* PREDICTED EVENT TIMELINE — 48 h forecast strip (NEW · v3) */}
+            <PredictedEventTimeline assets={assets} onSelectAsset={handleSelectAsset} />
+
+            {/* REGIONAL ANOMALY MATRIX — zone × sensor heatmap (NEW · v3) */}
+            <AnomalyHeatmapMatrix assets={assets} onSelectAsset={handleSelectAsset} />
 
             {/* INCREDIBLE JUDGE-FACING CRITERIA TO CAPABILITY WORKBENCH MAP */}
             <JudgeCriteriaCapabilityMap 
@@ -1164,6 +1185,9 @@ export default function App() {
 
             {/* AI OPTIMIZATION ENGINE — deterministic, sensor-grounded $ recommendations */}
             <AIOptimizationPanel assets={assets} onFocusAsset={handleSelectAsset} />
+
+            {/* MODELLED IMPACT TABLE — honest "target outcomes" framing (NEW · v3) */}
+            <ModelledImpactTable />
 
             {/* Extended Plant Operations & Compliance Suite - Solving Visibility Gaps 1:1 */}
             <div className="border-t border-slate-200/50 pt-6 mt-6 space-y-4" id="executive-ops-suite">
