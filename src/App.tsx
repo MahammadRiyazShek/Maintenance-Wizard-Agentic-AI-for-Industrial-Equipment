@@ -41,6 +41,8 @@ import AgentPipelineLive from "./components/AgentPipelineLive.tsx";
 import PredictedEventTimeline from "./components/PredictedEventTimeline.tsx";
 import AnomalyHeatmapMatrix from "./components/AnomalyHeatmapMatrix.tsx";
 import ModelledImpactTable from "./components/ModelledImpactTable.tsx";
+import MissionControlNav from "./components/MissionControlNav.tsx";
+import MPITraceInspector from "./components/MPITraceInspector.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, generateSimulatedDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -682,8 +684,17 @@ export default function App() {
           /* Main Cockpit Split Layout grid and flex boxes */
           <div className="space-y-6 overflow-y-auto xl:h-[calc(100vh-120px)] pr-1 font-sans" id="dashboard-workbench">
             
+            {/* MISSION CONTROL NAV — sticky 7-tab anchor rail (NEW · v4 FINAL) */}
+            <MissionControlNav
+              onJumpTo={jumpTo}
+              onOpenCmd={() => setCmdOpen(true)}
+              onSetTab={setActiveToolTab}
+            />
+
             {/* HEADLINE KPI BANNER — judge-facing hero numbers (NEW · v3) */}
-            <HeadlineKPIBanner assets={assets} alerts={alerts} />
+            <div id="headline-kpi-banner">
+              <HeadlineKPIBanner assets={assets} alerts={alerts} />
+            </div>
 
             {/* WIN PILLARS — judge-facing axes → evidence (click to jump) */}
             <WinPillarsBanner onJumpTo={jumpTo} />
@@ -1182,6 +1193,13 @@ export default function App() {
             </section>
 
             </div>
+
+            {/* MPI TRACE INSPECTOR — Auditable Maintenance Priority Index (NEW · v4 FINAL) */}
+            <MPITraceInspector
+              assets={assets}
+              selectedAssetId={selectedAssetId}
+              onSelectAsset={handleSelectAsset}
+            />
 
             {/* AI OPTIMIZATION ENGINE — deterministic, sensor-grounded $ recommendations */}
             <AIOptimizationPanel assets={assets} onFocusAsset={handleSelectAsset} />
