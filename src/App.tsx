@@ -151,7 +151,7 @@ export default function App() {
 
   // Autonomous Sentinel Agent continuous telemetry scanner simulation
   useEffect(() => {
-    const phases = ["Intel Ingest", "Vector RAG", "Anomaly Scoring", "RUL Curve", "MPI Solving", "Shift Sync"];
+    const phases = ["Plan", "Retrieve evidence", "Diagnose", "RCA", "Risk-score", "Action Plan", "Explain"];
     let phaseIdx = 0;
 
     const sentinelInterval = setInterval(() => {
@@ -162,26 +162,29 @@ export default function App() {
 
       let customMsg = "";
       if (sentinelProfile === "sentry-1") {
-        if (currentPh === "Intel Ingest") customMsg = "Ingested vibration sensor stream. Delta-a computed as +0.024 mm/s³.";
-        else if (currentPh === "Vector RAG") customMsg = "FAISS similarity search. Matched: SOP-SMS-MOLD-02 (vibration safety standard, 94.3% score).";
-        else if (currentPh === "Anomaly Scoring") customMsg = "Isolation-style ensemble flagged vibration divergence against the peer baseline.";
-        else if (currentPh === "RUL Curve") customMsg = "Estimated RUL curve updated from live telemetry stress and anomaly compression.";
-        else if (currentPh === "MPI Solving") customMsg = "Bespoke MPI matrix compiled. Risk index scored at 8.2 (Actions pending).";
-        else customMsg = "Synchronized shift logbook database. Telemetry alarm buffers checked and locked.";
+        if (currentPh === "Plan") customMsg = "Compiled multi-stage diagnostic plan. Checking active physical telemetry streams.";
+        else if (currentPh === "Retrieve evidence") customMsg = "FAISS similarity search over vector indices. Mapped SOP-SMS-MOLD-02 (Safety bounds, 94.3% score).";
+        else if (currentPh === "Diagnose") customMsg = "Isolation-style telemetry ensemble identified vibration divergence (+0.024 mm/s³).";
+        else if (currentPh === "RCA") customMsg = "Root cause analysis located eccentric vibration patterns in primary sphere drive bearing housings.";
+        else if (currentPh === "Risk-score") customMsg = "Remaining Useful Life estimated at 32 hours. Revenue-at-risk scored at $14,200/hr.";
+        else if (currentPh === "Action Plan") customMsg = "Parts agent auto-drafted Requisition order for FAG Roller Bearing spare (Model FAG 22352-TB).";
+        else customMsg = "Compiled end-to-end diagnostic explanation briefing log for shift handover supervisor.";
       } else if (sentinelProfile === "sentry-2") {
-        if (currentPh === "Intel Ingest") customMsg = "Ingested thermocouple stream. Active blast furnace tuyere thermal gradient rising.";
-        else if (currentPh === "Vector RAG") customMsg = "Matched SMS Group BF4 manual p. 142 (Tuyere thermal restriction guidelines).";
-        else if (currentPh === "Anomaly Scoring") customMsg = "Thermal pattern isolated from historical furnace behavior with high anomaly confidence.";
-        else if (currentPh === "RUL Curve") customMsg = "Arrhenius acceleration coefficient refreshed. Remaining Useful Life forecast tightened from live stress.";
-        else if (currentPh === "MPI Solving") customMsg = "Composite MPI evaluated. Urgency score set to 9.1. Immediate safe-mode speed limits calculated.";
-        else customMsg = "Dispatch trigger generated for copper tuyere body (sp-001) in central stores.";
+        if (currentPh === "Plan") customMsg = "Thermal anomaly assessment strategy initialized for blast furnace hearth units.";
+        else if (currentPh === "Retrieve evidence") customMsg = "Chroma DB query. Cited SMS Group BF4 Tuyeres handbook guidelines, page 142.";
+        else if (currentPh === "Diagnose") customMsg = "Tuyere thermocouple thermic escalation isolated from ambient furnace boundaries.";
+        else if (currentPh === "RCA") customMsg = "Fused thermal & flow sensor metrics: toroidal water jacket flow restriction identified.";
+        else if (currentPh === "Risk-score") customMsg = "Arrhenius thermal stress coefficients projected RUL under 4 hours. Severity: CRITICAL.";
+        else if (currentPh === "Action Plan") customMsg = "Requisition order auto-generated for copper tuyere envelope tip spare (Model BF-COP-T4).";
+        else customMsg = "Fitted expert narrator explanation block citing extreme thermal risks & immediate backpulse instructions.";
       } else {
-        if (currentPh === "Intel Ingest") customMsg = "Scanning warehouse inventory ledgers. Alert - low stock below critical safety limits.";
-        else if (currentPh === "Vector RAG") customMsg = "Cross-referenced SMS Group Germany and NSK Japan lead-times. Average duration: 30 days.";
-        else if (currentPh === "Anomaly Scoring") customMsg = "Business-impact engine quantified avoidable loss from an unmitigated run-to-failure scenario.";
-        else if (currentPh === "RUL Curve") customMsg = "Calculated safe margin buffer. Machinery remaining useful hours refreshed from current telemetry.";
-        else if (currentPh === "MPI Solving") customMsg = "Net ROI calculated at +595% with scheduled weekend shutdown action.";
-        else customMsg = "Maintenance Priority Index logged. Ticket locked into executive operations workspace.";
+        if (currentPh === "Plan") customMsg = "Routine logistics and parts warehouse safety level optimization check started.";
+        else if (currentPh === "Retrieve evidence") customMsg = "Retrieved critical safety inventory minimums from Spare Parts DB catalogs.";
+        else if (currentPh === "Diagnose") customMsg = "Identified critical parts deficit: copper tuyere bodies currently out of stock (0 units).";
+        else if (currentPh === "RCA") customMsg = "Sourcing lead-time check: international air freight OEM delays scored at 30 days.";
+        else if (currentPh === "Risk-score") customMsg = "Computed lead-time outage risk: potential downtime failure penalty of 720 hours ($13.3M liability).";
+        else if (currentPh === "Action Plan") customMsg = "Auto-escalating stock restoration PO dispatch queue for regional Adityapur machinist zone.";
+        else customMsg = "Dispatched priority stock warning summary briefing to Jamshedpur procurement department.";
       }
 
       const ts = new Date().toLocaleTimeString();
