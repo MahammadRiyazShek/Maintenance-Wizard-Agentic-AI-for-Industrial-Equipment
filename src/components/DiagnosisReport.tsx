@@ -570,9 +570,9 @@ Est. Production Outage Cost Penalty: $${asset.delayCostPerHour.toLocaleString()}
 ================================================================================
 
 ## 1. COMPREHENSIVE SPECIALIST AI DIAGNOSTIC FINDINGS
-- **Primary Telemetry Aberration:** ${report.primaryFindings}
+- **Primary Telemetry Aberration:** ${report.probableFault}
 - **RAG-Reasoning Confidence Factor:** ${report.confidence}%
-- **Component Fatigue Coefficient:** ${report.fatigueState || "91.8% Peak Fatigue Level"}
+- **Component Fatigue Level Risk:** ${report.remainingUsefulLife?.catastrophicFailureRisk || "Critical"} Level
 - **Remaining Useful Life (RUL) Forecast:** ${report.remainingUsefulLife?.hours || 48} Operating Hours
 
 ### Current Telemetry Baselines:
@@ -582,8 +582,8 @@ Est. Production Outage Cost Penalty: $${asset.delayCostPerHour.toLocaleString()}
 
 ## 2. ADVANCED ROOT CAUSE ANALYSIS (RCA) & PHYSICAL FAILURE CASCADE PATHWAYS
 - **Identified Failure Mode:** ${report.rootCauseAnalysis?.primaryCause || "N/A"}
-- **RCA Causal Class Mechanics:** ${report.rootCauseAnalysis?.failureModes?.join(", ") || "N/A"}
-- **Asset Interdependency Cascade Risk:** ${report.rootCauseAnalysis?.riskCascadeImpact || "N/A"}
+- **RCA Contributing Elements:** ${report.rootCauseAnalysis?.contributingSensors?.join(", ") || "N/A"}
+- **Asset Interdependency Process Defects:** ${report.rootCauseAnalysis?.processDefects?.join(", ") || "N/A"}
 
 ## 3. AUDITABLE KNOWLEDGE RETRIEVAL (COG-RAG EXPLAINABILITY CITATIONS)
 ${report.sourcesReferenced.map((s, idx) => `
