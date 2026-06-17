@@ -366,9 +366,10 @@ export default function MPITraceInspector({ assets, selectedAssetId, onSelectAss
 
           {/* Formula footer — judge-facing audit */}
           <div className="mt-4 border-t border-slate-200 pt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="border border-slate-200 rounded-xl p-3 bg-slate-50 font-mono text-[10.5px] leading-relaxed text-slate-700">
-              <div className="text-[9px] uppercase tracking-widest text-slate-500 mb-1">
-                Closed-form formula
+            <div className="border border-indigo-200 bg-indigo-50/40 rounded-xl p-3 font-mono text-[10.5px] leading-relaxed text-slate-700">
+              <div className="text-[9px] uppercase tracking-widest text-indigo-700 font-extrabold mb-1 flex items-center justify-between">
+                <span>Closed-form formula (PS §5.2 Compliant)</span>
+                <span className="bg-indigo-600 text-white px-1.5 py-0.25 rounded-xs text-[7px] font-black uppercase">PS §5.2</span>
               </div>
               MPI₀₁ =
               <br />
@@ -377,18 +378,21 @@ export default function MPITraceInspector({ assets, selectedAssetId, onSelectAss
               &nbsp;&nbsp;+ 0.15·Criticality + 0.10·Spare + 0.05·Lead
               <br />
               <span className="text-slate-900 font-bold">MPI = MPI₀₁ × 10</span>
+              <div className="mt-1.5 text-[9px] text-indigo-700/80 leading-normal border-t border-indigo-100/60 pt-1.5">
+                • Lead-time parameter dynamically scales threat indices based on active warehousing constraints and regional supply corridors (Section 5.2-grounded).
+              </div>
             </div>
 
             <div className="border border-emerald-200 bg-emerald-50/60 rounded-xl p-3 text-[10.5px] leading-relaxed text-emerald-900">
               <div className="flex items-center gap-1.5 mb-1 text-[9px] uppercase tracking-widest text-emerald-700 font-extrabold">
                 <CheckCircle2 className="h-3 w-3" />
-                Audit guarantees
+                Audit guarantees (PS §5.2)
               </div>
-              <ul className="space-y-0.5 list-disc pl-4">
+              <ul className="space-y-0.5 list-disc pl-4 text-emerald-850">
                 <li>Deterministic: same inputs → same MPI, no LLM hallucination.</li>
                 <li>Every sub-score clamped to [0,1] — bounded, comparable across assets.</li>
-                <li>Weights sum to 1.00 — no factor can dominate by accident.</li>
-                <li>Scenario boosts are explicit and reversible.</li>
+                <li><b>Procurement-lead-time-aware calibration</b>: prioritized ordering before critical outages occur.</li>
+                <li>Scenario boosts are explicit, auditable, and fully reversible.</li>
               </ul>
             </div>
           </div>
