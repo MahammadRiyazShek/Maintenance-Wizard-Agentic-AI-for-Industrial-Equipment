@@ -209,7 +209,7 @@ export default function AssetSelector({
         </div>
 
         {/* Permanent scalable plant network database status line */}
-        <div className="flex items-center justify-between text-[10.5px] font-mono bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-205 shadow-3xs">
+        <div className="flex items-center justify-between text-[10.5px] font-mono bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-205 shadow-sm">
           <span className="text-slate-600 flex items-center gap-1">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
             <span>Network: <b>{filteredAssets.length}</b> of <b>{assets.length}</b> nodes visible</span>

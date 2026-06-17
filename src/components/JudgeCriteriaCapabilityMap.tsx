@@ -162,7 +162,7 @@ export default function JudgeCriteriaCapabilityMap({ activeRole, activeToolTab, 
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden animate-feed" id="judge-capability-tracker-bench">
       
       {/* HEADER BAR */}
-      <div className="bg-gradient-to-r from-slate-900 to-indigo-950 text-white p-4.5 border-b border-indigo-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="bg-gradient-to-r from-slate-900 to-indigo-950 text-white p-5 border-b border-indigo-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <span className="p-1 px-1.5 bg-indigo-505 text-slate-950 font-bold font-mono text-[9px] uppercase tracking-wider rounded">
             AUDITOR CONSOLE
@@ -274,7 +274,7 @@ export default function JudgeCriteriaCapabilityMap({ activeRole, activeToolTab, 
                       onClick={() => onNavigate(item.targetRole, item.targetTab, item.scrollToId)}
                       className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-mono text-[9.5px] font-black transition-all cursor-pointer ${
                         isActiveMatch
-                          ? "bg-indigo-600 text-white shadow-sm ring-1 ring-indigo-500 scale-102"
+                          ? "bg-indigo-600 text-white shadow-sm ring-1 ring-indigo-500 scale-105"
                           : "bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 border border-slate-200 text-slate-600"
                       }`}
                     >

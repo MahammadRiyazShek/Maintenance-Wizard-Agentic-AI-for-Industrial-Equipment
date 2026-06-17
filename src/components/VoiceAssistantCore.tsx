@@ -210,7 +210,7 @@ export default function VoiceAssistantCore({
         <div className="grid grid-cols-2 gap-2 text-[9.5px] font-mono">
           <button
             onClick={() => processSpokenCommand("diagnose bf")}
-            className="p-1 px-2.5 bg-slate-900 border border-slate-850 hover:border-indigo-800 text-slate-300 hover:text-white rounded text-left transition truncate cursor-pointer flex items-center gap-1"
+            className="p-1 px-2.5 bg-slate-900 border border-slate-800 hover:border-indigo-800 text-slate-300 hover:text-white rounded text-left transition truncate cursor-pointer flex items-center gap-1"
           >
             <Cpu className="h-3 w-3 text-indigo-400" />
             <span>"Diagnose Blast Furnace"</span>
@@ -218,7 +218,7 @@ export default function VoiceAssistantCore({
 
           <button
             onClick={() => processSpokenCommand("spares")}
-            className="p-1 px-2.5 bg-slate-900 border border-slate-850 hover:border-indigo-800 text-slate-300 hover:text-white rounded text-left transition truncate cursor-pointer flex items-center gap-1"
+            className="p-1 px-2.5 bg-slate-900 border border-slate-800 hover:border-indigo-800 text-slate-300 hover:text-white rounded text-left transition truncate cursor-pointer flex items-center gap-1"
           >
             <Activity className="h-3 w-3 text-indigo-400" />
             <span>"Find Spares"</span>
@@ -226,7 +226,7 @@ export default function VoiceAssistantCore({
 
           <button
             onClick={() => processSpokenCommand("compliance map")}
-            className="p-1 px-2.5 bg-slate-900 border border-slate-850 hover:border-indigo-800 text-slate-300 hover:text-white rounded text-left transition truncate cursor-pointer flex items-center gap-1"
+            className="p-1 px-2.5 bg-slate-900 border border-slate-800 hover:border-indigo-800 text-slate-300 hover:text-white rounded text-left transition truncate cursor-pointer flex items-center gap-1"
           >
             <Command className="h-3 w-3 text-indigo-400" />
             <span>"Show Compliance Map"</span>
@@ -234,7 +234,7 @@ export default function VoiceAssistantCore({
 
           <button
             onClick={() => processSpokenCommand("system status")}
-            className="p-1 px-2.5 bg-slate-900 border border-slate-850 hover:border-indigo-800 text-slate-300 hover:text-white rounded text-left transition truncate cursor-pointer flex items-center gap-1"
+            className="p-1 px-2.5 bg-slate-900 border border-slate-800 hover:border-indigo-800 text-slate-300 hover:text-white rounded text-left transition truncate cursor-pointer flex items-center gap-1"
           >
             <HelpCircle className="h-3 w-3 text-indigo-400" />
             <span>"Speak System Status"</span>

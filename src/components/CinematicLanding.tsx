@@ -138,7 +138,7 @@ export default function CinematicLanding({ onEnter, apiActive }: CinematicLandin
 
                   <button
                     onClick={() => setShowDossier(true)}
-                    className="px-5 py-4 bg-slate-900 hover:bg-slate-850 text-indigo-300 border border-slate-850 hover:border-indigo-800 font-extrabold rounded-xl text-xs font-sans tracking-wider uppercase transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 select-none"
+                    className="px-5 py-4 bg-slate-900 hover:bg-slate-850 text-indigo-300 border border-slate-800 hover:border-indigo-800 font-extrabold rounded-xl text-xs font-sans tracking-wider uppercase transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 select-none"
                   >
                     <Award className="h-4 w-4 text-indigo-400" />
                     <span>View System Dossier</span>

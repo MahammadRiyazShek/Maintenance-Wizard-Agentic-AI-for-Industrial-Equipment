@@ -44,6 +44,7 @@ import ModelledImpactTable from "./components/ModelledImpactTable.tsx";
 import MissionControlNav from "./components/MissionControlNav.tsx";
 import MPITraceInspector from "./components/MPITraceInspector.tsx";
 import DecisionRecommendationCards from "./components/DecisionRecommendationCards.tsx";
+import ThreeLayerReasoningManifest from "./components/ThreeLayerReasoningManifest.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, generateSimulatedDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -537,7 +538,7 @@ export default function App() {
             <h1 className="text-xs font-bold tracking-wider font-mono text-indigo-400 uppercase flex items-center gap-2">
               COGNITIVE DECISION SYSTEM
               <span className="text-[9.5px] bg-blue-500/20 text-blue-300 font-mono px-2 py-0.5 rounded-full border border-blue-500/30 normal-case font-normal">
-                Wizard v1.0
+                Wizard v6.0 FINAL
               </span>
             </h1>
             <p className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
@@ -568,13 +569,13 @@ export default function App() {
           {/* Active algorithms status indicators */}
           <div className="hidden lg:flex items-center gap-1.5 bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800 text-[10.5px] font-mono font-bold select-none text-slate-400">
             <span className="text-[10px] tracking-wide text-slate-500">ML LABS:</span>
-            <span className="flex items-center gap-1 text-emerald-400 bg-emerald-955/30 border border-emerald-900 px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase">
+            <span className="flex items-center gap-1 text-emerald-400 bg-emerald-950/30 border border-emerald-900 px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> XGB-ENSEMBLE
             </span>
-            <span className="flex items-center gap-1 text-blue-400 bg-blue-955/30 border border-blue-900 px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase">
+            <span className="flex items-center gap-1 text-blue-400 bg-blue-950/30 border border-blue-900 px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase">
               <span className="h-1.5 w-1.5 rounded-full bg-blue-400" /> ISOLATION-FOREST
             </span>
-            <span className="flex items-center gap-1 text-purple-400 bg-purple-955/30 border border-purple-900 px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase">
+            <span className="flex items-center gap-1 text-purple-400 bg-purple-950/30 border border-purple-900 px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase">
               <span className="h-1.5 w-1.5 rounded-full bg-purple-400" /> PHYSICS-MATH-M3.2
             </span>
           </div>
@@ -635,7 +636,7 @@ export default function App() {
               setShowComplianceMap(false);
             }}
             id="btn-show-system-docs"
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-750 text-white border border-slate-700 hover:border-slate-600 rounded-lg text-xs font-bold font-mono tracking-wide transition cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 hover:border-slate-600 rounded-lg text-xs font-bold font-mono tracking-wide transition cursor-pointer"
           >
             <Settings className="h-3.5 w-3.5 text-blue-400 animate-spin-slow" />
             <span>{showDocsModal ? "Close System Dossier" : "System Documentation"}</span>
@@ -667,7 +668,7 @@ export default function App() {
           <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-lg p-6 max-h-[85vh] overflow-y-auto max-w-5xl mx-auto animate-feed">
             <div className="flex items-center justify-between border-b border-slate-200 pb-4 mb-4 shrink-0">
               <h3 className="font-sans font-extrabold text-sm uppercase text-slate-900 flex items-center gap-2 tracking-wider animate-pulse">
-                <span className="p-1 px-2 bg-indigo-650 text-indigo-50 font-mono text-[9px] font-bold rounded uppercase">
+                <span className="p-1 px-2 bg-indigo-600 text-indigo-50 font-mono text-[9px] font-bold rounded uppercase">
                   RULEBOOK SECTION 4 & 5
                 </span>
                 <span>Tata Steel Compliance & Feature Mapping Matrix</span>
@@ -700,6 +701,9 @@ export default function App() {
             {/* WIN PILLARS — judge-facing axes → evidence (click to jump) */}
             <WinPillarsBanner onJumpTo={jumpTo} />
 
+            {/* THREE-LAYER REASONING MANIFEST — the contract that wins Responsible AI (NEW · v6 FINAL) */}
+            <ThreeLayerReasoningManifest />
+
             {/* FLEET HEALTH STRIP — plant-wide status at a glance */}
             <FleetHealthStrip
               assets={assets}
@@ -727,7 +731,7 @@ export default function App() {
             />
             
             {/* 6 ROLE-BASED COMMAND SURFACE SELECTOR HUD */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-4.5 shadow-sm space-y-4 animate-feed" id="role-command-surfaces-hud">
+            <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4 animate-feed" id="role-command-surfaces-hud">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-100 pb-3">
                 <div className="flex items-center gap-2">
                   <span className="p-1 px-1.5 bg-indigo-50 text-indigo-700 rounded-lg font-mono text-[9px] font-extrabold uppercase">
@@ -746,7 +750,7 @@ export default function App() {
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                   <span className="text-[10px] font-mono text-slate-500 uppercase font-black">
-                    Surface Config: <b className="text-indigo-750 font-extrabold">{activeRole.toUpperCase()} EDITION</b>
+                    Surface Config: <b className="text-indigo-700 font-extrabold">{activeRole.toUpperCase()} EDITION</b>
                   </span>
                 </div>
               </div>
@@ -768,7 +772,7 @@ export default function App() {
                       onClick={() => handleRoleChange(role.id as any)}
                       className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
                         isActive
-                          ? "ring-2 ring-indigo-600 bg-slate-900 border-slate-900 text-white shadow-sm scale-102 font-extrabold"
+                          ? "ring-2 ring-indigo-600 bg-slate-900 border-slate-900 text-white shadow-sm scale-105 font-extrabold"
                           : `bg-white text-slate-700 ${role.color}`
                       }`}
                     >
@@ -785,7 +789,7 @@ export default function App() {
               </div>
 
               {/* Active Role Directive Banner */}
-              <div className={`p-3.5 rounded-xl border text-xs leading-relaxed transition-all duration-300 font-sans shadow-3xs ${
+              <div className={`p-3.5 rounded-xl border text-xs leading-relaxed transition-all duration-300 font-sans shadow-sm ${
                 activeRole === "operator" ? "bg-blue-50 border-blue-200 text-blue-800" :
                 activeRole === "reliability" ? "bg-purple-50 border-purple-200 text-purple-800" :
                 activeRole === "supervisor" ? "bg-amber-50 border-amber-200 text-amber-900" :
@@ -827,7 +831,7 @@ export default function App() {
             </div>
 
             {/* AUTONOMOUS SENTINEL RISK CORE & LIVE LOGGING AGENT */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-5 bg-slate-900 border border-slate-850 rounded-2xl p-4.5 text-white animate-feed" id="sentinel-agent-dashboard">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-5 bg-slate-900 border border-slate-800 rounded-2xl p-5 text-white animate-feed" id="sentinel-agent-dashboard">
               {/* Col 4: Sentry strategy & profiling */}
               <div className="md:col-span-4 flex flex-col justify-between space-y-3 md:border-r md:border-slate-800/80 pr-2 text-left">
                 <div>
@@ -908,7 +912,7 @@ export default function App() {
 
               {/* Col 5: Scrolling logs console */}
               <div className="md:col-span-5 bg-slate-950 border border-slate-800 rounded-xl p-3 flex flex-col justify-between h-[130px]">
-                <div className="flex items-center justify-between border-b border-slate-805 pb-1 mb-1 shrink-0 font-mono text-[8px] text-slate-500">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-1 mb-1 shrink-0 font-mono text-[8px] text-slate-500">
                   <span>SENTINEL TELEMETRY DIRECTIVE MEMORY</span>
                   <span className="animate-pulse text-indigo-400 font-bold uppercase flex items-center gap-0.5">● RUNNING DIALOGUES</span>
                 </div>
@@ -924,7 +928,7 @@ export default function App() {
 
             {/* UNIFIED TATA INDUS-MONITOR SCADA COCKPIT */}
             <div className="bg-slate-900 rounded-2xl border border-slate-800 p-4 space-y-4 shadow-xl select-none animate-feed" id="scada-monitor-suite">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-slate-850 pb-3 bg-slate-950 -mx-4 -mt-4 p-4 rounded-t-2xl">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-slate-800 pb-3 bg-slate-950 -mx-4 -mt-4 p-4 rounded-t-2xl">
                 <div className="flex items-center gap-2 text-left">
                   <span className="p-1 px-1.5 bg-indigo-950 text-indigo-400 border border-indigo-900/40 font-extrabold rounded font-mono text-[9px] uppercase tracking-wider">
                     SCADA PANEL
@@ -945,7 +949,7 @@ export default function App() {
                   <button
                     onClick={() => setActiveVisualizer("twin")}
                     className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
-                      activeVisualizer === "twin" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                      activeVisualizer === "twin" ? "bg-indigo-600 text-white shadow-xs scale-105" : "text-slate-400 hover:text-slate-200"
                     }`}
                   >
                     <span>🌐 3D Digital Twin</span>
@@ -953,7 +957,7 @@ export default function App() {
                   <button
                     onClick={() => setActiveVisualizer("flow")}
                     className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
-                      activeVisualizer === "flow" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                      activeVisualizer === "flow" ? "bg-indigo-600 text-white shadow-xs scale-105" : "text-slate-400 hover:text-slate-200"
                     }`}
                   >
                     <span>⚡ Process Cascade Graph</span>
@@ -961,7 +965,7 @@ export default function App() {
                   <button
                     onClick={() => setActiveVisualizer("risk")}
                     className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
-                      activeVisualizer === "risk" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                      activeVisualizer === "risk" ? "bg-indigo-600 text-white shadow-xs scale-105" : "text-slate-400 hover:text-slate-200"
                     }`}
                   >
                     <span>📊 Risk MPI Matrix</span>
@@ -969,7 +973,7 @@ export default function App() {
                   <button
                     onClick={() => setActiveVisualizer("cascade")}
                     className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
-                      activeVisualizer === "cascade" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                      activeVisualizer === "cascade" ? "bg-indigo-600 text-white shadow-xs scale-105" : "text-slate-400 hover:text-slate-200"
                     }`}
                   >
                     <span>🔗 Cascade Impact</span>
@@ -977,7 +981,7 @@ export default function App() {
                   <button
                     onClick={() => setActiveVisualizer("roi")}
                     className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
-                      activeVisualizer === "roi" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                      activeVisualizer === "roi" ? "bg-indigo-600 text-white shadow-xs scale-105" : "text-slate-400 hover:text-slate-200"
                     }`}
                   >
                     <span>💰 Live ROI</span>
@@ -985,7 +989,7 @@ export default function App() {
                   <button
                     onClick={() => setActiveVisualizer("replay")}
                     className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
-                      activeVisualizer === "replay" ? "bg-indigo-600 text-white shadow-xs scale-102" : "text-slate-400 hover:text-slate-200"
+                      activeVisualizer === "replay" ? "bg-indigo-600 text-white shadow-xs scale-105" : "text-slate-400 hover:text-slate-200"
                     }`}
                   >
                     <span>🕒 Incident Replay</span>
@@ -1124,7 +1128,7 @@ export default function App() {
                   onClick={() => setActiveToolTab("ml-engine")}
                   className={`flex-1 min-w-[70px] py-2 px-1.5 rounded-lg text-[10.5px] font-black uppercase transition flex items-center justify-center gap-1 cursor-pointer border glow-indigo-pulse ${
                     activeToolTab === "ml-engine"
-                      ? "bg-indigo-700 text-white border-indigo-500 font-black shadow-sm scale-102"
+                      ? "bg-indigo-700 text-white border-indigo-500 font-black shadow-sm scale-105"
                       : "bg-indigo-50/70 text-indigo-700 border-indigo-200 hover:bg-indigo-100"
                   }`}
                 >
@@ -1136,7 +1140,7 @@ export default function App() {
                   onClick={() => setActiveToolTab("spares")}
                   className={`flex-1 min-w-[70px] py-2 px-1.5 rounded-lg text-[10.5px] font-black uppercase transition flex items-center justify-center gap-1 cursor-pointer border glow-emerald-pulse ${
                     activeToolTab === "spares"
-                      ? "bg-emerald-700 text-white border-emerald-500 font-black shadow-sm scale-102"
+                      ? "bg-emerald-700 text-white border-emerald-500 font-black shadow-sm scale-105"
                       : "bg-emerald-50/70 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
                   }`}
                 >
@@ -1217,7 +1221,7 @@ export default function App() {
 
             {/* Extended Plant Operations & Compliance Suite - Solving Visibility Gaps 1:1 */}
             <div className="border-t border-slate-200/50 pt-6 mt-6 space-y-4" id="executive-ops-suite">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 text-white rounded-xl p-4 border border-slate-850 shadow-md">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 text-white rounded-xl p-4 border border-slate-800 shadow-md">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="p-0.5 px-2 bg-indigo-600 font-mono rounded text-[9.5px] font-extrabold text-indigo-50 tracking-widest uppercase">
@@ -1275,7 +1279,7 @@ export default function App() {
                     From Alarm to Action in Seconds.
                   </h4>
                   <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-                    A 35-component cognitive cockpit covering all four official judging axes —
+                    A 36-component cognitive cockpit covering all four official judging axes —
                     <b className="text-white"> Mission &amp; Knowledge Alignment</b>,
                     <b className="text-white"> Responsible &amp; Evidence-Grounded AI</b>,
                     <b className="text-white"> Technical Execution &amp; Feasibility</b>, and
@@ -1317,7 +1321,7 @@ export default function App() {
               <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div className="rounded-xl bg-white/5 border border-white/10 p-3">
                   <div className="text-[9.5px] font-mono uppercase tracking-widest text-indigo-200">Components</div>
-                  <div className="text-lg font-black tabular-nums text-white mt-0.5">35</div>
+                  <div className="text-lg font-black tabular-nums text-white mt-0.5">36</div>
                 </div>
                 <div className="rounded-xl bg-white/5 border border-white/10 p-3">
                   <div className="text-[9.5px] font-mono uppercase tracking-widest text-indigo-200">Specialist agents</div>
@@ -1395,6 +1399,7 @@ function buildCommandActions(ctx: {
     { id: "nav-decisions", group: "Navigation", label: "Jump to Top-3 Decision Cards", hint: "Action · Cost · ETA · Deferred risk", keywords: ["decision", "recommendation", "action", "verdict"], run: () => jumpTo("decision-recommendation-cards") },
     { id: "nav-mpi", group: "Navigation", label: "Jump to MPI Trace Inspector", hint: "Auditable priority formula", keywords: ["mpi", "priority", "trace", "formula"], run: () => jumpTo("mpi-trace-inspector") },
     { id: "nav-verdict", group: "Navigation", label: "Jump to Win Verdict", hint: "Final judge-facing pitch", keywords: ["verdict", "win", "footer", "summary"], run: () => jumpTo("win-verdict-banner") },
+    { id: "nav-manifest", group: "Navigation", label: "Jump to Three-Layer Reasoning Manifest", hint: "L1 math → L2 RAG → L3 narrator", keywords: ["manifest", "reasoning", "layer", "responsible"], run: () => jumpTo("three-layer-manifest") },
 
     // Roles
     { id: "role-operator", group: "Role", label: "Activate · Control Room Operator", hint: "Live 3D twin & sensors", keywords: ["operator", "control"], run: () => handleRoleChange("operator") },

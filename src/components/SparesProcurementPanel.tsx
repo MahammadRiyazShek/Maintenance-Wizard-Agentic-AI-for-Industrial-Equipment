@@ -637,7 +637,7 @@ export default function SparesProcurementPanel({ asset, onStockUpdate }: SparesP
             </div>
 
             {/* Financial Liabilities Overview (Section 5.3) */}
-            <div className="bg-slate-900 border border-slate-850 rounded-xl p-4 text-white space-y-3.5">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 text-white space-y-3.5">
               <div className="flex items-center justify-between">
                 <span className="text-[9px] font-mono uppercase text-rose-455 tracking-wider font-extrabold flex items-center gap-1">
                   <AlertTriangle className="h-3.5 w-3.5 text-rose-450 animate-bounce" />
@@ -660,7 +660,7 @@ export default function SparesProcurementPanel({ asset, onStockUpdate }: SparesP
                     <div key={item.id} className={`p-2.5 rounded-lg border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 ${
                       r.criticalRisk 
                         ? "bg-rose-950/40 border-rose-500/30 text-rose-100" 
-                        : "bg-slate-950/60 border-slate-850 text-slate-300"
+                        : "bg-slate-950/60 border-slate-800 text-slate-300"
                     }`}>
                       <div className="space-y-0.5">
                         <div className="font-bold flex items-center gap-1.5">

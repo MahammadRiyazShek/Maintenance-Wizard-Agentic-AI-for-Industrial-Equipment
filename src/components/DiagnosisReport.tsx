@@ -609,7 +609,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
           </div>
 
           {/* Active ML Models Ledger Card */}
-          <div className="border border-slate-850 rounded-xl overflow-hidden shadow-xs bg-slate-900 text-white">
+          <div className="border border-slate-800 rounded-xl overflow-hidden shadow-xs bg-slate-900 text-white">
             <div className="bg-slate-950 px-4 py-2.5 text-[9.5px] font-mono text-slate-300 font-bold flex items-center justify-between border-b border-slate-800">
               <span className="uppercase tracking-wider">CYBER-PHYSICAL ML PREDICTIVE ENSEMBLES</span>
               <span className="text-emerald-400 bg-emerald-950/50 border border-emerald-500/10 px-2 py-0.5 rounded text-[8px] font-extrabold uppercase animate-pulse">
@@ -711,7 +711,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs leading-tight">
               
               {/* XGBoost Anomaly Profiler */}
-              <div className="bg-slate-950/70 p-2.5 rounded-lg border border-slate-850 space-y-1">
+              <div className="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800 space-y-1">
                 <div className="flex items-center justify-between text-[9.5px] font-mono text-slate-400">
                   <span>Decision Logic</span>
                   <span className="text-indigo-400 text-[8px] uppercase">UCI AI4I Dataset</span>
@@ -726,7 +726,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
               </div>
 
               {/* Isolation Forest Outliers */}
-              <div className="bg-slate-950/70 p-2.5 rounded-lg border border-slate-850 space-y-1">
+              <div className="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800 space-y-1">
                 <div className="flex items-center justify-between text-[9.5px] font-mono text-slate-400">
                   <span>Isolation Forest</span>
                   <span className="text-violet-400 text-[8px] uppercase">Outlier Scorer</span>
@@ -741,7 +741,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
               </div>
 
               {/* Real-time Physics Fatigue estimation */}
-              <div className="bg-slate-950/70 p-2.5 rounded-lg border border-slate-850 space-y-1">
+              <div className="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800 space-y-1">
                 <div className="flex items-center justify-between text-[9.5px] font-mono text-slate-400">
                   <span>Physics Degradation</span>
                   <span className="text-emerald-400 text-[8px] uppercase">RUL math</span>
@@ -809,7 +809,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
 
                 <div className="space-y-2 font-mono text-[10.5px]">
                   {getRankedCauses(asset?.id || "").map((candidate, idx) => (
-                    <div key={idx} className="flex flex-col space-y-1 bg-white p-2.5 rounded-lg border border-slate-200 shadow-3xs">
+                    <div key={idx} className="flex flex-col space-y-1 bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
                       <div className="flex items-center justify-between">
                         <span className={`font-semibold ${candidate.status === "Active Lead" ? "text-slate-850 font-extrabold" : "text-slate-500"}`}>
                           {candidate.cause}
@@ -860,7 +860,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
             <div className="space-y-6" id="diagnostic-report-rendered">
               
               {/* Highlight Fault Outcome Card */}
-              <div className="bg-slate-900 text-white rounded-2xl p-5 relative overflow-hidden shadow-lg border border-slate-850">
+              <div className="bg-slate-900 text-white rounded-2xl p-5 relative overflow-hidden shadow-lg border border-slate-800">
                 <div className="absolute top-0 right-0 w-44 h-44 bg-blue-500 rounded-full blur-3xl opacity-20"></div>
                 
                 <div className="space-y-3 relative z-10">
@@ -908,7 +908,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
               </div>
 
               {/* CYBER-PHYSICAL ML PREDICTIVE ENSEMBLES INFERENCE HUD */}
-              <div className="border border-slate-250 rounded-2xl overflow-hidden bg-slate-50 shadow-3xs font-sans">
+              <div className="border border-slate-250 rounded-2xl overflow-hidden bg-slate-50 shadow-sm font-sans">
                 <div className="bg-slate-900 px-4 py-2 text-[9.5px] font-mono text-slate-100 font-bold flex items-center justify-between">
                   <span className="uppercase tracking-wider">⚡ REAL-TIME CPS MACHINE LEARNING INFERENCE MATH ENSEMBLE</span>
                   <span className="text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded text-[8.5px] font-extrabold uppercase animate-pulse border border-emerald-800 font-mono">
@@ -925,7 +925,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                         <span>Isolation Forest</span>
                         <span className="text-indigo-600 bg-indigo-50 px-1 py-0.2 rounded-sm border border-indigo-100">IF-v2.1</span>
                       </div>
-                      <h4 className="text-[11px] font-sans font-black text-slate-805 leading-tight">Multi-Var Telemetry Outlier Distance</h4>
+                      <h4 className="text-[11px] font-sans font-black text-slate-800 leading-tight">Multi-Var Telemetry Outlier Distance</h4>
                       <p className="text-[10px] text-slate-400 leading-normal">
                         Flags multi-sensor boundary deviations in 25ms sweeps.
                       </p>
@@ -954,7 +954,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                         <span>Decision Logic</span>
                         <span className="text-rose-600 bg-rose-50 px-1 py-0.2 rounded-sm border border-rose-100">XG-v1.0</span>
                       </div>
-                      <h4 className="text-[11px] font-sans font-black text-slate-805 leading-tight">Failure Mode Probabilistic Inference</h4>
+                      <h4 className="text-[11px] font-sans font-black text-slate-800 leading-tight">Failure Mode Probabilistic Inference</h4>
                       <p className="text-[10px] text-slate-400 leading-normal">
                         Classifies 4 fail states (TWF, HDF, PWF, OSF).
                       </p>
@@ -981,7 +981,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                         <span>Random Forest</span>
                         <span className="text-emerald-600 bg-emerald-50 px-1 py-0.2 rounded-sm border border-emerald-100">RF-v3.4</span>
                       </div>
-                      <h4 className="text-[11px] font-sans font-black text-slate-805 leading-tight">Multivariate Fatigue Decay Regression</h4>
+                      <h4 className="text-[11px] font-sans font-black text-slate-800 leading-tight">Multivariate Fatigue Decay Regression</h4>
                       <p className="text-[10px] text-slate-400 leading-normal">
                         Forecasts Remaining Useful Life hours under active load.
                       </p>
@@ -1004,7 +1004,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                 </div>
                 
                 {/* Mathematical Equation Banner inside active inference HUD */}
-                <div className="bg-slate-900 border-t border-slate-850 p-2.5 text-[9.5px] font-mono text-indigo-300 flex flex-col md:flex-row justify-between items-start md:items-center gap-1.5 leading-none">
+                <div className="bg-slate-900 border-t border-slate-800 p-2.5 text-[9.5px] font-mono text-indigo-300 flex flex-col md:flex-row justify-between items-start md:items-center gap-1.5 leading-none">
                   <span>Ensemble Bayes Triangulation: <b className="text-white">P(θ|X) = [P(X|θ) &middot; P(θ)] / P(X)</b></span>
                   <span>Variance Coefficient: <b className="text-emerald-400 font-extrabold">σ² = 1.043e-5 (Normal Deviation)</b></span>
                 </div>
@@ -1069,7 +1069,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                                 key={idx}
                                 type="button"
                                 onClick={() => handleOpenCitationDetails(val)}
-                                className="font-bold font-mono text-indigo-750 px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-200 text-[9px] uppercase hover:bg-indigo-150 transition-all cursor-pointer active:scale-95"
+                                className="font-bold font-mono text-indigo-700 px-1.5 py-0.5 rounded bg-indigo-50 border border-indigo-200 text-[9px] uppercase hover:bg-indigo-150 transition-all cursor-pointer active:scale-95"
                                 title="Click to view full vector grounding content"
                               >
                                 🔑 {val}
@@ -1237,7 +1237,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                     </span>
                     <div className="space-y-1.5 font-mono text-[10px]">
                       {getRankedCauses(asset?.id || "").map((candidate, idx) => (
-                        <div key={idx} className="flex flex-col space-y-1 bg-white p-1.5 rounded border border-slate-100 shadow-3xs">
+                        <div key={idx} className="flex flex-col space-y-1 bg-white p-1.5 rounded border border-slate-100 shadow-sm">
                           <div className="flex items-center justify-between text-[9.5px]">
                             <span className={`font-semibold ${candidate.status === "Active Lead" ? "text-slate-800 font-extrabold" : "text-slate-500"}`}>
                               {candidate.cause}
@@ -1249,7 +1249,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                           <div className="flex items-center gap-2">
                             <div className="flex-1 h-1 bg-slate-150 rounded-full overflow-hidden">
                               <div 
-                                className={`h-full rounded-full ${candidate.status === "Active Lead" ? "bg-indigo-650" : "bg-slate-300"}`} 
+                                className={`h-full rounded-full ${candidate.status === "Active Lead" ? "bg-indigo-600" : "bg-slate-300"}`} 
                                 style={{ width: `${candidate.probability}%` }}
                               />
                             </div>
@@ -1705,7 +1705,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                         <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
                           The system ingests sensor streams directly from the active cyber-physical plant network. Our **Delta Intelligence Engine** computes immediate rates of rates of change (acceleration vectors) to detect sudden failures before standard static thresholds are crossed.
                         </p>
-                        <div className="grid grid-cols-2 xs:grid-cols-4 gap-2.5 pt-1.5 text-[10px] font-mono bg-slate-900/60 p-2.5 rounded-lg border border-slate-850">
+                        <div className="grid grid-cols-2 xs:grid-cols-4 gap-2.5 pt-1.5 text-[10px] font-mono bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
                           <div>
                             <span className="text-slate-500 block">Ingest Asset:</span>
                             <strong className="text-white font-bold uppercase">{asset.id} ({asset.name.split(" ")[0]})</strong>
@@ -1739,14 +1739,14 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                           Our **decision logic layer** evaluates sensor interactions while the **Isolation-Forest-style anomaly model** calculates structural boundary shifts from telemetry history and peer baselines.
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1 text-[10px] font-mono leading-normal">
-                          <div className="bg-slate-900/60 p-2 rounded-lg border border-slate-850">
+                          <div className="bg-slate-900/60 p-2 rounded-lg border border-slate-800">
                             <span className="text-slate-500 block">Model Selection / Metric:</span>
                             <strong className="text-white font-bold block">Decision logic ensemble (live telemetry)</strong>
                             <p className="text-slate-400 mt-1">
                               Classified fault mode: <b className="text-indigo-300 uppercase">{asset.id === "bf-04" ? "HDF (Heat Dissipation Failure)" : asset.id === "cc-02" ? "OSF (Overstrain Failure)" : asset.id === "hsm-01" ? "PWF (Power Wear Failure)" : "TWF (Tool Wear Failure)"}</b> with high likelihood.
                             </p>
                           </div>
-                          <div className="bg-slate-900/60 p-2 rounded-lg border border-slate-850">
+                          <div className="bg-slate-900/60 p-2 rounded-lg border border-slate-800">
                             <span className="text-slate-500 block">Outlier Detection:</span>
                             <strong className="text-white font-bold block">Isolation Forest (contamination=0.04)</strong>
                             <p className="text-slate-400 mt-1">
@@ -1774,7 +1774,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                             <p className="text-slate-400 mt-1 text-[9.5px]">Based on current physical load factors.</p>
                           </div>
                           
-                          <div className="bg-slate-900/60 p-2 rounded-lg border border-slate-850 text-[9.5px]">
+                          <div className="bg-slate-900/60 p-2 rounded-lg border border-slate-800 text-[9.5px]">
                             <span className="text-slate-400 block font-mono font-bold uppercase leading-none">Random Forest Regressor Weights:</span>
                             <div className="space-y-1 mt-1 text-slate-300 font-mono text-[9px]">
                               <div className="flex justify-between">
@@ -1803,7 +1803,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                         <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
                           Our specialized MPI score calculates exact priority by blending raw sensor hazard risk, plant delay penalties in INR/hour, spare inventory availability, and warehouse lead times in days.
                         </p>
-                        <div className="p-2.5 bg-slate-900/65 rounded-lg border border-slate-850 text-indigo-300 font-mono text-[10.5px] font-bold text-center">
+                        <div className="p-2.5 bg-slate-900/65 rounded-lg border border-slate-800 text-indigo-300 font-mono text-[10.5px] font-bold text-center">
                           Composite MPI value: {mpiData.mpi}/100 • Blended math is active & compliant
                         </div>
                       </div>
@@ -1982,7 +1982,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                   <div className="pt-4 border-t border-slate-200 space-y-4 font-sans select-none" id="interactive-spares-cockpit">
                     
                     {/* Part A: Machine Learning Decision & Boundary Profiler */}
-                    <div className="bg-slate-900 border border-slate-850 rounded-xl p-3.5 text-white space-y-3">
+                    <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 text-white space-y-3">
                       <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                         <div className="flex items-center gap-1.5 font-mono text-[9.5px]">
                           <span className="p-1 bg-indigo-950 text-indigo-400 font-extrabold rounded">ML</span>
@@ -2167,7 +2167,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                                   procureStatus === "dispatched"
                                     ? "bg-emerald-100 text-emerald-800 border-emerald-300"
                                     : procureStatus === "dispatching"
-                                      ? "bg-indigo-50 text-indigo-750 border-indigo-200"
+                                      ? "bg-indigo-50 text-indigo-700 border-indigo-200"
                                       : "bg-indigo-600 text-white border-indigo-700 hover:bg-indigo-700 cursor-pointer"
                                 }`}
                               >
@@ -2597,7 +2597,7 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
 
                 {/* Simulated Part Schematic Blueprint Render Box */}
                 <div className="border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
-                  <div className="bg-slate-900 px-3 py-1.5 text-[8.5px] font-mono text-slate-400 flex justify-between items-center select-none border-b border-slate-850">
+                  <div className="bg-slate-900 px-3 py-1.5 text-[8.5px] font-mono text-slate-400 flex justify-between items-center select-none border-b border-slate-800">
                     <span>CYBER-PHYSICAL STRUCTURAL BLUEPRINT SPECIFICATION</span>
                     <span className="text-indigo-400 font-mono tracking-wider">TS-CAD-v4.0_REV_A</span>
                   </div>

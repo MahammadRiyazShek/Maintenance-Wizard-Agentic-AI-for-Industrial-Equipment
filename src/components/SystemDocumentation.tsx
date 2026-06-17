@@ -29,7 +29,7 @@ export default function SystemDocumentation() {
               <p className="text-xs text-indigo-600 font-mono">Comparing current system features to challenge specifications</p>
             </div>
           </div>
-          <span className="text-[10px] bg-indigo-650 bg-indigo-600 text-white font-mono px-3 py-1 rounded-full font-bold uppercase tracking-wider">
+          <span className="text-[10px] bg-indigo-600 bg-indigo-600 text-white font-mono px-3 py-1 rounded-full font-bold uppercase tracking-wider">
             Elite Status
           </span>
         </div>

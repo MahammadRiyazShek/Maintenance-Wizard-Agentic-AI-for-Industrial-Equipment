@@ -36,6 +36,7 @@ const TABS = [
   { id: "headline-kpi-banner", label: "Mission Control", desc: "Plant-wide pulse", Icon: LayoutDashboard, accent: "from-indigo-500 to-blue-500" },
   { id: "scada-monitor-suite", label: "Asset Explorer", desc: "3D twin & cascade", Icon: Cpu, accent: "from-sky-500 to-cyan-500" },
   { id: "center-reasoning-column", label: "AI Copilot", desc: "Diagnose · chat · plan", Icon: Sparkles, accent: "from-fuchsia-500 to-purple-500" },
+  { id: "three-layer-manifest", label: "Reasoning Contract", desc: "L1 math → L2 RAG → L3", Icon: Sparkles, accent: "from-violet-500 to-indigo-600" },
   { id: "ai-confidence-index", label: "Intelligence", desc: "Confidence · forecast", Icon: AlertTriangle, accent: "from-amber-500 to-rose-500" },
   { id: "mpi-trace-inspector", label: "Maintenance Priority", desc: "MPI · transparent formula", Icon: TrendingUp, accent: "from-rose-500 to-pink-600" },
   { id: "decision-recommendation-cards", label: "Decisions", desc: "Top-3 actionable verdicts", Icon: Wrench, accent: "from-indigo-600 to-violet-700" },

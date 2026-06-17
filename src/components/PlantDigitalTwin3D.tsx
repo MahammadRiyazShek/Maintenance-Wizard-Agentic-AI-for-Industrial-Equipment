@@ -108,7 +108,7 @@ export default function PlantDigitalTwin3D() {
         </div>
 
         {/* View mode toggle controls */}
-        <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-lg border border-slate-850 select-none">
+        <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-lg border border-slate-800 select-none">
           <button
             onClick={() => setActiveCam("isometric")}
             className={`px-2.5 py-1 text-[9.5px] font-mono font-black rounded uppercase tracking-wide flex items-center gap-1 cursor-pointer transition ${
@@ -145,7 +145,7 @@ export default function PlantDigitalTwin3D() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 relative z-10">
         
         {/* LEFT COMPONENT: Interactive 3D SVG Scene */}
-        <div className="lg:col-span-8 bg-black/40 border border-slate-850 rounded-xl p-3 relative h-[250px] md:h-[320px] flex items-center justify-center">
+        <div className="lg:col-span-8 bg-black/40 border border-slate-800 rounded-xl p-3 relative h-[250px] md:h-[320px] flex items-center justify-center">
           
           {/* Spatial Blueprint Overlay Indicator */}
           <div className="absolute top-2.5 left-2.5 font-mono text-[9px] text-slate-500 space-y-0.5">
@@ -306,7 +306,7 @@ export default function PlantDigitalTwin3D() {
         </div>
 
         {/* RIGHT LAYER: Subsystem Diagnostics & Predictive Delta intelligence Inspector */}
-        <div className="lg:col-span-4 bg-slate-950/80 border border-slate-850 rounded-xl p-4 flex flex-col justify-between space-y-4">
+        <div className="lg:col-span-4 bg-slate-950/80 border border-slate-800 rounded-xl p-4 flex flex-col justify-between space-y-4">
           
           <div className="space-y-3 font-sans">
             <div>
@@ -388,7 +388,7 @@ export default function PlantDigitalTwin3D() {
 
           </div>
 
-          <div className="pt-2 border-t border-slate-850 text-[8.5px] font-mono text-indigo-400 leading-normal">
+          <div className="pt-2 border-t border-slate-800 text-[8.5px] font-mono text-indigo-400 leading-normal">
             🛡️ Cognitive Twin utilizes structural mesh alignment to predict physical bearing wear parameters 2 hours before standard SCADA alerts threshold.
           </div>
 

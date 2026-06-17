@@ -313,7 +313,7 @@ export default function ComplianceRulebookMap() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-slate-200 p-2.5 rounded-xl shadow-3xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-slate-200 p-2.5 rounded-xl shadow-sm">
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setActiveFilter("All")}
@@ -373,7 +373,7 @@ export default function ComplianceRulebookMap() {
                   setSelectedReqId(req.id);
                   setSimLogs([]);
                 }}
-                className={`border-2 transition-all rounded-xl p-4 flex flex-col justify-between space-y-3 shadow-3xs cursor-pointer select-none relative ${
+                className={`border-2 transition-all rounded-xl p-4 flex flex-col justify-between space-y-3 shadow-sm cursor-pointer select-none relative ${
                   isSelected 
                     ? "border-indigo-600 bg-indigo-50/20 ring-1 ring-indigo-500/20" 
                     : "bg-white border-slate-200 hover:border-slate-350 hover:bg-slate-50/50"
@@ -435,7 +435,7 @@ export default function ComplianceRulebookMap() {
         </div>
 
         {/* Right Side: High-fidelity active trace, code inspector & dry-run simulation console */}
-        <div className="lg:col-span-5 bg-slate-950 border border-slate-900 rounded-2xl p-4.5 text-white flex flex-col justify-between min-h-[500px] h-[80vh] overflow-y-auto custom-scrollbar sticky top-4">
+        <div className="lg:col-span-5 bg-slate-950 border border-slate-900 rounded-2xl p-5 text-white flex flex-col justify-between min-h-[500px] h-[80vh] overflow-y-auto custom-scrollbar sticky top-4">
           <div className="space-y-4">
             {/* Explorer Title */}
             <div className="border-b border-slate-900 pb-2.5 flex items-center justify-between">
@@ -502,7 +502,7 @@ export default function ComplianceRulebookMap() {
               </button>
             </div>
 
-            <div className="bg-slate-900 border border-slate-850 rounded-lg p-3 min-h-[110px] font-mono text-[9.5px] text-slate-400 flex flex-col justify-start space-y-1 max-h-[150px] overflow-y-auto">
+            <div className="bg-slate-900 border border-slate-800 rounded-lg p-3 min-h-[110px] font-mono text-[9.5px] text-slate-400 flex flex-col justify-start space-y-1 max-h-[150px] overflow-y-auto">
               {simLogs.length === 0 ? (
                 <div className="text-slate-500 italic text-center py-6 text-[10px]">
                   Sim log offline. Click "Run Real-Time Dry Evaluation" to trace node.

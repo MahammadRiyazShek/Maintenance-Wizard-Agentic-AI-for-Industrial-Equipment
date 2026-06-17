@@ -213,7 +213,7 @@ export default function ReportingIncidentCenter({ assets }: ReportingIncidentCen
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden animate-feed" id="reporting-replay-center">
       
       {/* Title bar of reporting block */}
-      <div className="bg-slate-900 text-white p-4.5 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="bg-slate-900 text-white p-5 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <span className="p-1 px-1.5 bg-indigo-950 text-indigo-400 border border-indigo-900 rounded font-bold font-mono text-[9px] uppercase tracking-wider">
             ANALYTIC ENGINE
@@ -265,7 +265,7 @@ export default function ReportingIncidentCenter({ assets }: ReportingIncidentCen
                     onClick={() => handleIncidentSelect(inc.id)}
                     className={`px-2.5 py-1 rounded-md transition select-none cursor-pointer ${
                       selectedIncidentId === inc.id 
-                        ? "bg-white text-slate-900 shadow-3xs border border-slate-150" 
+                        ? "bg-white text-slate-900 shadow-sm border border-slate-150" 
                         : "text-slate-500 hover:text-slate-800"
                     }`}
                   >
@@ -346,7 +346,7 @@ export default function ReportingIncidentCenter({ assets }: ReportingIncidentCen
 
                 <div className="border-t border-indigo-100/50 pt-2 flex justify-between font-mono text-[9px] text-slate-500">
                   <span>{currentIncident.steps[currentStep].criticalMetric}:</span>
-                  <strong className="text-indigo-750 font-extrabold text-[10px]">{currentIncident.steps[currentStep].telemetryVal}</strong>
+                  <strong className="text-indigo-700 font-extrabold text-[10px]">{currentIncident.steps[currentStep].telemetryVal}</strong>
                 </div>
               </div>
 
@@ -491,7 +491,7 @@ export default function ReportingIncidentCenter({ assets }: ReportingIncidentCen
           </div>
 
           {/* Historical Case Matching side-by-side indicator */}
-          <div className="bg-slate-50 border border-slate-205 rounded-xl p-4.5 space-y-3">
+          <div className="bg-slate-50 border border-slate-205 rounded-xl p-5 space-y-3">
             <h6 className="font-sans font-black text-[10.5px] text-slate-800 uppercase tracking-tight flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-indigo-600 animate-pulse" />
               <span>Cognitive Case-Matching (FAISS)</span>
@@ -534,7 +534,7 @@ export default function ReportingIncidentCenter({ assets }: ReportingIncidentCen
               <button
                 onClick={() => handleExport("excel")}
                 disabled={exportLoading !== null}
-                className="p-2 bg-indigo-900 hover:bg-indigo-850 text-indigo-200 rounded-lg flex flex-col items-center justify-center gap-1 bg-indigo-900/40 border border-indigo-800 hover:border-indigo-500 cursor-pointer shadow-3xs hover:shadow-indigo-500/20 active:scale-95 transition-all select-none text-center"
+                className="p-2 bg-indigo-900 hover:bg-indigo-850 text-indigo-200 rounded-lg flex flex-col items-center justify-center gap-1 bg-indigo-900/40 border border-indigo-800 hover:border-indigo-500 cursor-pointer shadow-sm hover:shadow-indigo-500/20 active:scale-95 transition-all select-none text-center"
               >
                 <FileSpreadsheet className="h-4 w-4 text-emerald-400" />
                 <span>Excel Spreadsheet</span>
@@ -544,7 +544,7 @@ export default function ReportingIncidentCenter({ assets }: ReportingIncidentCen
               <button
                 onClick={() => handleExport("json")}
                 disabled={exportLoading !== null}
-                className="p-2 bg-indigo-900 hover:bg-indigo-850 text-indigo-200 rounded-lg flex flex-col items-center justify-center gap-1 bg-indigo-900/40 border border-indigo-800 hover:border-indigo-500 cursor-pointer shadow-3xs hover:shadow-indigo-500/20 active:scale-95 transition-all select-none text-center"
+                className="p-2 bg-indigo-900 hover:bg-indigo-850 text-indigo-200 rounded-lg flex flex-col items-center justify-center gap-1 bg-indigo-900/40 border border-indigo-800 hover:border-indigo-500 cursor-pointer shadow-sm hover:shadow-indigo-500/20 active:scale-95 transition-all select-none text-center"
               >
                 <FileJson className="h-4 w-4 text-blue-400" />
                 <span>Diagnostic JSON</span>
@@ -554,7 +554,7 @@ export default function ReportingIncidentCenter({ assets }: ReportingIncidentCen
               <button
                 onClick={() => handleExport("pdf")}
                 disabled={exportLoading !== null}
-                className="p-2 bg-indigo-900 hover:bg-indigo-850 text-indigo-200 rounded-lg flex flex-col items-center justify-center gap-1 bg-indigo-900/40 border border-indigo-800 hover:border-indigo-500 cursor-pointer shadow-3xs hover:shadow-indigo-500/20 active:scale-95 transition-all select-none text-center"
+                className="p-2 bg-indigo-900 hover:bg-indigo-850 text-indigo-200 rounded-lg flex flex-col items-center justify-center gap-1 bg-indigo-900/40 border border-indigo-800 hover:border-indigo-500 cursor-pointer shadow-sm hover:shadow-indigo-500/20 active:scale-95 transition-all select-none text-center"
               >
                 <Printer className="h-4 w-4 text-indigo-300" />
                 <span>Operations PDF</span>
