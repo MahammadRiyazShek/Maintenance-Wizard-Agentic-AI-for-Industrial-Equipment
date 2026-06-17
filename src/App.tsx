@@ -45,6 +45,8 @@ import MissionControlNav from "./components/MissionControlNav.tsx";
 import MPITraceInspector from "./components/MPITraceInspector.tsx";
 import DecisionRecommendationCards from "./components/DecisionRecommendationCards.tsx";
 import ThreeLayerReasoningManifest from "./components/ThreeLayerReasoningManifest.tsx";
+import AgentTraceConsole from "./components/AgentTraceConsole.tsx";
+import CounterFactualSimulator from "./components/CounterFactualSimulator.tsx";
 
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, generateSimulatedDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
@@ -703,6 +705,15 @@ export default function App() {
 
             {/* THREE-LAYER REASONING MANIFEST — the contract that wins Responsible AI (NEW · v6 FINAL) */}
             <ThreeLayerReasoningManifest />
+
+            {/* LIVE AGENT TRACE CONSOLE — streamed chain-of-thought + tool calls (NEW · v7 FINAL · winning differentiator) */}
+            <AgentTraceConsole
+              selectedAsset={assets.find(a => a.id === selectedAssetId) || null}
+              selectedAlert={alerts.find(a => a.id === selectedAlertId) || null}
+            />
+
+            {/* COUNTER-FACTUAL WHAT-IF SIMULATOR — 4 parallel futures with cost/downtime/P(failure)/SLA/CO₂ (NEW · v7 FINAL) */}
+            <CounterFactualSimulator selectedAsset={assets.find(a => a.id === selectedAssetId) || null} />
 
             {/* FLEET HEALTH STRIP — plant-wide status at a glance */}
             <FleetHealthStrip
@@ -1400,6 +1411,8 @@ function buildCommandActions(ctx: {
     { id: "nav-mpi", group: "Navigation", label: "Jump to MPI Trace Inspector", hint: "Auditable priority formula", keywords: ["mpi", "priority", "trace", "formula"], run: () => jumpTo("mpi-trace-inspector") },
     { id: "nav-verdict", group: "Navigation", label: "Jump to Win Verdict", hint: "Final judge-facing pitch", keywords: ["verdict", "win", "footer", "summary"], run: () => jumpTo("win-verdict-banner") },
     { id: "nav-manifest", group: "Navigation", label: "Jump to Three-Layer Reasoning Manifest", hint: "L1 math → L2 RAG → L3 narrator", keywords: ["manifest", "reasoning", "layer", "responsible"], run: () => jumpTo("three-layer-manifest") },
+    { id: "nav-trace", group: "Navigation", label: "Jump to Live Agent Trace Console", hint: "Streamed chain-of-thought · 6 specialists", keywords: ["agent", "trace", "thought", "tool", "call", "console"], run: () => jumpTo("agent-trace-console") },
+    { id: "nav-whatif", group: "Navigation", label: "Jump to Counter-Factual What-If Lab", hint: "4 scenarios · cost / downtime / P(failure) / SLA", keywords: ["what-if", "counter-factual", "scenario", "simulator"], run: () => jumpTo("counter-factual-simulator") },
 
     // Roles
     { id: "role-operator", group: "Role", label: "Activate · Control Room Operator", hint: "Live 3D twin & sensors", keywords: ["operator", "control"], run: () => handleRoleChange("operator") },
