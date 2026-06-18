@@ -17,6 +17,16 @@ import {
   acknowledgeAlert 
 } from "./server/data_store.ts";
 import { DiagnosticResult, EngineerFeedback, LogbookEntry } from "./src/types.ts";
+import {
+  startAutopilot,
+  setAutopilotMode,
+  autopilotStatus,
+  autopilotEvents,
+  autopilotOutcomes,
+  resolveAutopilotOutcome,
+  autopilotAccuracy,
+  AutopilotMode,
+} from "./server/autopilot_daemon.ts";
 
 const app = express();
 const PORT = Number(process.env.PORT || 8080);
@@ -117,6 +127,75 @@ app.post("/api/assets/telemetry", (req, res) => {
 // Get Knowledge Base documents
 app.get("/api/kb", (_req, res) => {
   res.json(kbDocuments);
+});
+
+// Dynamic KB upload — indexes a new document into the live RAG store at runtime.
+app.post("/api/kb", (req, res) => {
+  const { title, category, content } = req.body || {};
+  if (!title || !category || !content) {
+    return res.status(400).json({ error: "title, category and content are required" });
+  }
+  const doc = {
+    id: `kb-up-${Date.now()}-${Math.floor(Math.random() * 1e5)}`,
+    title: String(title).slice(0, 200),
+    category: String(category) as any,
+    content: String(content),
+    lastUpdated: new Date().toISOString(),
+  };
+  kbDocuments.unshift(doc);
+  res.json({ success: true, doc, totalDocs: kbDocuments.length });
+});
+
+// Remove a KB document by id (only documents added at runtime can be removed).
+app.delete("/api/kb/:id", (req, res) => {
+  const idx = kbDocuments.findIndex(d => d.id === req.params.id);
+  if (idx < 0) return res.status(404).json({ error: "document not found" });
+  const removed = kbDocuments.splice(idx, 1)[0];
+  res.json({ success: true, removed, totalDocs: kbDocuments.length });
+});
+
+/* =========================================
+   AUTOPILOT DAEMON ENDPOINTS (zero-touch autonomy)
+   ========================================= */
+app.get("/api/autopilot/status", (_req, res) => {
+  res.json(autopilotStatus());
+});
+
+app.post("/api/autopilot/mode", (req, res) => {
+  const mode = req.body?.mode as AutopilotMode | undefined;
+  if (!mode || !["off", "monitor", "autopilot"].includes(mode)) {
+    return res.status(400).json({ error: "mode must be off | monitor | autopilot" });
+  }
+  setAutopilotMode(mode);
+  res.json({ success: true, status: autopilotStatus() });
+});
+
+app.get("/api/autopilot/events", (req, res) => {
+  const limit = Math.min(200, Math.max(1, Number(req.query.limit) || 50));
+  res.json({ events: autopilotEvents(limit) });
+});
+
+app.get("/api/autopilot/outcomes", (_req, res) => {
+  res.json({ outcomes: autopilotOutcomes() });
+});
+
+app.post("/api/autopilot/outcomes/:id/resolve", (req, res) => {
+  const { outcome, note, costAvoided } = req.body || {};
+  if (!outcome || !["correct", "incorrect"].includes(outcome)) {
+    return res.status(400).json({ error: "outcome must be 'correct' or 'incorrect'" });
+  }
+  const rec = resolveAutopilotOutcome(
+    req.params.id,
+    outcome,
+    String(note || ""),
+    Number(costAvoided || 0)
+  );
+  if (!rec) return res.status(404).json({ error: "outcome not found" });
+  res.json({ success: true, outcome: rec, accuracy: autopilotAccuracy() });
+});
+
+app.get("/api/autopilot/accuracy", (_req, res) => {
+  res.json(autopilotAccuracy());
 });
 
 // Maintenance Logbook
@@ -425,6 +504,9 @@ async function startServer() {
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Maintenance Wizard Server running at http://0.0.0.0:${PORT}`);
+    // Boot the autonomous daemon — keeps running with all browser tabs closed.
+    startAutopilot({ mode: "monitor", intervalMs: 8000 });
+    console.log(`[autopilot] daemon armed · mode=monitor · interval=8000 ms`);
   });
 }
 

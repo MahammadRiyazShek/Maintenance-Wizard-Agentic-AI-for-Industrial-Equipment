@@ -109,3 +109,42 @@ export interface ChatMessage {
   text: string;
   timestamp: string;
 }
+
+/* ---------------------------------------------------------------------------
+ * Extended types for v8 — MPI, AI4I, LangGraph, Outcome Repository
+ * ------------------------------------------------------------------------- */
+
+export type FailureMode = "TWF" | "HDF" | "PWF" | "OSF" | "OK";
+
+export interface MPITraceStep {
+  step: number;
+  name: string;
+  inputs: Record<string, number | string>;
+  formula: string;
+  output: number;
+  weightApplied: number;
+  contribution: number;
+}
+
+export interface MPIResult {
+  index: number;
+  band: "Low" | "Medium" | "High" | "Critical";
+  trace: MPITraceStep[];
+  dollarImpactPerHour: number;
+  projectedDowntimeHours: number;
+  projectedLoss: number;
+  generatedAt: string;
+}
+
+export interface AutopilotEvent {
+  id: string;
+  ts: string;
+  assetId: string;
+  assetName: string;
+  phase: "scan" | "anomaly" | "diagnose" | "plan" | "dispatch" | "verify" | "skip";
+  message: string;
+  mpi?: number;
+  ai4iMode?: string;
+  ai4iProbability?: number;
+  workOrderId?: string;
+}

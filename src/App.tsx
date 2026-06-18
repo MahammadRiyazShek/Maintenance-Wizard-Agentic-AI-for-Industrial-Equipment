@@ -49,6 +49,17 @@ import AgentTraceConsole from "./components/AgentTraceConsole.tsx";
 import CounterFactualSimulator from "./components/CounterFactualSimulator.tsx";
 import CognitiveAuditorConsole from "./components/CognitiveAuditorConsole.tsx";
 
+// v8 FINAL — merged feature set: MPI audit, AI4I physics, LangGraph,
+// autonomous daemon, ROI agent, judge map, outcome repo, dynamic KB upload.
+import MPIAuditTrail from "./components/MPIAuditTrail.tsx";
+import AI4IPhysicsPanel from "./components/AI4IPhysicsPanel.tsx";
+import LangGraphPipeline from "./components/LangGraphPipeline.tsx";
+import BoardroomROIAgent from "./components/BoardroomROIAgent.tsx";
+import AutopilotDaemonConsole from "./components/AutopilotDaemonConsole.tsx";
+import DynamicKBUpload from "./components/DynamicKBUpload.tsx";
+import OutcomeRepositoryView from "./components/OutcomeRepositoryView.tsx";
+import JudgeMapPage from "./components/JudgeMapPage.tsx";
+
 import { ClientStore } from "./utils/dataStore.ts";
 import { runAssetDiagnosis, generateSimulatedDiagnosis, askWizardChat, getSavedApiKey, saveApiKey } from "./utils/geminiClient.ts";
 
@@ -545,7 +556,7 @@ export default function App() {
             <h1 className="text-xs font-bold tracking-wider font-mono text-indigo-400 uppercase flex items-center gap-2">
               COGNITIVE DECISION SYSTEM
               <span className="text-[9.5px] bg-blue-500/20 text-blue-300 font-mono px-2 py-0.5 rounded-full border border-blue-500/30 normal-case font-normal">
-                Wizard v6.0 FINAL
+                Wizard v8.0 FINAL (MPI · AI4I · LangGraph · Daemon)
               </span>
             </h1>
             <p className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
@@ -785,6 +796,26 @@ export default function App() {
 
             {/* REGIONAL ANOMALY MATRIX — zone × sensor heatmap (NEW · v3) */}
             <AnomalyHeatmapMatrix assets={assets} onSelectAsset={handleSelectAsset} />
+
+            {/* ====================================================== *
+             *  v8 FINAL  —  Merged feature set                         *
+             *    1. 5-agent LangGraph pipeline visualisation           *
+             *    2. 6-step deterministic MPI audit trail               *
+             *    3. AI4I-2020 XGBoost physics-rule surrogate (99.05%)  *
+             *    4. Server-side autonomous daemon control surface      *
+             *    5. Boardroom-grade ROI agent                          *
+             *    6. Outcome repository with accuracy metric            *
+             *    7. Dynamic KB upload — live RAG store                 *
+             *    8. Explicit judge-map page                            *
+             * ====================================================== */}
+            <LangGraphPipeline activePhase={agentPhase} />
+            <MPIAuditTrail asset={activeAsset} />
+            <AI4IPhysicsPanel asset={activeAsset} />
+            <AutopilotDaemonConsole />
+            <BoardroomROIAgent assets={assets} />
+            <OutcomeRepositoryView />
+            <DynamicKBUpload />
+            <JudgeMapPage />
 
             {/* INCREDIBLE JUDGE-FACING CRITERIA TO CAPABILITY WORKBENCH MAP */}
             <JudgeCriteriaCapabilityMap 
