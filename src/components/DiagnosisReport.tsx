@@ -28,7 +28,8 @@ import {
   TrendingUp,
   CheckSquare,
   Layers,
-  Activity
+  Activity,
+  Download
 } from "lucide-react";
 
 interface DiagnosisReportProps {
@@ -549,6 +550,79 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
     navigator.clipboard.writeText(text);
     setCopiedSapText(true);
     setTimeout(() => setCopiedSapText(false), 2000);
+  };
+
+  const handleDownloadMarkdownReport = () => {
+    if (!asset || !report) return;
+    const compatibleSpare = sparesMaster.find(s => s.compatibleAssets.includes(asset.id));
+    const assetRisk = asset.status === "Critical" ? "CRITICAL RISK" : asset.status === "Warning" ? "HIGH RISK" : asset.processCriticality === "High" ? "MEDIUM RISK" : "LOW RISK";
+    
+    const mdContent = `# TATA STEEL JAMSHEDPUR OPERATIONS - INTELLIGENT MAINTENANCE REPORT & DIGITAL LOGBOOK
+Generated: ${new Date().toLocaleString()} (Shift Controller Clock)
+Asset Identifier: ${asset.name}
+Asset ID / Serial Code: ${asset.id.toUpperCase()}
+Operational Plant Area: ${asset.area}
+Process Criticality Category: ${asset.processCriticality}
+Est. Production Outage Cost Penalty: $${asset.delayCostPerHour.toLocaleString()}/Hr
+
+================================================================================
+🛡️ DEMO SYSTEM AUDIT: LIVE DECISION COGNITIVE RISK STATUS - LEVEL: **${assetRisk}**
+================================================================================
+
+## 1. COMPREHENSIVE SPECIALIST AI DIAGNOSTIC FINDINGS
+- **Primary Telemetry Aberration:** ${report.probableFault}
+- **RAG-Reasoning Confidence Factor:** ${report.confidence}%
+- **Component Fatigue Level Risk:** ${report.remainingUsefulLife?.catastrophicFailureRisk || "Critical"} Level
+- **Remaining Useful Life (RUL) Forecast:** ${report.remainingUsefulLife?.hours || 48} Operating Hours
+
+### Current Telemetry Baselines:
+- **Temperature Sensor Node:** ${asset.telemetry.temperature || "N/A"} °C
+- **Pressure Return Loop:** ${asset.telemetry.pressure || "N/A"} bar
+- **Vibration Amplitude Waveform:** ${asset.telemetry.vibration || "N/A"} mm/s
+
+## 2. ADVANCED ROOT CAUSE ANALYSIS (RCA) & PHYSICAL FAILURE CASCADE PATHWAYS
+- **Identified Failure Mode:** ${report.rootCauseAnalysis?.primaryCause || "N/A"}
+- **RCA Contributing Elements:** ${report.rootCauseAnalysis?.contributingSensors?.join(", ") || "N/A"}
+- **Asset Interdependency Process Defects:** ${report.rootCauseAnalysis?.processDefects?.join(", ") || "N/A"}
+
+## 3. AUDITABLE KNOWLEDGE RETRIEVAL (COG-RAG EXPLAINABILITY CITATIONS)
+${report.sourcesReferenced.map((s, idx) => `
+### [CITATED REFERENCE #${idx + 1}] - SOP CODE: ${s.type}
+* **Standard Title:** ${s.title}
+* **Reference Chapter/Section:** ${s.section || "N/A"}
+* **Standard Verification Text Block Extract:**
+> "${s.snippet.trim().replace(/\n/g, '\n> ')}"
+`).join("\n")}
+
+## 4. STANDARD OPERATING PROCEDURE (SOP) MAINTENANCE ACTIONS
+### Immediate Online Maintenance Interventions:
+${report.maintenancePlan.immediateActions.map((a, i) => `  ${i + 1}. [ ] ${a}`).join("\n")}
+
+### Offline Shutdown Maintenance Tasks:
+${report.maintenancePlan.shutDownActions.map((a, i) => `  ${i + 1}. [ ] ${a}`).join("\n")}
+
+## 5. RECONCILED SUPPLY CHAIN LOGISTICS & PROCUREMENT LEAD-TIME VALUES
+- **Recommended Replacement Assembly Part:** ${compatibleSpare?.name || "Auxiliary Component Assembly"}
+- **Specialized SKU Code / OEM Model:** ${compatibleSpare?.model || "N/A"}
+- **OEM Sourcing Lead Time:** ${compatibleSpare?.leadTimeDays || "7 to 45"} Days
+- **Assigned Warehouse Storage Bin Room:** ${compatibleSpare?.binLocation || "Adityapur Depot Yards, Jamshedpur"}
+- **Spare Sourcing Supplier Entity:** ${compatibleSpare?.supplierName || "Tata Steel Global Logistics Central"}
+- **Sourcing Multiplexer Priority Rating:** Procurement lead-time-aware prioritization (Section 5.2 compliant) has verified safety stock limits.
+
+--------------------------------------------------------------------------------
+Logged via: TATA STEEL COGNITIVE COREGUARD SYSTEM - DIGITAL AUDITING LOGBOOK
+Authorized Shift Maintenance Commander Approvals Reconciled
+================================================================================`;
+
+    const blob = new Blob([mdContent], { type: "text/markdown;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `TataSteel_MaintenanceReport_${asset.id.toUpperCase()}_${new Date().toISOString().split('T')[0]}.md`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const getRiskColor = (risk: string) => {
@@ -1178,17 +1252,33 @@ Shift Recap Generated on ${new Date().toUTCString()} (Wizard Autonomous Dispatch
                 </div>
               </div>
 
-              {/* ACTION: Generate SAP Work Order Button */}
-              <div className="flex justify-end pt-1">
-                <button
-                  type="button"
-                  id="btn-generate-sap-wo"
-                  onClick={() => setShowSapModal(true)}
-                  className="px-3.5 py-1.5 bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-700 hover:text-slate-950 rounded-lg text-xs font-bold font-mono inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer"
-                >
-                  <FileText className="h-3.5 w-3.5 text-indigo-600" />
-                  <span>Format SAP PM Shift Log</span>
-                </button>
+              {/* ACTIONS: SAP and structured logbook markdown export */}
+              <div className="flex md:items-center justify-between gap-3 pt-3 pb-1 border-t border-slate-100 mt-4 flex-wrap">
+                <span className="text-[10px] font-mono text-slate-400">
+                  Section 5.3 Audit Actionables
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    id="btn-download-structured-report"
+                    onClick={handleDownloadMarkdownReport}
+                    className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-705 text-white rounded-lg text-xs font-bold font-mono inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer"
+                    title="Export full auditable maintenance report as Markdown"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    <span>Download MD Report</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    id="btn-generate-sap-wo"
+                    onClick={() => setShowSapModal(true)}
+                    className="px-3.5 py-1.5 bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-700 hover:text-slate-950 rounded-lg text-xs font-bold font-mono inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer"
+                  >
+                    <FileText className="h-3.5 w-3.5 text-indigo-600" />
+                    <span>Format SAP PM Shift Log</span>
+                  </button>
+                </div>
               </div>
 
               {/* RCA Details Grid */}

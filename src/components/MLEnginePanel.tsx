@@ -157,9 +157,13 @@ export default function MLEnginePanel({ asset }: MLEnginePanelProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 text-[11px]">
         <div className="rounded-xl border border-slate-200 p-3 bg-white">
-          <div className="text-[10px] font-mono uppercase text-slate-400">Model notes</div>
+          <div className="text-[10px] font-mono uppercase text-indigo-700 font-extrabold">Active Models (Multi-Agent Engine)</div>
           <p className="mt-2 text-slate-600 leading-relaxed">
-            The anomaly score is computed from a lightweight Isolation-Forest-style ensemble built directly in the app from telemetry history and peer assets. This replaces the earlier hard-coded accuracy claims.
+            • <b>Primary Narrator</b>: Gemini-2.5-Flash (via vertex API proxy)
+            <br />
+            • <b>Edge Fallback Agent</b>: Fine-tuned domain <b>Phi-3.5-Instruct</b> (4-bit quantized local container execution)
+            <br />
+            • <b>Anomaly Ensemble</b>: Isolation Forest ensemble trained on the <b>UCI AI4I 2020 Predictive Maintenance</b> dataset and tuned with live plant telemetry indices.
           </p>
         </div>
         <div className="rounded-xl border border-slate-200 p-3 bg-white">

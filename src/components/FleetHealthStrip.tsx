@@ -91,40 +91,53 @@ export default function FleetHealthStrip({ assets, selectedAssetId, onSelectAsse
 
         {/* Worst-asset spotlight (cols 5–7) */}
         <div className="col-span-12 lg:col-span-3">
-          {stats.worst ? (
-            <button
-              onClick={() => onSelectAsset(stats.worst!.id)}
-              className={`w-full h-full text-left rounded-xl border p-3 transition cursor-pointer flex flex-col justify-between ${
-                stats.worst.status === "Critical"
-                  ? "bg-rose-50 border-rose-200 hover:border-rose-400"
-                  : stats.worst.status === "Warning"
-                  ? "bg-amber-50 border-amber-200 hover:border-amber-400"
-                  : "bg-emerald-50 border-emerald-200 hover:border-emerald-400"
-              }`}
-            >
-              <div className="flex items-center gap-1.5">
-                <Zap
-                  className={`h-3.5 w-3.5 ${
-                    stats.worst.status === "Critical"
-                      ? "text-rose-600"
-                      : stats.worst.status === "Warning"
-                      ? "text-amber-600"
-                      : "text-emerald-600"
-                  }`}
-                />
-                <span className="text-[9px] font-mono font-extrabold uppercase tracking-widest text-slate-600">
-                  Top-Risk Asset
-                </span>
-              </div>
-              <div className="font-sans font-black text-sm text-slate-900 truncate">
-                {stats.worst.name}
-              </div>
-              <div className="text-[10px] font-mono text-slate-500">
-                {stats.worst.area} · {stats.worst.status} · $
-                {stats.worst.delayCostPerHour.toLocaleString()}/hr at risk
-              </div>
-            </button>
-          ) : (
+          {stats.worst ? (() => {
+            const worstRisk = stats.worst.status === "Critical" ? "Critical" : stats.worst.status === "Warning" ? "High" : stats.worst.processCriticality === "High" ? "Medium" : "Low";
+            const worstRiskBadge = 
+              worstRisk === "Critical" ? "bg-rose-600 text-white animate-pulse" :
+              worstRisk === "High" ? "bg-amber-500 text-slate-900 font-bold" :
+              worstRisk === "Medium" ? "bg-indigo-600 text-white" : "bg-emerald-600 text-white";
+
+            return (
+              <button
+                onClick={() => onSelectAsset(stats.worst!.id)}
+                className={`w-full h-full text-left rounded-xl border p-3 transition cursor-pointer flex flex-col justify-between ${
+                  stats.worst.status === "Critical"
+                    ? "bg-rose-50 border-rose-200 hover:border-rose-400"
+                    : stats.worst.status === "Warning"
+                    ? "bg-amber-50 border-amber-200 hover:border-amber-400"
+                    : "bg-emerald-50 border-emerald-200 hover:border-emerald-400"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-1.5 w-full">
+                  <div className="flex items-center gap-1">
+                    <Zap
+                      className={`h-3.5 w-3.5 ${
+                        stats.worst.status === "Critical"
+                          ? "text-rose-600 animate-bounce"
+                          : stats.worst.status === "Warning"
+                          ? "text-amber-600"
+                          : "text-emerald-600"
+                      }`}
+                    />
+                    <span className="text-[9px] font-mono font-extrabold uppercase tracking-widest text-slate-600">
+                      Top-Risk Asset
+                    </span>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded-sm text-[8px] font-mono font-black uppercase tracking-wider shadow-xs ${worstRiskBadge}`}>
+                    {worstRisk} RISK
+                  </span>
+                </div>
+                <div className="font-sans font-black text-sm text-slate-900 truncate mt-1">
+                  {stats.worst.name}
+                </div>
+                <div className="text-[10px] font-mono text-slate-500 mt-1">
+                  {stats.worst.area} · <span className="font-bold underline">{stats.worst.status}</span> · $
+                  {stats.worst.delayCostPerHour.toLocaleString()}/hr penalty
+                </div>
+              </button>
+            );
+          })() : (
             <div className="w-full h-full rounded-xl border border-slate-200 bg-slate-50" />
           )}
         </div>
@@ -134,6 +147,8 @@ export default function FleetHealthStrip({ assets, selectedAssetId, onSelectAsse
           <div className="flex flex-wrap gap-1.5 max-h-[88px] overflow-y-auto pr-1 custom-scrollbar">
             {sortedAssets.map((a) => {
               const isSel = a.id === selectedAssetId;
+              const assetRisk = a.status === "Critical" ? "Critical" : a.status === "Warning" ? "High" : a.processCriticality === "High" ? "Medium" : "Low";
+              
               const cls =
                 a.status === "Critical"
                   ? "bg-rose-100 border-rose-300 text-rose-800 hover:border-rose-500"
@@ -144,7 +159,7 @@ export default function FleetHealthStrip({ assets, selectedAssetId, onSelectAsse
                 <button
                   key={a.id}
                   onClick={() => onSelectAsset(a.id)}
-                  title={`${a.name} · ${a.status} · ${a.area}`}
+                  title={`${a.name} · ${a.status} · ${a.area} · Risk Class: ${assetRisk}`}
                   className={`px-2 py-1 rounded-md border text-[10px] font-mono font-bold cursor-pointer transition flex items-center gap-1 ${cls} ${
                     isSel ? "ring-2 ring-indigo-500 ring-offset-1" : ""
                   }`}
@@ -158,7 +173,10 @@ export default function FleetHealthStrip({ assets, selectedAssetId, onSelectAsse
                         : "bg-emerald-500"
                     }`}
                   />
-                  <span className="truncate max-w-[120px]">{a.name}</span>
+                  <span className="truncate max-w-[95px]">{a.name}</span>
+                  <span className="text-[7.5px] scale-90 px-1 py-0.25 rounded-xs bg-black/5 font-extrabold text-slate-600 uppercase tracking-tight">
+                    {assetRisk}
+                  </span>
                 </button>
               );
             })}

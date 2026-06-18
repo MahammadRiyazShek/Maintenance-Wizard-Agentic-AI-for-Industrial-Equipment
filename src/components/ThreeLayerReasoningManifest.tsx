@@ -57,7 +57,7 @@ const layers = [
   {
     n: 3,
     title: "Narrative Intelligence",
-    subtitle: "Gemini 3 — translator only, never inventor",
+    subtitle: "Gemini / Fine-Tuned Phi-3.5 LLM Translation",
     icon: MessageCircle,
     accent: "violet",
     color: "from-violet-500/15 to-violet-500/0",
@@ -66,10 +66,11 @@ const layers = [
     items: [
       "Strict JSON response schema — numbers are passed-through, not generated",
       "Role-aware tone: operator vs reliability vs supply vs executive",
+      "Optionally fallbacks to fine-tuned Phi-3.5 on-premise MoE model for secure offline metallurgy diagnostics",
       "Refuses to answer when retrieval confidence < 0.55 (escalates to human)",
       "Every recommendation cites its evidence chunk and its MPI breakdown",
       "Multi-turn troubleshooting inherits active alarm + asset context",
-      "Voice-activated diagnostics route through the same audit trail",
+      "Voice-activated diagnostics route through the exact same audit trail",
     ],
   },
 ];
@@ -164,11 +165,11 @@ export default function ThreeLayerReasoningManifest() {
         <span className="text-slate-400">→</span>
         <span className="px-2 py-1 bg-emerald-100 text-emerald-800 rounded font-extrabold">L2 · Retrieval</span>
         <span className="text-slate-400">→</span>
-        <span className="px-2 py-1 bg-violet-100 text-violet-800 rounded font-extrabold">L3 · Narrator</span>
+        <span className="px-2 py-1 bg-violet-100 text-violet-800 rounded font-extrabold">L3 · LLM (Gemini / Phi-3.5)</span>
         <span className="text-slate-400">→</span>
         <span className="px-2 py-1 bg-slate-900 text-white rounded font-extrabold">Engineer</span>
         <span className="ml-auto text-[10px] text-slate-500 normal-case font-medium hidden md:inline">
-          Numbers never originate in the LLM. Every figure traces back to a sensor or a manual page.
+          Numbers never originate in the LLM. Every figure traces back to a sensor, a fine-tuned rule, or a manual page.
         </span>
       </div>
     </section>

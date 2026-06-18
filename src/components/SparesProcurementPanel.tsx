@@ -108,6 +108,7 @@ export default function SparesProcurementPanel({ asset, onStockUpdate }: SparesP
   const [orderQuantity, setOrderQuantity] = useState<number>(1);
   const [selectedSupplierRoute, setSelectedSupplierRoute] = useState<"standard" | "regional" | "local_emergency">("standard");
   const [orderLogs, setOrderLogs] = useState<{ id: string; timestamp: string; item: string; qty: number; route: string; estDelivery: string; costINR: number }[]>([]);
+  const [autonomousPoApproved, setAutonomousPoApproved] = useState<Record<string, boolean>>({});
 
   // Simulation parameters for Jamshedpur local logistics
   const supplierRoutes = {
@@ -296,6 +297,153 @@ export default function SparesProcurementPanel({ asset, onStockUpdate }: SparesP
         
         {activeSubTab === "inventory" ? (
           <>
+            {/* Autonomous Spare Parts Procurement Auto-Drafting Agent Panel */}
+            {asset && (asset.status === "Warning" || asset.status === "Critical") && (() => {
+              const matchingSpare = spares.find(s => s.compatibleAssets.includes(asset.id));
+              if (!matchingSpare) return null;
+              
+              const isApproved = !!autonomousPoApproved[asset.id];
+              const relatedRulHours = asset.id === "bf-04" ? 4 : asset.id === "cc-02" ? 32 : asset.id === "hsm-01" ? 48 : 72;
+              const delayHourlyLoss = asset.delayCostPerHour;
+              const outageDaysLiability = matchingSpare.leadTimeDays;
+              const totalOutageLiability = outageDaysLiability * 24 * delayHourlyLoss;
+              
+              return (
+                <div 
+                  id={`autonomous-po-draft-${asset.id}`}
+                  className="bg-slate-50 border-2 border-indigo-150 rounded-2xl p-4.5 space-y-3.5 shadow-sm relative overflow-hidden animate-feed font-sans"
+                >
+                  {/* Visual Background Stamp watermark for completed POs */}
+                  {isApproved && (
+                    <div className="absolute right-3 top-3 rotate-12 border-3 border-emerald-500/40 text-emerald-600/40 font-mono font-black text-xs px-2.5 py-1 rounded-sm uppercase tracking-widest pointer-events-none select-none">
+                      PO APPROVED & SENT
+                    </div>
+                  )}
+
+                  {/* Header Badge */}
+                  <div className="flex items-center justify-between border-b border-indigo-100/55 pb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="p-1.5 rounded-lg bg-indigo-50 text-indigo-700 font-bold shrink-0">
+                        <Zap className="h-4 w-4 animate-pulse" />
+                      </span>
+                      <div>
+                        <span className="text-[9px] font-mono text-slate-400 font-extrabold uppercase tracking-wide">
+                          Autonomous Procurement Co-Pilot AG-8
+                        </span>
+                        <h4 className="font-sans font-extrabold text-xs text-slate-800 leading-tight">
+                          Low RUL Warning: PO Contract Auto-Drafted
+                        </h4>
+                      </div>
+                    </div>
+                    <span className="text-[10px] text-slate-500 font-mono font-bold bg-white border border-slate-200 px-2.5 py-0.5 rounded-md">
+                      Ref: AJ-PO-2026-{asset.id.toUpperCase()}
+                    </span>
+                  </div>
+
+                  {/* Trigger conditions of Remaining Useful Life */}
+                  <div className="bg-white p-3 rounded-xl border border-indigo-100/50 space-y-2.5">
+                    <div className="flex justify-between items-center text-[10.5px]">
+                      <span className="text-slate-500">Asset Trigger Name:</span>
+                      <strong className="text-slate-850 font-bold font-sans">{asset.name}</strong>
+                    </div>
+                    <div className="flex justify-between items-center text-[10.5px]">
+                      <span className="text-slate-500">Remaining Useful Life (RUL):</span>
+                      <span className="font-mono text-rose-700 font-black flex items-center gap-1 bg-rose-50 border border-rose-100 px-2 py-0.25 rounded">
+                        <Clock className="w-3.5 h-3.5 text-rose-600 shrink-0" /> {relatedRulHours} Hours Left
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-[10.5px]">
+                      <span className="text-slate-500">Warehouse Assembly Stock:</span>
+                      <span className="font-mono text-amber-700 font-black bg-amber-50 border border-amber-100 px-2 py-0.25 rounded">
+                        {matchingSpare.currentStock} / {matchingSpare.safetyLevel} units
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-[10.5px] border-t border-slate-100 pt-2 text-rose-800">
+                      <span className="text-slate-600">Avoidable Production Risk:</span>
+                      <strong className="font-mono font-bold">
+                        ${totalOutageLiability.toLocaleString()} ({matchingSpare.leadTimeDays} Days Outage)
+                      </strong>
+                    </div>
+                  </div>
+
+                  {/* PO Draft Details Form summary */}
+                  <div className="space-y-1 text-xs">
+                    <span className="text-[9px] font-mono uppercase text-slate-400 font-bold block tracking-wider">
+                      Proposed Order Details (Contract Sourcing)
+                    </span>
+                    <div className="bg-slate-900 text-slate-200 p-3 rounded-xl font-mono text-[10px] space-y-1.5 border border-slate-850">
+                      <p className="flex justify-between">
+                        <span className="text-slate-400">PART DESCRIPTION:</span>
+                        <b className="text-slate-100">{matchingSpare.name}</b>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="text-slate-400">PART SKU MODEL:</span>
+                        <b className="text-indigo-300">{matchingSpare.model}</b>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="text-slate-400">REQUISITION QTY:</span>
+                        <b className="text-slate-100">1 unit (Restores Safety Stock)</b>
+                      </p>
+                      <p className="flex justify-between text-emerald-450 border-t border-slate-800 pt-1.5 font-bold">
+                        <span className="text-slate-400">PO VALUE CONTRACT:</span>
+                        <b>₹{Math.round(matchingSpare.unitCostUSD * usdToInr).toLocaleString()}</b>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Actions buttons */}
+                  {isApproved ? (
+                    <div className="bg-emerald-50 border border-emerald-150 rounded-xl p-3 text-[11px] text-emerald-800 flex items-center justify-between">
+                      <p className="font-semibold flex items-center gap-1">
+                        <CheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
+                        <span>Requisition PO Signed & Transmitted to {matchingSpare.supplierName}!</span>
+                      </p>
+                      <span className="text-[9px] font-mono bg-emerald-150 px-2 py-0.5 rounded text-emerald-700 font-semibold uppercase">Pending Shipment</span>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          // Approve PO
+                          setAutonomousPoApproved(prev => ({ ...prev, [asset.id]: true }));
+                          
+                          // Increment Stock
+                          const updatedList = spares.map(sp => {
+                            if (sp.id === matchingSpare.id) {
+                              return { ...sp, currentStock: sp.currentStock + 1 };
+                            }
+                            return sp;
+                          });
+                          saveToLocal(updatedList);
+
+                          // Log order action
+                          const now = new Date();
+                          const arrivalDate = new Date();
+                          arrivalDate.setDate(now.getDate() + matchingSpare.leadTimeDays);
+                          const dateString = arrivalDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+                          const newLog = {
+                            id: `so-auto-${asset.id}`,
+                            timestamp: now.toLocaleTimeString(),
+                            item: matchingSpare.name,
+                            qty: 1,
+                            route: "Auto Sourced OEM via Sentry",
+                            estDelivery: `${dateString} (${matchingSpare.leadTimeDays} Days)`,
+                            costINR: Math.round(matchingSpare.unitCostUSD * usdToInr)
+                          };
+                          setOrderLogs(prev => [newLog, ...prev]);
+                        }}
+                        className="flex-1 flex items-center justify-center gap-1.5 bg-gradient-to-r from-indigo-700 to-indigo-900 border border-indigo-950 text-white font-mono font-bold py-2 px-3 text-[10.5px] rounded-lg shadow-sm hover:from-indigo-800 hover:to-indigo-950 hover:cursor-pointer transition select-none"
+                      >
+                        <ShieldCheck className="h-4 w-4 text-indigo-300" />
+                        <span>🔒 Verify and Authorize Auto-Drafted PO</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
             {/* Dynamic Critical Spares Catalogue Table */}
             <div className="space-y-2 font-sans">
               <h4 className="font-bold text-slate-700 uppercase text-[10px] font-mono tracking-wider">

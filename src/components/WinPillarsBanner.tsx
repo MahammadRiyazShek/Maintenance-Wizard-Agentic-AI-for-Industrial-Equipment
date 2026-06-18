@@ -30,16 +30,16 @@ export default function WinPillarsBanner({ onJumpTo }: Props) {
       label: "Mission & Knowledge Alignment",
       section: "role-command-surfaces-hud",
       proof:
-        "6 role surfaces map the actual Tata Steel maintenance org · 4 plant-area assets",
+        "6 role surfaces map actual Tata Steel maintenance org · Dynamic dashboard-wide Risk/Priority Classifications (Low/Med/High/Critical).",
       Icon: BookOpen,
       accent: "from-blue-600 to-indigo-600",
     },
     {
       id: "responsible",
-      label: "Responsible · Evidence-Grounded",
+      label: "Responsible & Evidence-Grounded",
       section: "center-reasoning-column",
       proof:
-        "Every Gemini reply cites SOP / Manual / Historical RAG snippet · human-in-the-loop feedback",
+        "Every Gemini reply cites SOP / Manual / Historical RAG snippets · Interactive digital logbooks and click-to-download structured audit reports.",
       Icon: ShieldCheck,
       accent: "from-emerald-600 to-teal-600",
     },
@@ -48,7 +48,7 @@ export default function WinPillarsBanner({ onJumpTo }: Props) {
       label: "Innovation & Agentic Depth",
       section: "sentinel-agent-dashboard",
       proof:
-        "Autonomous Sentinel + 4-agent flow (Diagnose → RCA → Plan → Procure) · real Isolation Forest",
+        "Autonomous Sentinel + 4-agent loop (Diagnose → RCA → Plan → Procure) · Lead-time aware prioritization (PS §5.2) balancing logistics delays.",
       Icon: Brain,
       accent: "from-rose-600 to-pink-600",
     },
@@ -57,7 +57,7 @@ export default function WinPillarsBanner({ onJumpTo }: Props) {
       label: "Business Impact & Scalability",
       section: "scada-monitor-suite",
       proof:
-        "Live ROI calculator · cascade-loss model · Cloud Run autoscale 0→N · <100 MB Distroless image",
+        "Live ROI calculator · Cascade-loss models · SCM warehousing optimizer & regional Adityapur sourcing route acceleration policies.",
       Icon: BarChart3,
       accent: "from-amber-600 to-orange-600",
     },
