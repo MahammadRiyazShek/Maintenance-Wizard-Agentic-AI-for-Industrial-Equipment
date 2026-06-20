@@ -8,7 +8,7 @@
 |---|-----------|-------------------|---------------|-----------|--------|
 | 1 | 6-step deterministic MPI with weighted contributions | `src/utils/anomalyEngine.ts → computeMPI` | — | `#mpi-audit-trail` | deterministic |
 | 2 | Isolation Forest anomaly detection (32 trees, seed-stable) | `src/utils/anomalyEngine.ts → isolationForestScore` | — | `#mpi-audit-trail` | deterministic |
-| 3 | AI4I-2020 XGBoost surrogate (99.05 %) on real UCI dataset | `src/utils/anomalyEngine.ts → classifyAI4I` | — | `#ai4i-physics-panel` | deterministic |
+| 3 | implements the published UCI AI4I-2020 ruleset on real UCI dataset | `src/utils/anomalyEngine.ts → classifyAI4I` | — | `#ai4i-physics-panel` | deterministic |
 | 4 | UCI physics rules TWF / HDF / PWF / OSF (verbatim encoder) | `anomalyEngine.ts → classifyAI4I` | — | `#ai4i-physics-panel` | deterministic |
 | 5 | 5-agent LangGraph + Multi-Agent RAG | `src/utils/langGraphMap.ts` + `LangGraphPipeline.tsx` | — | `#langgraph-pipeline` | live |
 | 6 | Confidence index — weighted breakdown + evidence chain | `langGraphMap.ts → weightedConfidence` | — | `#langgraph-pipeline` | deterministic |
@@ -34,7 +34,7 @@
 2. **Isolation Forest** — change one telemetry value in `data_store.ts` and
    re-load. The anomaly contribution (step 4) updates deterministically
    because the RNG is seeded from the asset id.
-3. **AI4I 99.05 %** — open `anomalyEngine.ts` and read the rule block. The
+3. **AI4I ruleset** — open `anomalyEngine.ts` and read the rule block. The
    four `if` branches are the **literal** TWF / HDF / PWF / OSF rules from
    the UCI dataset documentation.
 4. **5-agent LangGraph** — the "5-Agent LangGraph · Multi-Agent RAG

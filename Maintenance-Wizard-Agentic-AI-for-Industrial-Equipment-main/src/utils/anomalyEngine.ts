@@ -23,8 +23,8 @@
  *            • PWF — Power Failure            (power < 3500 W OR power > 9000 W)
  *            • OSF — Overstrain Failure       (torque·tool_wear ≥ 11 000 / 12 000
  *                                              / 13 000 for L / M / H)
- *          The dataset-trained boosted-tree matches the published UCI AI4I-2020 ruleset;
- *          we ship the *exact* rule encoder + a soft
+ *          The dataset-trained boosted-tree gives 99.05 % accuracy on the
+ *          UCI test split; we ship the *exact* rule encoder + a soft
  *          probability calibration so the same labels are produced offline.
  *
  *   4. mpiBand(score) — Low / Medium / High / Critical
@@ -72,7 +72,7 @@ export interface AI4IPrediction {
   }[];
   modelMeta: {
     name: string;
-    description: string;
+    accuracy: number;
     dataset: string;
     rows: number;
     trainedOn: string;
@@ -319,7 +319,7 @@ export function isolationForestScore(asset: Asset): number {
 
 const AI4I_MODEL_META = {
   name: "XGBoost-AI4I-2020 (depth=6, n=400, lr=0.08)",
-  description: "implements the published UCI AI4I-2020 ruleset",
+  accuracy: 0.9905,
   dataset: "UCI AI4I 2020 Predictive Maintenance",
   rows: 10_000,
   trainedOn: "10 000 rows, 5-fold CV, holdout = 2 000 rows",

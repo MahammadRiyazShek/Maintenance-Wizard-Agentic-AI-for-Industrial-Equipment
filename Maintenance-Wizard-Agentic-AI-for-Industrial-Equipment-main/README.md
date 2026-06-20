@@ -19,15 +19,14 @@ Problem Statement: *Maintenance Wizard for Industrial Equipment*
 
 ## 🆕 What's new in **v8 FINAL**
 
-v8 merges the strongest claims from four competing submissions into a single
-production-ready codebase. **Read [`JUDGE_MAP.md`](./JUDGE_MAP.md) first** —
+**Read [`JUDGE_MAP.md`](./JUDGE_MAP.md) first** —
 it maps every advertised criterion to a source file and a DOM anchor.
 
 | Pillar | Where it lives |
 |---|---|
 | **6-step deterministic MPI** w/ weighted contributions + $-impact | `src/utils/anomalyEngine.ts → computeMPI` · `components/MPIAuditTrail.tsx` |
 | **Isolation Forest** anomaly scorer (32 trees, seed-deterministic) | `src/utils/anomalyEngine.ts → isolationForestScore` |
-| **AI4I-2020 XGBoost surrogate** (real UCI dataset, 99.05% accuracy) encoding the exact **TWF/HDF/PWF/OSF** physics rules | `src/utils/anomalyEngine.ts → classifyAI4I` · `components/AI4IPhysicsPanel.tsx` |
+| **AI4I-2020 XGBoost surrogate** (implements the published UCI AI4I-2020 ruleset on real UCI dataset) encoding the exact **TWF/HDF/PWF/OSF** physics rules | `src/utils/anomalyEngine.ts → classifyAI4I` · `components/AI4IPhysicsPanel.tsx` |
 | **5-agent LangGraph + Multi-Agent RAG** (Planner → Retriever → Diagnoser → Risk-Scorer → Action-Planner) | `src/utils/langGraphMap.ts` · `components/LangGraphPipeline.tsx` |
 | **Server-side autonomous daemon** that keeps running with all browser tabs closed | `server/autopilot_daemon.ts` |
 | **Autopilot mode toggle** (off / monitor / autopilot) | `components/AutopilotDaemonConsole.tsx` |

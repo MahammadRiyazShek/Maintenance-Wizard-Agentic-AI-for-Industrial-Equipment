@@ -203,7 +203,6 @@ app.get("/api/logbook", (_req, res) => {
   res.json(logbook);
 });
 
-// POST logbook
 app.post("/api/logbook", (req, res) => {
   const { assetId, actionTaken, engineerName, diagnosticReportId, alertId } = req.body;
   if (!assetId || !actionTaken || !engineerName) {

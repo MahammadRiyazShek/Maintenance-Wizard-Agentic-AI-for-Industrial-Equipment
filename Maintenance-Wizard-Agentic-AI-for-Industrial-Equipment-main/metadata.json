@@ -1,0 +1,6 @@
+{
+  "name": "Tata Steel Maintenance Wizard",
+  "description": "An intelligent decision support system for Steel Plant maintenance, diagnosing critical assets like blast furnaces, rolling mills, and casters, integrated with dynamic RAG manuals, SOPs, and employee learning feedback loops.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

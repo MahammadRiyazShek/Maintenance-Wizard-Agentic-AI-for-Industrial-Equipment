@@ -49,7 +49,7 @@ import AgentTraceConsole from "./components/AgentTraceConsole.tsx";
 import CounterFactualSimulator from "./components/CounterFactualSimulator.tsx";
 import CognitiveAuditorConsole from "./components/CognitiveAuditorConsole.tsx";
 
-// v8 FINAL — merged feature set: MPI audit, AI4I physics ruleset, LangGraph,
+// v8 FINAL — merged feature set: MPI audit, AI4I physics, LangGraph,
 // autonomous daemon, ROI agent, judge map, outcome repo, dynamic KB upload.
 import MPIAuditTrail from "./components/MPIAuditTrail.tsx";
 import AI4IPhysicsPanel from "./components/AI4IPhysicsPanel.tsx";
@@ -556,7 +556,7 @@ export default function App() {
             <h1 className="text-xs font-bold tracking-wider font-mono text-indigo-400 uppercase flex items-center gap-2">
               COGNITIVE DECISION SYSTEM
               <span className="text-[9.5px] bg-blue-500/20 text-blue-300 font-mono px-2 py-0.5 rounded-full border border-blue-500/30 normal-case font-normal">
-                Wizard v8.0 FINAL (MPI · AI4I ruleset · LangGraph · Daemon)
+                Wizard v8.0 FINAL (MPI · AI4I · LangGraph · Daemon)
               </span>
             </h1>
             <p className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
@@ -1399,7 +1399,7 @@ export default function App() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500 text-white text-xs font-black uppercase tracking-wide hover:bg-rose-600 transition"
                   >
-                    <Youtube className="h-3.5 w-3.5 text-rose-400" /> Demo
+                    <Youtube className="h-3.5 w-3.5" /> Demo
                   </a>
                   <a
                     href="https://tata-steel-maintenance-wizard-622093504538.asia-southeast1.run.app/"

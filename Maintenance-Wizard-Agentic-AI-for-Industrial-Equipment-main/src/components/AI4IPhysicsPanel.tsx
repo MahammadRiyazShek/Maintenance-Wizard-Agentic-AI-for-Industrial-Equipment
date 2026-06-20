@@ -48,7 +48,7 @@ const AI4IPhysicsPanel: React.FC<Props> = ({ asset }) => {
             AI4I-2020 XGBoost Surrogate — Physics Rule Engine
           </h3>
           <p className="text-[11px] text-slate-400 font-mono">
-            {pred.modelMeta.name} · {pred.modelMeta.description} · {pred.modelMeta.dataset}
+            {pred.modelMeta.name} · accuracy={(pred.modelMeta.accuracy * 100).toFixed(2)}% · {pred.modelMeta.dataset}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -95,7 +95,7 @@ const AI4IPhysicsPanel: React.FC<Props> = ({ asset }) => {
       <p className="mt-3 text-[10px] text-slate-500 font-mono">
         Trained on {pred.modelMeta.rows.toLocaleString()} real rows from the UCI AI4I-2020 Predictive
         Maintenance dataset. Rules above are encoded verbatim from the published dataset documentation;
-        the overall model {pred.modelMeta.description}.
+        the boosted-tree surrogate reaches {(pred.modelMeta.accuracy * 100).toFixed(2)}% on the holdout split.
       </p>
     </section>
   );
