@@ -1,0 +1,13 @@
+[
+  "Air temperature [K]",
+  "Process temperature [K]",
+  "Rotational speed [rpm]",
+  "Torque [Nm]",
+  "Tool wear [min]",
+  "temp_diff",
+  "power_w",
+  "strain",
+  "type_L",
+  "type_M",
+  "type_H"
+]

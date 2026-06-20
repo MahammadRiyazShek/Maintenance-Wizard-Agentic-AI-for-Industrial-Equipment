@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-1">Hackathon Evaluation Alignment</h1>
+<p class="text-slate-600 mb-6">A direct mapping from judging criteria to the implemented feature, with one-click verification.</p>
+
+<table class="w-full text-sm bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+  <thead class="bg-slate-100 text-slate-600 text-left">
+    <tr><th class="px-4 py-2">Criterion</th><th class="px-4 py-2">Implementation</th><th class="px-4 py-2">Verify</th></tr>
+  </thead>
+  <tbody class="divide-y divide-slate-100">
+    <tr><td class="px-4 py-3 font-semibold">Problem understanding</td>
+        <td class="px-4 py-3">Tata Steel hot-strip mill: motor / gearbox / cooling auxiliaries; INR downtime; spare lead-time.</td>
+        <td class="px-4 py-3"><a class="text-blue-600 underline" href="/dashboard">Command Center</a></td></tr>
+    <tr><td class="px-4 py-3 font-semibold">Agentic concepts</td>
+        <td class="px-4 py-3">Explicit 5-agent LangGraph pipeline (Sentinel - Anomaly - RAG - Risk - Planner) + Feedback loop, visible on landing page.</td>
+        <td class="px-4 py-3"><a class="text-blue-600 underline" href="/">Topology diagram</a></td></tr>
+    <tr><td class="px-4 py-3 font-semibold">Technical implementation</td>
+        <td class="px-4 py-3">XGBoost + Isolation Forest on UCI AI4I 2020, FAISS RAG, Gemini synthesis with ADC fallback, FastAPI + LangGraph.</td>
+        <td class="px-4 py-3"><a class="text-blue-600 underline" href="/health">/health JSON</a></td></tr>
+    <tr><td class="px-4 py-3 font-semibold">Quantifiable accuracy</td>
+        <td class="px-4 py-3">XGBoost accuracy <b>{{ "%.2f"|format(metrics.accuracy*100) }}%</b>, F1 {{ "%.4f"|format(metrics.f1) }}, on {{ metrics.dataset }}.</td>
+        <td class="px-4 py-3"><form method="post" action="/admin/retrain"><button class="text-blue-600 underline">Retrain & verify</button></form></td></tr>
+    <tr><td class="px-4 py-3 font-semibold">Decision Trace (transparency)</td>
+        <td class="px-4 py-3">Every agent appends to a shared trace with inputs, outputs, confidence, latency.</td>
+        <td class="px-4 py-3"><a class="text-blue-600 underline" href="/dashboard">See trace</a></td></tr>
+    <tr><td class="px-4 py-3 font-semibold">Business logic (MPI)</td>
+        <td class="px-4 py-3">Maintenance Priority Index = 5-component weighted score; spare-not-on-hand multiplier x1.6.</td>
+        <td class="px-4 py-3"><a class="text-blue-600 underline" href="/dashboard">MPI breakdown</a></td></tr>
+    <tr><td class="px-4 py-3 font-semibold">ROI simulator</td>
+        <td class="px-4 py-3">Sliders for downtime cost (INR/hr) and spare lead-time; live re-computation of MPI and exposure curve.</td>
+        <td class="px-4 py-3"><a class="text-blue-600 underline" href="/dashboard">Use sliders</a></td></tr>
+    <tr><td class="px-4 py-3 font-semibold">Cascade / Failure Propagation</td>
+        <td class="px-4 py-3">COOLING -> MOTOR -> GEARBOX -> COILER dependency network with ETAs and projected severity.</td>
+        <td class="px-4 py-3"><a class="text-blue-600 underline" href="/">Cascade graph</a></td></tr>
+    <tr><td class="px-4 py-3 font-semibold">3D digital twin</td>
+        <td class="px-4 py-3">Plotly 3D scene with severity-coloured assets (lightweight; no WebGL toolchain).</td>
+        <td class="px-4 py-3"><a class="text-blue-600 underline" href="/">3D twin</a></td></tr>
+    <tr><td class="px-4 py-3 font-semibold">Role-based alerts (6 surfaces)</td>
+        <td class="px-4 py-3">Operator / Maintenance / Reliability / Plant Manager / Procurement / Executive messages from one decision.</td>
+        <td class="px-4 py-3"><a class="text-blue-600 underline" href="/dashboard">Role surfaces</a></td></tr>
+    <tr><td class="px-4 py-3 font-semibold">AI Confidence Index</td>
+        <td class="px-4 py-3">5-component weighted formula (ingestion / model agreement / evidence / RUL tightness / rule agreement).</td>
+        <td class="px-4 py-3"><a class="text-blue-600 underline" href="/dashboard">Confidence panel</a></td></tr>
+    <tr><td class="px-4 py-3 font-semibold">Human-in-loop feedback</td>
+        <td class="px-4 py-3">Feedback agent persists trace and decision; logbook surface ready for reviewer sign-off.</td>
+        <td class="px-4 py-3"><a class="text-blue-600 underline" href="/dashboard">Trace step 6</a></td></tr>
+    <tr><td class="px-4 py-3 font-semibold">Innovation</td>
+        <td class="px-4 py-3">Moves from anomaly detection to deterministic utility-based decision making (MPI + cascade + cost).</td>
+        <td class="px-4 py-3">-</td></tr>
+    <tr><td class="px-4 py-3 font-semibold">Deployability</td>
+        <td class="px-4 py-3">Single container, deploy.sh one-shot to Cloud Run, Gemini via ADC, graceful no-key fallback.</td>
+        <td class="px-4 py-3">See README</td></tr>
+  </tbody>
+</table>
+
+<div class="mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+  <h2 class="text-lg font-semibold mb-2">Reproducibility: re-train the model in-place</h2>
+  <p class="text-sm text-slate-600 mb-3">
+    Click below to re-run training (UCI AI4I 2020 download with synthetic fallback).
+    The new metrics will be reflected on the landing page after a refresh.
+  </p>
+  <form method="post" action="/admin/retrain">
+    <button class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg px-4 py-2">
+      Retrain XGBoost + Isolation Forest
+    </button>
+    <span class="text-xs text-slate-400 ml-2">(reproduces the {{ "%.2f"|format(metrics.accuracy*100) }}% benchmark; takes about 30-60 seconds.)</span>
+  </form>
+</div>
+{% endblock %}
