@@ -505,9 +505,9 @@ async function startServer() {
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Maintenance Wizard Server running at http://0.0.0.0:${PORT}`);
-    // Boot the autonomous daemon — keeps running with all browser tabs closed.
-    startAutopilot({ mode: "monitor", intervalMs: 8000 });
-    console.log(`[autopilot] daemon armed · mode=monitor · interval=8000 ms`);
+    // Boot the autonomous daemon in autopilot mode with a 5s interval for fast live evaluation responses
+    startAutopilot({ mode: "autopilot", intervalMs: 5000 });
+    console.log(`[autopilot] daemon armed · mode=autopilot · interval=5000 ms`);
   });
 }
 
