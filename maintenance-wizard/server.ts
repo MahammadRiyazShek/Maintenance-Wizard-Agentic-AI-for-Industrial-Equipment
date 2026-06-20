@@ -29,7 +29,7 @@ import {
 } from "./server/autopilot_daemon.ts";
 
 const app = express();
-const PORT = Number(process.env.PORT || 3000);
+const PORT = Number(process.env.PORT || 8080);
 
 app.use(express.json());
 
