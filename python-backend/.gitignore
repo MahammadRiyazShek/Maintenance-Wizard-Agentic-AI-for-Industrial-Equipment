@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+app/ml/artifacts/*.pkl
+app/ml/artifacts/*.json
+app/ml/artifacts/*.csv
+app/rag/index/
+.DS_Store

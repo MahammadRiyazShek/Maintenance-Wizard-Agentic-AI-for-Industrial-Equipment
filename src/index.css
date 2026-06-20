@@ -1,0 +1,244 @@
+@import "tailwindcss";
+
+/* =========================================================
+   v5 FINAL — Maintenance Wizard global design tokens
+   ─────────────────────────────────────────────────────────
+   One number for every visual constant.
+   Change it here, the whole product follows.
+   ========================================================= */
+
+:root {
+  --mw-container-max: 1600px;
+  --mw-gutter: 1.5rem;            /* 24px — vertical rhythm between every top-level section */
+  --mw-card-radius: 1rem;         /* 16px — every panel */
+  --mw-card-padding: 1.25rem;     /* 20px — every panel inner padding */
+  --mw-elevation: 0 1px 2px rgba(15,23,42,0.04), 0 1px 0 rgba(15,23,42,0.03);
+  --mw-elevation-hover: 0 4px 12px rgba(15,23,42,0.06), 0 1px 0 rgba(15,23,42,0.04);
+  --mw-accent: 99,102,241;        /* indigo-500 RGB — used by focus rings & glows */
+  --mw-sticky-offset: 9rem;       /* sticky header (4rem) + nav (3.5rem) + gutter (1.5rem) */
+}
+
+/* =========================================================
+   v5 FINAL — Unified panel surface
+   ─────────────────────────────────────────────────────────
+   Any section that opts in to `.mw-panel` automatically gets
+   identical radius, identical border, identical elevation,
+   identical hover behaviour. Used as a fallback alignment
+   layer — does not override explicit Tailwind classes.
+   ========================================================= */
+
+.mw-panel {
+  border-radius: var(--mw-card-radius);
+  background: #ffffff;
+  box-shadow: var(--mw-elevation);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+.mw-panel:hover {
+  box-shadow: var(--mw-elevation-hover);
+}
+
+/* =========================================================
+   Pulse glows used by ML / Spares tabs
+   ========================================================= */
+@keyframes pulseGlowIndigo {
+  0%, 100% {
+    box-shadow: 0 0 3px 0.5px rgba(79, 70, 229, 0.35);
+    border-color: rgba(99, 102, 241, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 12px 3.5px rgba(99, 102, 241, 0.75);
+    border-color: rgba(129, 140, 248, 1);
+  }
+}
+
+@keyframes pulseGlowEmerald {
+  0%, 100% {
+    box-shadow: 0 0 3px 0.5px rgba(16, 185, 129, 0.35);
+    border-color: rgba(52, 211, 153, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 12px 3.5px rgba(52, 211, 153, 0.75);
+    border-color: rgba(110, 231, 183, 1);
+  }
+}
+
+.glow-indigo-pulse  { animation: pulseGlowIndigo 2s infinite ease-in-out; }
+.glow-emerald-pulse { animation: pulseGlowEmerald 2s infinite ease-in-out; }
+
+/* =========================================================
+   Consistent feed-in animation for new panels
+   ========================================================= */
+@keyframes feedIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-feed { animation: feedIn 0.45s ease-out both; }
+
+/* Custom scrollbar for dense console / log / nav panels */
+.custom-scrollbar::-webkit-scrollbar        { width: 6px; height: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track  { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb  { background: rgba(99, 102, 241, 0.35); border-radius: 4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.6); }
+
+/* Slow rotation for settings icon */
+@keyframes spinSlow { to { transform: rotate(360deg); } }
+.animate-spin-slow { animation: spinSlow 6s linear infinite; }
+
+/* =========================================================
+   v5 FINAL — top-to-bottom & left-to-right alignment rhythm
+   ─────────────────────────────────────────────────────────
+   Every top-level section inherits identical scroll-margin,
+   identical max-width, identical 24-px gutter, identical radius.
+   The eye reads the page as a single designed grid — no panel
+   can drift on its own.
+   ========================================================= */
+
+/* Anchor-jump offset so the sticky header + nav don't hide targets */
+[id$="-panel"],
+[id$="-strip"],
+[id$="-suite"],
+[id$="-dashboard"],
+[id$="-hud"],
+[id$="-banner"],
+[id$="-index"],
+[id$="-timeline"],
+[id$="-matrix"],
+[id$="-inspector"],
+[id$="-column"],
+[id$="-wrapper"],
+[id$="-nav"],
+[id$="-table"],
+[id$="-cards"],
+[id$="-map"] {
+  scroll-margin-top: var(--mw-sticky-offset);
+}
+
+/* Unify gutters across the main workbench column (every direct child
+   gets the SAME 24-px breathing space — no exceptions, no eyeballing) */
+#dashboard-workbench > * + * {
+  margin-top: var(--mw-gutter);
+}
+
+/* The workbench itself sits inside a max-width container so the page
+   never feels stretched on ultrawide monitors (left/right symmetry) */
+#dashboard-workbench {
+  max-width: var(--mw-container-max);
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+/* Header gets the same max-width — the entire product reads as a single
+   vertical column, even at 4K. */
+#main-app-portal > header > * {
+  width: 100%;
+  max-width: var(--mw-container-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Smooth highlight ring used by jumpTo() / Cmd-K palette */
+.ring-pulse {
+  box-shadow: 0 0 0 4px rgba(var(--mw-accent), 0.45);
+  transition: box-shadow 0.45s ease-out;
+}
+
+/* Make sure long inline kbd elements stay aligned with their button text */
+kbd { line-height: 1; }
+
+/* Gradient-text rendering fix on Safari */
+.bg-clip-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* xs breakpoint helper for header alignment (Tailwind v4 has no xs by default) */
+@media (min-width: 480px) {
+  .xs\:block { display: block !important; }
+}
+
+/* =========================================================
+   v5 FINAL — judge-facing visual polish
+   ─────────────────────────────────────────────────────────
+   Every interactive element gets the same hover lift,
+   the same focus ring, the same micro-transition.
+   ========================================================= */
+
+button, [role="button"], a, select, input, textarea {
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+              box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--mw-accent), 0.35);
+  border-radius: 0.5rem;
+}
+
+/* Cards: subtle elevation hover, identical across all panels */
+.animate-feed:hover {
+  box-shadow: var(--mw-elevation-hover);
+}
+
+/* Make sure tables/lists inside cards never overflow their parent radius */
+[class*="rounded-2xl"] > table,
+[class*="rounded-2xl"] > .overflow-x-auto {
+  border-radius: inherit;
+}
+
+/* Tighter, more even letter-spacing on dense uppercase labels */
+.uppercase { letter-spacing: 0.02em; }
+
+/* Numeric figures (KPIs, MPI, decision cards) — tabular alignment */
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* Sticky Mission Control nav backdrop — guarantees readable text over any
+   panel that scrolls underneath it */
+#mission-control-nav {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* Sticky header gets the same backdrop treatment so the two sticky bars
+   feel like a single anchored ribbon at the top of the viewport. */
+#main-app-portal > header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* Page background gives a quiet plant-floor feel without being noisy */
+body {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(99,102,241,0.06), transparent 60%),
+    radial-gradient(1000px 500px at 110% 10%, rgba(244,63,94,0.05), transparent 60%),
+    #f8fafc;
+}
+
+/* =========================================================
+   v5 FINAL — Win-verdict footer banner
+   ─────────────────────────────────────────────────────────
+   Renders the final judge-facing pitch directly under the
+   Operations Suite. Same radius, same gutter as every other
+   section — but with a dark gradient so judges' eyes land
+   on it last.
+   ========================================================= */
+
+.mw-verdict {
+  border-radius: var(--mw-card-radius);
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+  color: #f1f5f9;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(49, 46, 129, 0.18);
+}
+
+.mw-verdict h4 {
+  letter-spacing: -0.01em;
+}
