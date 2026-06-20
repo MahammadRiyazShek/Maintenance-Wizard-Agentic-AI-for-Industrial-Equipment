@@ -92,38 +92,6 @@ const AI4IPhysicsPanel: React.FC<Props> = ({ asset }) => {
         ))}
       </div>
 
-      {/* Quantitative mathematical performance benchmarks on the ground-truth set */}
-      <div className="mt-5 rounded-md border border-cyan-500/20 bg-cyan-950/20 p-4">
-        <h4 className="text-xs font-bold text-cyan-300 uppercase tracking-wider font-mono mb-1.5 flex items-center gap-1.5">
-          📊 UCI AI4I-2020 Ground-Truth Validation Benchmarks
-        </h4>
-        <p className="text-[11px] text-slate-300 leading-relaxed mb-3">
-          Quantitative metrics for our trained <b>XGBoost Classifier Surrogate</b> (depth=6, n_estimators=400, learning_rate=0.08) verified using 5-fold cross-validation on the complete 10,000-records UCI predictive maintenance set:
-        </p>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center font-mono">
-          <div className="rounded border border-slate-700 bg-slate-800/40 p-2">
-            <span className="text-[9px] uppercase text-slate-400 block mb-0.5">Accuracy</span>
-            <span className="text-xs sm:text-sm font-black text-emerald-400">99.21%</span>
-          </div>
-          <div className="rounded border border-slate-700 bg-slate-800/40 p-2">
-            <span className="text-[9px] uppercase text-slate-400 block mb-0.5">Area Under ROC</span>
-            <span className="text-xs sm:text-sm font-black text-cyan-300">0.988</span>
-          </div>
-          <div className="rounded border border-slate-700 bg-slate-800/40 p-2">
-            <span className="text-[9px] uppercase text-slate-400 block mb-0.5">Macro F1</span>
-            <span className="text-xs sm:text-sm font-black text-indigo-300">0.912</span>
-          </div>
-          <div className="rounded border border-slate-700 bg-slate-800/40 p-2">
-            <span className="text-[9px] uppercase text-slate-400 block mb-0.5">Recall (Fail)</span>
-            <span className="text-xs sm:text-sm font-black text-amber-300">86.42%</span>
-          </div>
-          <div className="rounded border border-slate-700 bg-slate-800/40 p-2 col-span-2 sm:col-span-1">
-            <span className="text-[9px] uppercase text-slate-400 block mb-0.5">Precision</span>
-            <span className="text-xs sm:text-sm font-black text-rose-400">92.51%</span>
-          </div>
-        </div>
-      </div>
-
       <p className="mt-3 text-[10px] text-slate-500 font-mono">
         Trained on {pred.modelMeta.rows.toLocaleString()} real rows from the UCI AI4I-2020 Predictive
         Maintenance dataset. Rules above are encoded verbatim from the published dataset documentation;
